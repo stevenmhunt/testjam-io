@@ -1,0 +1,156 @@
+$fa-font-path: "~font-awesome/fonts";
+@import "~font-awesome/scss/font-awesome";
+
+html,
+body,
+#app,
+.app-container {
+    width: 100%;
+    height: 100%;    
+    margin: 0;
+    padding: 0;
+}
+
+body.theme-light {
+    $bg-color: #eeeeee;
+    $bg-alt-color: #fafafa;
+    $border-color: #bdbdbd;
+
+    background-color: $bg-color;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-size: 10pt;
+
+    div.header-view {
+        border-bottom: 1px solid $border-color;
+    }
+
+    div.output-view {
+        background-color: $bg-alt-color;
+    }
+
+    div.testrunner-view {
+        background-color: $border-color;
+    }
+
+    .btn:hover {
+        background-color: #003366;
+    }
+    .btn-run:hover {
+        background-color: #39B54A;
+        color: white;
+    }
+}
+
+body.theme-dark {
+    $bg-color: #272822;
+    $bg-alt-color: #272822;
+    $border-color: #444444;
+
+    background-color: $bg-color;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-size: 10pt;
+
+    div.header-view {
+        border-bottom: 1px solid $border-color;
+        color: #eeeeee;
+    }
+
+    div.output-view {
+        background-color: $bg-alt-color;
+        color: white;
+    }
+
+    div.testrunner-view {
+        background-color: $border-color;
+    }
+
+    .btn:hover {
+        background-color: #dddddd;
+        color: black;
+    }
+    .btn-run:hover {
+        background-color: #39B54A;
+        color: white;
+    }
+}
+
+pre, textarea {
+    font-family: 'Courier New', Courier, monospace;
+}
+
+div.header-view {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: row;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    height: 45px;
+
+    div.header-left, div.header-right {
+        display: -webkit-flex;
+        display: flex;
+        -webkit-flex-direction: row;
+        flex-direction: row;
+
+        div.logo {
+            display: inline-flex;
+            align-items: center;
+            img {
+                height: 24px;
+                margin-left: 9px;
+            }
+        }
+
+        div.title {
+            display: inline-flex;
+            align-items: center;
+            div {
+                font-weight: normal;
+                margin: 0;
+                padding-left: 8px;
+                font-size: 20px;
+                height: 24px;
+            }
+        }
+    
+        div.menu {
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            cursor: pointer;
+            font-size: 18px;
+            padding: 5px 15px 5px 15px;                
+            height: 40px;
+        }
+    }
+
+    div.header-right {
+        justify-content: flex-end;
+    }
+}
+
+div.testrunner-view {
+    height: calc(100% - 46px);
+    width: 100%;
+}
+
+div.feature-view, div.stepdefinition-view {
+    height: 100%;
+    width: 100%;
+    position: relative;
+}
+
+div.output-view {
+    height: 100%;
+    width: 100%;
+    overflow: auto;
+    pre {
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+}
