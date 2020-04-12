@@ -23,8 +23,11 @@ export default
                 </div>
                 <div className="view-header-right">
                     <div className="menu">
-                    <div className="btn" title="Format JavaScript"><i className="fa fa-magic"></i></div>
-                    <div className="btn" title="Configure"><i className="fa fa-gear"></i></div>
+                        <a className="btn" title="[Link] Learn more about step definitions" target="_blank" href="https://cucumber.io/docs/cucumber/step-definitions/">
+                            <i className="fa fa-info-circle"></i>
+                        </a>
+                        <div className="btn" title="Format JavaScript"><i className="fa fa-magic"></i></div>
+                        <div className="btn" title="Configure"><i className="fa fa-gear"></i></div>
                     </div>
                 </div>
             </div>

@@ -1,7 +1,10 @@
 import React from 'react';
-import Editor from '../components/Editor.jsx'
 import Dropdown from 'react-dropdown';
+
+import Editor from '../components/Editor.jsx'
+
 import GherkinIndent from '../../lib/gherkin-indent';
+import eventHub from '../eventHub';
 
 export default
     class FeatureView extends React.Component {
@@ -10,23 +13,28 @@ export default
         super(props);
         
         this.onBlur = this.onBlur.bind(this);
+        this.changeRuntime = this.changeRuntime.bind(this);
         this.formatGherkin = this.formatGherkin.bind(this);
 
         this.indent = new GherkinIndent({});
 
         this.state = {
-            cucumberVersion: '6.x'
+            runtime: 'CucumberJS 6.x'
         }
 
-        this.cucumberVersions = [
-            '6.x'
-        ];
+        this.runtimes = eventHub.getRuntimes();
+
+        eventHub.on('runtimeChanged', runtime => this.setState({ runtime }));
     }
 
     onBlur(e, code) {
         if (this.props && this.props.onChange) {
             this.props.onChange(this.props.name, code.getValue());
         }
+    }
+
+    changeRuntime(t) {
+        eventHub.setRuntime(t.value);
     }
 
     formatGherkin() {
@@ -43,12 +51,12 @@ export default
                 </div>
                 <div className="view-header-right">
                     <div className="menu">
-                    <a className="btn" title="Learn more about Gherkin" target="_blank" href="https://cucumber.io/docs/gherkin/reference/">
-                        <i className="fa fa-external-link"></i>
+                    <a className="btn" title="[Link] Learn more about the Gherkin syntax" target="_blank" href="https://cucumber.io/docs/gherkin/reference/">
+                        <i className="fa fa-info-circle"></i>
                     </a>
                     <div onClick={this.formatGherkin} className="btn" title="Format Gherkin"><i className="fa fa-magic"></i></div>
-                        <div className="item" title="CucumberJS Version">
-                            <Dropdown options={this.cucumberVersions} value={this.state.cucumberVersion} />
+                        <div className="item" title="Runtime">
+                            <Dropdown options={this.runtimes} value={this.state.runtime} onChange={this.changeRuntime} />
                         </div>
                     </div>
                 </div>

@@ -8,16 +8,17 @@ const stepDefinitionProcessor = require('../stepDefinitionProcessor');
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
-module.exports = function runCucumber6x({ features, stepDefinitions, modules, logger }) {
-    const cucumber = window.cucumber6;
+module.exports = function runCucumber5x({ features, stepDefinitions, modules, logger }) {
+    const cucumber = window.cucumber5;
     const dependencies = {
         cucumber,
         chai
     };
     if (!cucumber) {
-        logger.error('Expected cucumber 6.x to be loaded. Exiting...');
-        return null;
+        logger.error('Expected CucumberJS 5 script files to be loaded. Exiting...');
+        return Promise.resolve();
     }
+    logger.info(`Starting CucumberJS 5.1.0...\n`);
     function _runFeature() {
         _runFeature = _asyncToGenerator(
             /*#__PURE__*/

@@ -1,8 +1,18 @@
 import React from 'react';
 import ansiHtml from 'ansi-html';
+import _ from 'lodash';
+
 import eventHub from '../eventHub';
 
 function processOutput(output, formatter) {
+    if (!output || output === true) {
+        return '';
+    }
+
+    if (_.isObject(output)) {
+        return JSON.stringify(output, null, 4);
+    }
+
     const { protocol, hostname, port } = window.location;
     let result = `${output}`;
     result = result.replace(new RegExp(`${protocol}[/]{1,2}${hostname}${port !== 80 || port != 443 ? ':' + port : ''}`, 'g'), '');
@@ -35,7 +45,7 @@ export default
 
     displayHelp() {
         this.props.logger.log(`
-- Testing
+- Execute tests
 test
 
 - Console
@@ -43,9 +53,19 @@ help
 clear
 copy
 
+- Test Runtimes
+getRuntimes
+getRuntime
+setRuntime
+
 - Themes
+getThemes
 getTheme
-setTheme (light|dark)
+setTheme
+
+- Likes
+like
+unlike
 
 `);
     }
@@ -104,7 +124,7 @@ setTheme (light|dark)
                 <div className="view-header-left" style={{ width: '100%' }}>
                     <div className="title"><div style={{fontSize: '18px'}}><i className="fa fa-terminal"></i></div></div>
                     <div className="item commands">
-                        <input type="text" className="commands" placeholder="For help with the terminal, type 'help'." onKeyDown={this.onCommandKeyDown} />
+                        <input autoFocus type="text" className="commands" placeholder="For help with the terminal, type 'help'." onKeyDown={this.onCommandKeyDown} />
                     </div>
                 </div>
             </div>

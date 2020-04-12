@@ -18,14 +18,14 @@ export default
         this.state = {
             editorHeight: "100%",
             editorWidth: "auto",
-            editorTheme: "light"
+            editorTheme: "Light"
         }
         this.onResize = this.onResize.bind(this);
         eventHub.on('themeChanged', t => this.setState({ editorTheme: t }));
     }
 
     getTheme() {
-        if (this.state.editorTheme === 'dark') {
+        if (this.state.editorTheme === 'Dark') {
             return 'monokai';
         }
         return 'chrome';

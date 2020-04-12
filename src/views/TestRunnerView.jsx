@@ -1,13 +1,14 @@
 import React from 'react';
 import SplitPane, { Pane } from 'react-split-pane';
 
-import runCucumber6x from '../runners/cucumber6x';
 import Logger from '../Logger';
 import eventHub from '../eventHub';
 
 import OutputView from './OutputView.jsx';
 import FeatureView from './FeatureView.jsx';
 import StepDefinitionView from './StepDefinitionView.jsx';
+
+const { execute } = require('../runtime');
 
 export default
     class TestRunnerView extends React.Component {
@@ -63,7 +64,7 @@ CustomWorld.prototype.incrementBy = function(number) {
 setWorldConstructor(CustomWorld);
 
 function wait() {
-    return new Promise(r => setTimeout(r, 500));
+    return new Promise(r => setTimeout(r, 100));
 }
 
 ///// Step definitions /////
@@ -97,7 +98,7 @@ Then('the variable should contain {int}', function(number) {
         eventHub.on('test', () => {
             try {
                 eventHub.emit('testRunStarted');
-                runCucumber6x({
+                execute(eventHub.getRuntime(), {
                     features: [{
                         id: 'd0f8784uf8df781',
                         name: this.state.featureName,
@@ -147,7 +148,7 @@ Then('the variable should contain {int}', function(number) {
             '_next@'
         ];
 
-        return stack.split('\n').map((line) => {
+        return (stack || '').split('\n').map((line) => {
             // example lines:
             //      d873hfh74ryhrh7@/js/client.js line 1897 > eval line 75 > Function:13:67
             // ?[90md873hfh74ryhrh7/<@/js/client.js line 1897 > eval line 75 > Function:44:36
@@ -166,13 +167,13 @@ Then('the variable should contain {int}', function(number) {
     }
 
     onChangeFeature(featureName, featureSource) {
-        this.setState(state => ({
+        this.setState(() => ({
             featureName, featureSource
         }))
     }
 
     onChangeStep(stepName, stepSource) {
-        this.setState(state => ({
+        this.setState(() => ({
             stepName, stepSource
         }));
     }

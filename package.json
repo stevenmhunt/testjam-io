@@ -38,6 +38,7 @@
     "react-split-pane": "^2.0.3",
     "regenerator-runtime": "^0.13.5",
     "sass-loader": "^6.0.6",
+    "shell-quote": "^1.7.2",
     "webpack": "^3.11.0"
   }
 }

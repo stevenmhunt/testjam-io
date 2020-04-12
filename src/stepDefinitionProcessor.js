@@ -13,7 +13,7 @@ module.exports = function stepDefinitionProcessor({ source, id }) {
         ${source}
     }
     
-    return ${id}();
+    return ${id}.call(this);
     `;
     return result;
 };

@@ -8,9 +8,9 @@ export default
     constructor(props) {
         super(props);
         
-        this.changeTheme = this.changeTheme.bind(this);
-        this.onTest = this.onTest.bind(this);
-        this.onToggleLike = this.onToggleLike.bind(this);
+        this.changeTheme = this.setTheme.bind(this);
+        this.runTest = this.runTest.bind(this);
+        this.onToggleLike = this.toggleLike.bind(this);
 
         this.state = {
             theme: eventHub.getTheme(),
@@ -18,9 +18,7 @@ export default
             isLiked: false
         }
 
-        this.themes = [
-            { value: 'light', label: 'Light' }, { value: 'dark', label: 'Dark' }
-        ];
+        this.themes = eventHub.getThemes();
 
         eventHub.on('testRunStarted', () => this.setState({ isTestRunning: true }));
         eventHub.on('testRunEnded', () => this.setState({ isTestRunning: false }));
@@ -29,17 +27,17 @@ export default
         eventHub.on('unliked', () => this.setState({ isLiked: false }));
     }
 
-    changeTheme(t) {
+    setTheme(t) {
         eventHub.setTheme(t.value);
     }
 
-    onTest() {
+    runTest() {
         if (!this.state.isTestRunning) {
             eventHub.test();
         }
     }
 
-    onToggleLike() {
+    toggleLike() {
         if (this.state.isLiked) {
             eventHub.unlike();
         }
@@ -61,14 +59,14 @@ export default
             <div className="header-right">
                 <div className="menu">
                     <div className="item" title="Theme" style={{ marginRight: '6px' }}>
-                        <Dropdown options={this.themes} value={this.state.theme} onChange={this.changeTheme} />
+                        <Dropdown options={this.themes} value={this.state.theme} onChange={this.setTheme} />
                     </div>
-                    <div className={this.state.isTestRunning ? "btn btn-running" : "btn btn-run"} onClick={this.onTest}>
+                    <div className={this.state.isTestRunning ? "btn btn-running" : "btn btn-run"} onClick={this.runTest}>
                         {this.state.isTestRunning ? 
                         <span>&nbsp;<i className="fa fa-spinner fa-spin"></i>&nbsp;Running...</span> :
                         <span>&nbsp;<i className="fa fa-play-circle"></i>&nbsp;&nbsp;Run Tests</span>}
                     </div>
-                    <div className={this.state.isLiked ? "btn btn-liked" : "btn btn-unliked"} onClick={this.onToggleLike}>
+                    <div className={this.state.isLiked ? "btn btn-liked" : "btn btn-unliked"} onClick={this.toggleLike}>
                         {this.state.isLiked ? 
                         <span>&nbsp;<i className="fa fa-heart"></i></span> :
                         <span>&nbsp;<i className="fa fa-heart-o"></i></span>}                        

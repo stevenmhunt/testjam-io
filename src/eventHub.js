@@ -1,20 +1,43 @@
 const EventEmitter = require('events');
 const _ = require('lodash');
+const { parse } = require('shell-quote');
+const { browser, remote } = require('./persistence');
+const { runtimes, themes } = require('../config');
+
+const cache = {
+    runtime: 'CucumberJS 6.x'
+};
 
 const hub = new EventEmitter();
 
-hub.getTheme = () => window.localStorage.theme;
+hub.getThemes = () => themes;
+hub.getTheme = () => browser.get('theme');
 hub.setTheme = (t) => {
-    window.localStorage.theme = t;
-    return hub.emit('themeChanged', t);
+    if (themes.indexOf(t) >= 0) {
+        browser.set('theme', t);
+        return hub.emit('themeChanged', t);
+    }
+    throw new Error(`Unrecognized theme '${t}'.`);
 };
 
-hub.test = () => hub.emit('test');
+hub.test = (...args) => hub.emit('test', ...args);
+hub.cucumber = (...args) => hub.emit('test', ...args);
+
 hub.like = () => hub.emit('liked');
 hub.unlike = () => hub.emit('unliked');
 
+hub.getRuntimes = () => runtimes;
+hub.getRuntime = () => cache.runtime;
+hub.setRuntime = (r) => {
+    if (runtimes.indexOf(r) >= 0) {
+        cache.runtime = r;
+        return hub.emit('runtimeChanged', r);
+    }
+    throw new Error(`Unrecognized runtime '${r}'.`);
+};
+
 hub.execute = (text, logger) => {
-    const [command, ...args] = (text || '').split(' ');
+    const [command, ...args] = parse(text || '');
     logger.log(`$ ${text}\n`);
     if (hub[command] && _.isFunction(hub[command])) {
         try {
@@ -30,15 +53,10 @@ hub.execute = (text, logger) => {
     }
 };
 
-window.testjam = {
-    setTheme: (t) => hub.setTheme(t),    
-    test: () => hub.test()
-};
-
 module.exports = hub;
 
 setImmediate(() => {
-    if (window.localStorage.theme) {
-        hub.setTheme(window.localStorage.theme);
+    if (browser.exists('theme')) {
+        hub.setTheme(browser.get('theme'));
     }
 });
