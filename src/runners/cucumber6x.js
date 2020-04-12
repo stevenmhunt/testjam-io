@@ -14,7 +14,6 @@ module.exports = function runCucumber6x({ features, stepDefinitions, modules, lo
         cucumber,
         chai
     };
-    logger.clear();
     if (!cucumber) {
         logger.error('Expected cucumber 6.x to be loaded. Exiting...');
         return null;

@@ -52,10 +52,11 @@ export default
                 width={this.state.editorWidth}
                 name={this.props.id}
                 value={this.props.value}
+                useSoftTabs={true}
                 editorProps={{
                     hScrollBarAlwaysVisible: false,
                     vScrollBarAlwaysVisible: true,
-                    animatedScroll: true
+                    animatedScroll: true,
                 }}
             />
         </div>);

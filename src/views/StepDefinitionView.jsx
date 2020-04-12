@@ -17,7 +17,20 @@ export default
 
     render() {
         return (<div className="stepdefinition-view">
-            <Editor type="javascript" id={this.props.id} value={this.props.value} onBlur={this.onBlur} />
+            <div className="view-header">
+                <div className="view-header-left">
+                    <div className="title"><div>Step Definitions</div></div>
+                </div>
+                <div className="view-header-right">
+                    <div className="menu">
+                    <div className="btn" title="Format JavaScript"><i className="fa fa-magic"></i></div>
+                    <div className="btn" title="Configure"><i className="fa fa-gear"></i></div>
+                    </div>
+                </div>
+            </div>
+            <div className="editor-container">
+                <Editor type="javascript" id={this.props.id} value={this.props.value} onBlur={this.onBlur} />
+            </div>
         </div>);
     }
 }

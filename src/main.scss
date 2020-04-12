@@ -1,5 +1,6 @@
 $fa-font-path: "~font-awesome/fonts";
 @import "~font-awesome/scss/font-awesome";
+@import "~react-dropdown/style.css";
 
 html,
 body,
@@ -11,10 +12,15 @@ body,
     padding: 0;
 }
 
+$gherkin-color: rgb(117, 206, 129);
+$gherkin-text-color: #333333;
+
+
 body.theme-light {
     $bg-color: #eeeeee;
     $bg-alt-color: #fafafa;
     $border-color: #bdbdbd;
+    $text-color: black;
 
     background-color: $bg-color;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
@@ -22,6 +28,7 @@ body.theme-light {
 
     div.header-view {
         border-bottom: 1px solid $border-color;
+        background-color: $bg-alt-color;
     }
 
     div.output-view {
@@ -32,50 +39,144 @@ body.theme-light {
         background-color: $border-color;
     }
 
-    .btn:hover {
-        background-color: #003366;
+    div.view-header {
+        background-color: $bg-color;
+        border-bottom: 1px solid $border-color;
     }
-    .btn-run:hover {
+
+    .btn {
+        color: black;
+    }
+    .btn:hover {
+        background-color: $gherkin-color;
+        color: $gherkin-text-color;
+    }
+
+    .btn-run {
         background-color: #39B54A;
         color: white;
+    }
+
+    .btn-running, .btn-running:hover {
+        background-color: $bg-alt-color;
+        color: $text-color;
+        cursor: wait;
+    }
+
+    .btn-liked, .btn-liked:hover {
+        background-color: #db15d8;
+        color: white;
+    }
+
+    .btn-liked:hover, .btn-unliked:hover {
+        background-color: #db6fd9;
+    }
+
+    .Dropdown-option:hover {
+        background-color: $gherkin-color;
+        color: $gherkin-text-color;
+    }
+      
+    .Dropdown-option.is-selected {
+        background-color: $gherkin-color;
+        color: $gherkin-text-color;
+    }
+
+    input.commands {
+        color: black;
     }
 }
 
 body.theme-dark {
     $bg-color: #272822;
-    $bg-alt-color: #272822;
+    $bg-alt-color: #333333;
     $border-color: #444444;
+    $text-color: #eeeeee;
 
     background-color: $bg-color;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     font-size: 10pt;
+    color: $text-color;
 
     div.header-view {
         border-bottom: 1px solid $border-color;
-        color: #eeeeee;
+        background-color: $bg-alt-color;
     }
 
     div.output-view {
         background-color: $bg-alt-color;
-        color: white;
     }
 
     div.testrunner-view {
         background-color: $border-color;
     }
 
-    .btn:hover {
-        background-color: #dddddd;
-        color: black;
+    div.view-header {
+        background-color: $bg-color;
+        border-bottom: 1px solid $border-color;
     }
-    .btn-run:hover {
+
+    .btn {
+        color: $text-color;
+    }
+    .btn:hover {
+        background-color: $gherkin-color;
+        color: $gherkin-text-color
+    }
+
+    .btn-run {
         background-color: #39B54A;
+        color: white;
+    }
+
+    .btn-running, .btn-running:hover {
+        background-color: $bg-alt-color;
+        color: $text-color;
+        cursor: wait;
+    }
+
+    .btn-liked, .btn-liked:hover {
+        background-color: #db15d8;
+        color: white;
+    }
+
+    .btn-liked:hover, .btn-unliked:hover {
+        background-color: #db6fd9;
+    }
+
+    .Dropdown-control {
+        background-color: $bg-color;
+        border: 1px solid $border-color;
+        color: $text-color;
+    }
+    .Dropdown-menu {
+        background-color: $bg-color;
+        border: 1px solid $border-color;
+        color: $text-color;
+    }
+    .Dropdown-option {
+        color: $text-color;
+    }
+    .Dropdown-option:hover {
+        background-color: $gherkin-color;
+        color: $gherkin-text-color
+    }
+    .Dropdown-option.is-selected {
+        background-color: $gherkin-color;
+        color: $gherkin-text-color
+    }
+
+    input.commands {
         color: white;
     }
 }
 
 pre, textarea {
     font-family: 'Courier New', Courier, monospace;
+}
+
+.btn {
+    text-decoration: none;
 }
 
 div.header-view {
@@ -114,6 +215,11 @@ div.header-view {
             }
         }
     
+        div.item {
+            display: inline-flex;
+            align-items: center;
+        }
+
         div.menu {
             display: inline-flex;
             align-items: center;
@@ -123,9 +229,9 @@ div.header-view {
             display: inline-flex;
             align-items: center;
             cursor: pointer;
+            text-align: center;
             font-size: 18px;
-            padding: 5px 15px 5px 15px;                
-            height: 40px;
+            padding: 12px 15px 12px 15px;                
         }
     }
 
@@ -148,9 +254,82 @@ div.feature-view, div.stepdefinition-view {
 div.output-view {
     height: 100%;
     width: 100%;
-    overflow: auto;
     pre {
         margin-left: 10px;
         margin-right: 10px;
     }
+}
+
+div.view-header {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: row;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    height: 32px;
+
+    div.view-header-left, div.view-header-right {
+        display: -webkit-flex;
+        display: flex;
+        -webkit-flex-direction: row;
+        flex-direction: row;
+
+        div.title {
+            display: inline-flex;
+            align-items: center;
+            div {
+                font-weight: normal;
+                margin: 0;
+                padding-left: 4px;
+                font-size: 12px;
+                height: 16px;
+            }
+        }
+
+        div.item {
+            display: inline-flex;
+            align-items: center;
+        }
+
+        div.menu {
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 8px;
+        }
+    }
+
+    div.view-header-right {
+        justify-content: flex-end;
+    }
+}
+
+div.editor-container {
+    width: 100%;
+    height: calc(100% - 33px);
+}
+
+div.output-container {
+    width: 100%;
+    height: calc(100% - 66px);
+}
+
+.commands {
+    width: calc(100% - 50px);
+}
+
+input.commands {
+    margin-left: 10px;
+    width: 100%;
+    background-color: transparent;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 18px;
+    border: 0;
 }
