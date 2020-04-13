@@ -19,20 +19,20 @@ export default
         this.indent = new GherkinIndent({});
 
         this.state = {
-            runtime: 'CucumberJS 6.x'
+            runtime: 'CucumberJS 6.x',
+            name: '',
+            source: ''
         }
 
-        this.runtimes = app.getRuntimes();
-        this.editorValue = props.value;
-
         app.on('runtimeChanged', runtime => this.setState({ runtime }));
+        app.on('featureUpdated', (data) => this.setState(() => data));
+
+        this.runtimes = app.getRuntimes();
     }
 
     onBlur(e, code) {
-        if (this.props && this.props.onChange) {
-            this.editorValue = code.getValue();
-            this.props.onChange(this.props.name, this.editorValue);
-        }
+        return app.setFeature({ id: 1, name: this.state.name, source: code.getValue() })
+            .catch(err => app.logger.error(`${err.name}: ${err.message}\n`));
     }
 
     changeRuntime(t) {
@@ -40,9 +40,9 @@ export default
     }
 
     formatGherkin() {
-        if (this.props && this.props.onChange) {
-            this.props.onChange(this.props.name, this.indent.format(this.editorValue));
-        }
+        const source = this.indent.format(this.state.source);
+        return app.setFeature({ id: 1, name: this.state.name, source })
+            .catch(err => app.logger.error(`${err.name}: ${err.message}\n`));
     }
 
     render() {
@@ -64,7 +64,7 @@ export default
                 </div>
             </div>
             <div className="editor-container">
-                <Editor type="gherkin" id={this.props.id} value={this.props.value} onBlur={this.onBlur} />
+                <Editor type="gherkin" id={this.props.id} value={this.state.source} onBlur={this.onBlur} />
             </div>
         </div>);
     }

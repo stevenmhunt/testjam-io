@@ -2,6 +2,8 @@ import React from 'react';
 import Editor from '../components/Editor.jsx';
 import { indent } from 'indent.js';
 
+import app from '../app';
+
 export default
     class StepDefinitionView extends React.Component {
 
@@ -11,23 +13,23 @@ export default
         this.formatJS = this.formatJS.bind(this);
 
         this.state = {
-            language: 'javascript'
+            language: 'javascript',
+            name: '',
+            source: ''
         };
 
-        this.editorValue = props.value;
+        app.on('stepDefinitionUpdated', (data) => this.setState(() => data));
     }
 
     onBlur(e, code) {
-        if (this.props && this.props.onChange) {
-            this.editorValue = code.getValue();
-            this.props.onChange(this.props.name, this.editorValue);
-        }
+        return app.setStepDefinition({ id: 1, name: this.state.name, source: code.getValue() })
+            .catch(err => app.logger.error(`${err.name}: ${err.message}\n`));
     }
 
     formatJS() {
-        if (this.props && this.props.onChange) {
-            this.props.onChange(this.props.name, indent.js(this.editorValue, { tabString: '    ' }));
-        }
+        const source = indent.js(this.state.source, { tabString: '    ' });
+        return app.setStepDefinition({ id: 1, name: this.state.name, source })
+            .catch(err => app.logger.error(`${err.name}: ${err.message}\n`));
     }
 
     render() {
@@ -46,7 +48,7 @@ export default
                 </div>
             </div>
             <div className="editor-container">
-                <Editor type={this.state.language} id={this.props.id} value={this.props.value} onBlur={this.onBlur} />
+                <Editor type={this.state.language} id={this.props.id} value={this.state.source} onBlur={this.onBlur} />
             </div>
         </div>);
     }

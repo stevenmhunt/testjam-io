@@ -1,9 +1,8 @@
 $fa-font-path: "~font-awesome/fonts";
 @import "~font-awesome/scss/font-awesome";
-@import "~react-dropdown/style.css";
 
-@import "./themes/Dark.scss";
-@import "./themes/Light.scss";
+@import "~react-dropdown/style.css";
+@import '~react-notifications/lib/notifications.css';
 
 html,
 body,
@@ -14,10 +13,17 @@ body,
     margin: 0;
     padding: 0;
     transition: opacity 400ms ease-out;
+
+    font-family: 'Segoe UI', Tahoma, Geneva, Ubuntu, "Droid Sans", Arial, sans-serif;
+    /* -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";*/
+    font-size: 10pt;
 }
 
 $gherkin-color: rgb(117, 206, 129);
 $gherkin-text-color: #333333;
+
+@import "./themes/Dark.scss";
+@import "./themes/Light.scss";
 
 #loading {
     position: absolute;

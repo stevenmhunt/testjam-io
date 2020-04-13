@@ -1,5 +1,3 @@
-$gherkin-color: rgb(117, 206, 129);
-$gherkin-text-color: #333333;
 
 body.theme-Light {
     $bg-color: #eeeeee;
@@ -8,8 +6,6 @@ body.theme-Light {
     $text-color: black;
 
     background-color: $bg-color;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-    font-size: 10pt;
 
     div.header-view {
         border-bottom: 1px solid $border-color;

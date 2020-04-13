@@ -4,7 +4,7 @@ const { parse } = require('shell-quote');
 const { browser, firebase } = require('./data');
 const { npm } = require('./packages');
 import { loadRuntime, executeRuntime } from './runtime';
-import { runtimes, themes } from '../config';
+import { runtimes, themes, featureSource, stepSource } from '../config';
 import errorFormatter from './formatters/errorFormatter';
 
 import Logger from './Logger';
@@ -21,6 +21,8 @@ const app = {
 
 const hub = new EventEmitter();
 
+// User Authentication
+
 firebase.onAuthChanged(({ action, user }) => {
     if (action === 'signIn') {
         hub.emit('signedIn', user);
@@ -30,40 +32,96 @@ firebase.onAuthChanged(({ action, user }) => {
     }
 });
 
+app.signIn = () => firebase.signIn()
+    .then(user => hub.emit('signedIn', user));
+
+app.signOut = () => {
+    firebase.signOut();
+    hub.emit('signedOut');
+};
+
+// Persistence
+
+function loadJam() {
+    const id = browser.page();
+    if (!id) {
+        return Promise.all([
+            Promise.resolve(hub.emit('jamChanged', null)),
+            app.setFeature({ id: 1, name: 'test.feature', source: featureSource }),
+            app.setStepDefinition({ id: 1, name: 'steps.js', source: stepSource })
+        ]);
+    }
+    return firebase.getJam(id)
+        .then(jam => Promise.all([
+            Promise.resolve(hub.emit('jamChanged', jam)),
+            app.setRuntime(jam.runtime),
+            ...(jam.features.map(i => app.setFeature(i))),
+            ...(jam.stepDefinitions.map(i => app.setStepDefinition(i)))
+        ]));
+}
+
+app.save = () => 
+    Promise.resolve(hub.emit('saving'))
+    .then(() => firebase.saveJam(browser.page(), {
+        runtime: app.getRuntime(),
+        features: app.getFeatures(),
+        stepDefinitions: app.getStepDefinitions()
+    })).then((id) => {
+        hub.emit('saved', id);
+        if (id) {
+            browser.page(id);
+        }
+    });
+
+// Theme Management
+
 app.getThemes = () => themes;
 app.getTheme = () => browser.get('theme');
 app.setTheme = (t) => {
     if (themes.indexOf(t) >= 0) {
         browser.set('theme', t);
-        setImmediate(() => {
-            document.getElementById('app').style.opacity = 1;
-            document.getElementById('loading').style.display = 'none';
-        });
         return Promise.resolve(hub.emit('themeChanged', t));
     }
     return Promise.reject(new Error(`Unrecognized theme '${t}'.`));
 };
 
+// Test Execution
+
+/**
+ * @private
+ */
 const enableTests = () => {
     cache.isTestingEnabled = true;
     hub.emit('testsEnabled');
 }
 
+/**
+ * @private
+ */
 const disableTests = () => {
     cache.isTestingEnabled = false;
     hub.emit('testsDisabled');
 }
 
+/**
+ * @private
+ */
 const startTests = () => {
     cache.isTestRunning = true;
     hub.emit('testsStarted');
 }
 
+/**
+ * @private
+ */
 const endTests = () => {
     cache.isTestRunning = false;
     hub.emit('testsEnded');
 }
 
+/**
+ * @private
+ */
 function runTestsInternal() {
     try {
         startTests();
@@ -71,7 +129,7 @@ function runTestsInternal() {
 
         app.getPackages().then((pkgData) => {
             pkgData.forEach((pkg) => {
-                packages[pkg.name] = window[_.camelCase(pkg.name)];
+                packages[pkg.name] = browser.global(_.camelCase(pkg.name));
             });
         })
             .then(() => loadRuntime(app.getRuntime()))
@@ -117,8 +175,12 @@ app.test = () => {
 };
 app.cucumber = app.test;
 
+// Favorites
+
 app.like = () => hub.emit('liked');
 app.unlike = () => hub.emit('unliked');
+
+// Runtime Management
 
 app.getRuntimes = () => runtimes;
 app.getRuntime = () => cache.runtime;
@@ -134,6 +196,8 @@ app.setRuntime = (r) => {
     }
     return Promise.reject(new Error(`Unrecognized runtime '${r}'.`));
 };
+
+// Package Management
 
 app.getPackages = () => {
     disableTests();
@@ -157,8 +221,10 @@ app.removePackage = (name) => {
     return npm.removePackage(name);
 }
 
+// Feature Files
+
 app.getFeatures = () => cache.features || [];
-app.setFeature = (id, name, source) => {
+app.setFeature = ({ id, name, source }) => {
     cache.features = cache.features || [];
     const selected = cache.features.filter(i => i.id === id)[0];
     if (selected) {
@@ -168,11 +234,15 @@ app.setFeature = (id, name, source) => {
     else {
         cache.features.push({ id, name, source });
     }
+
+    hub.emit('featureUpdated', { id, name, source });
     return Promise.resolve();
 }
 
+// Step Definitions
+
 app.getStepDefinitions = () => cache.steps || [];
-app.setStepDefinition = (id, name, source) => {
+app.setStepDefinition = ({ id, name, source }) => {
     cache.steps = cache.steps || [];
     const selected = cache.steps.filter(i => i.id === id)[0];
     if (selected) {
@@ -183,6 +253,7 @@ app.setStepDefinition = (id, name, source) => {
         cache.steps.push({ id, name, source });
     }
     return npm.scanForPackages(source)
+        .then(() => hub.emit('stepDefinitionUpdated', { id, name, source }))
         .then(() => enableTests(), (err) => {
             disableTests();
             throw err;
@@ -213,12 +284,13 @@ app.execute = (text) => {
     }
 };
 
-app.signIn = () => firebase.signIn();
-
 app.on = hub.on.bind(hub);
 
 module.exports = app;
 
 setImmediate(() => {
-    app.setTheme(browser.exists('theme') ? browser.get('theme') : app.getThemes()[0]);
+    const theme = browser.exists('theme') ? browser.get('theme') : app.getThemes()[0];
+    loadJam()
+        .then(() => app.setTheme(theme))
+        .then(() => browser.enableApp());
 });

@@ -44,7 +44,11 @@ function removePackage(name) {
 }
 
 function scanForPackages(source) {
-    const requires = source.match(/require\s*\(['"](.*)['"]\)/g)
+    if (!source) {
+        return Promise.resolve();
+    }
+
+    const requires = (source.match(/require\s*\(['"](.*)['"]\)/g) || [])
         .map(i => i.match(/require\s*\(['"](.*)['"]\)/)[1]);
     
     return getPackages()

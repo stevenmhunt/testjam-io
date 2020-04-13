@@ -24,7 +24,7 @@ function executeScript(id, code) {
 }
 
 const INTERVAL = 50;
-const TIMEOUT = 10000;
+const TIMEOUT = 30000;
 
 function waitUntilExists(name, returns) {
     return new Promise((resolve, reject) => {
