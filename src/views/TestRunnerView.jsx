@@ -26,23 +26,25 @@ export default
             stepSource
         };
 
-        app.setFeature(1, featureName, featureSource);
-        app.setStepDefinition(1, stepName, stepSource);
+        app.setFeature(1, featureName, featureSource)
+            .catch(err => app.logger.error(`${err.name}: ${err.message}\n`));
+        app.setStepDefinition(1, stepName, stepSource)
+            .catch(err => app.logger.error(`${err.name}: ${err.message}\n`));
     }
 
     onChangeFeature(featureName, featureSource) {
-        app.setFeature(1, featureName, featureSource);
-        this.setState(() => ({
-            featureName, featureSource
-        }));
+        app.setFeature(1, featureName, featureSource)
+            .then(() => this.setState(() => ({
+                featureName, featureSource
+            })), err => app.logger.error(`${err.name}: ${err.message}\n`));
     }
 
     onChangeStep(stepName, stepSource) {
-        app.setStepDefinition(1, stepName, stepSource);
-        this.setState(() => ({
-            stepName, stepSource
-        }));
-    }
+        app.setStepDefinition(1, stepName, stepSource)
+            .then(() => this.setState(() => ({
+                stepName, stepSource
+            })), err => app.logger.error(`${err.name}: ${err.message}\n`));
+        }
 
     render() {
         return (<div className="testrunner-view">

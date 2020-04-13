@@ -1,7 +1,7 @@
 const EventEmitter = require('events');
 const _ = require('lodash');
 const { parse } = require('shell-quote');
-const { browser, remote } = require('./data');
+const { browser, firebase } = require('./data');
 const { npm } = require('./packages');
 import { loadRuntime, executeRuntime } from './runtime';
 import { runtimes, themes } from '../config';
@@ -21,11 +21,24 @@ const app = {
 
 const hub = new EventEmitter();
 
+firebase.onAuthChanged(({ action, user }) => {
+    if (action === 'signIn') {
+        hub.emit('signedIn', user);
+    }
+    else {
+        hub.emit('signedOut');
+    }
+});
+
 app.getThemes = () => themes;
 app.getTheme = () => browser.get('theme');
 app.setTheme = (t) => {
     if (themes.indexOf(t) >= 0) {
         browser.set('theme', t);
+        setImmediate(() => {
+            document.getElementById('app').style.opacity = 1;
+            document.getElementById('loading').style.display = 'none';
+        });
         return Promise.resolve(hub.emit('themeChanged', t));
     }
     return Promise.reject(new Error(`Unrecognized theme '${t}'.`));
@@ -170,7 +183,10 @@ app.setStepDefinition = (id, name, source) => {
         cache.steps.push({ id, name, source });
     }
     return npm.scanForPackages(source)
-        .then(() => enableTests());
+        .then(() => enableTests(), (err) => {
+            disableTests();
+            throw err;
+         });
 }
 
 app.execute = (text) => {
@@ -197,10 +213,12 @@ app.execute = (text) => {
     }
 };
 
+app.signIn = () => firebase.signIn();
+
 app.on = hub.on.bind(hub);
 
 module.exports = app;
 
 setImmediate(() => {
-    app.setTheme(browser.exists('theme') ? browser.get('theme') : 'Light');
+    app.setTheme(browser.exists('theme') ? browser.get('theme') : app.getThemes()[0]);
 });

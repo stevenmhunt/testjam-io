@@ -3,6 +3,7 @@
 module.exports = {
     runtimes: require('./runtimes.json'),
     themes: require('./themes.json'),
+    firebase: require('./firebase.json'),
     featureSource: `
 # In your feature file, you can define scenarios which will be executed as tests.
 

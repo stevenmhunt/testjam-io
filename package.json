@@ -1,6 +1,6 @@
 {
   "name": "testjam-io",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "React web application for testjam.io",
   "main": "index.js",
   "scripts": {
@@ -11,7 +11,7 @@
     "clean": "make clean"
   },
   "author": "Steven Hunt",
-  "license": "MIT",
+  "license": "UNLICENSED",
   "dependencies": {
     "ace-builds": "^1.4.9",
     "ansi-html": "0.0.7",

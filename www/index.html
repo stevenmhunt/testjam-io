@@ -6,8 +6,18 @@
         <link href="images/favicon.png" rel="icon" type="image/png">
         <link rel="stylesheet" type="text/css" href="/css/testjam.css" />
     </head>
-    <body class="app-page theme-Light">
-        <div id="app"></div>
+    <body class="app-page">
+        <div id="app" style="display: none;"></div>
+        <div id="loading">
+            <div>
+                <h1><i class="fa fa-spin fa-circle-o-notch"></i></h1>
+                <h3>Jamming on...</h3>
+            </div>
+        </div>
     </body>
+    <script src="https://www.gstatic.com/firebasejs/7.14.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.14.0/firebase-analytics.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.14.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.14.0/firebase-firestore.js"></script>
     <script type="text/javascript" src="/js/testjam.js"></script>
 </html>
