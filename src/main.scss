@@ -57,7 +57,7 @@ body.theme-Light {
         color: white;
     }
 
-    .btn-running, .btn-running:hover {
+    .btn-running, .btn-running:hover, .btn-norun, .btn-norun:hover {
         background-color: $bg-alt-color;
         color: $text-color;
         cursor: wait;
@@ -129,7 +129,7 @@ body.theme-Dark {
         color: white;
     }
 
-    .btn-running, .btn-running:hover {
+    .btn-running, .btn-running:hover, .btn-norun, .btn-norun:hover {
         background-color: $bg-alt-color;
         color: $text-color;
         cursor: wait;
@@ -171,8 +171,16 @@ body.theme-Dark {
     }
 }
 
-pre, textarea {
+.Dropdown-control {
+    border-top: 0 !important;
+    margin-top: 1px !important;
+}
+
+pre {
     font-family: 'Courier New', Courier, monospace;
+    white-space: pre-wrap;
+    word-break: break-word;
+    overflow-x: hidden;
 }
 
 .btn {

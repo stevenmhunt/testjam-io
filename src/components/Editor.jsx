@@ -2,7 +2,7 @@ import React from 'react';
 import AceEditor from 'react-ace';
 import ReactResizeDetector from 'react-resize-detector';
 
-import eventHub from '../eventHub';
+import app from '../app';
 
 import 'ace-builds/src-noconflict/mode-gherkin';
 import 'ace-builds/src-noconflict/mode-javascript';
@@ -10,31 +10,41 @@ import 'ace-builds/src-noconflict/mode-javascript';
 import 'ace-builds/src-noconflict/theme-chrome';
 import 'ace-builds/src-noconflict/theme-monokai';
 
+/**
+ * @class
+ * Code editor component.
+ */
 export default
     class Editor extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            editorHeight: "100%",
-            editorWidth: "auto",
-            editorTheme: "Light"
+            width: "auto",
+            height: "100%",
+            theme: "Light"
         }
         this.onResize = this.onResize.bind(this);
-        eventHub.on('themeChanged', t => this.setState({ editorTheme: t }));
+        app.on('themeChanged', t => this.setState({ theme: t }));
     }
 
-    getTheme() {
-        if (this.state.editorTheme === 'Dark') {
+    /**
+     * Based on the current theme, determine which Ace editor theme to use.
+     */
+    getAceTheme() {
+        if (this.state.theme === 'Dark') {
             return 'monokai';
         }
         return 'chrome';
     }
 
+    /**
+     * Handles resize events to keep the editor functioning when sizes change.
+     */
     onResize(w, h) {
         this.setState({
-            editorHeight: `${h}`,
-            editorWidth: `${w}`
+            width: `${w}`,
+            height: `${h}`
         })
     }
 
@@ -43,13 +53,13 @@ export default
             <ReactResizeDetector handleWidth handleHeight onResize={this.onResize} />
             <AceEditor
                 mode={this.props.type}
-                theme={this.getTheme()}
+                theme={this.getAceTheme()}
                 fontSize={14}
                 showPrintMargin={false}
                 onBlur={this.props.onBlur}
                 onChange={this.props.onChange}
-                height={this.state.editorHeight}
-                width={this.state.editorWidth}
+                height={this.state.height}
+                width={this.state.width}
                 name={this.props.id}
                 value={this.props.value}
                 useSoftTabs={true}

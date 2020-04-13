@@ -4,7 +4,7 @@ import Dropdown from 'react-dropdown';
 import Editor from '../components/Editor.jsx'
 
 import GherkinIndent from '../../lib/gherkin-indent';
-import eventHub from '../eventHub';
+import app from '../app';
 
 export default
     class FeatureView extends React.Component {
@@ -22,24 +22,26 @@ export default
             runtime: 'CucumberJS 6.x'
         }
 
-        this.runtimes = eventHub.getRuntimes();
+        this.runtimes = app.getRuntimes();
+        this.editorValue = props.value;
 
-        eventHub.on('runtimeChanged', runtime => this.setState({ runtime }));
+        app.on('runtimeChanged', runtime => this.setState({ runtime }));
     }
 
     onBlur(e, code) {
         if (this.props && this.props.onChange) {
-            this.props.onChange(this.props.name, code.getValue());
+            this.editorValue = code.getValue();
+            this.props.onChange(this.props.name, this.editorValue);
         }
     }
 
     changeRuntime(t) {
-        eventHub.setRuntime(t.value);
+        app.setRuntime(t.value);
     }
 
     formatGherkin() {
         if (this.props && this.props.onChange) {
-            this.props.onChange(this.props.name, this.indent.format(code.getValue()));
+            this.props.onChange(this.props.name, this.indent.format(this.editorValue));
         }
     }
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import Dropdown from 'react-dropdown';
-import eventHub from '../eventHub';
+
+import app from '../app';
 
 export default
     class HeaderView extends React.Component {
@@ -10,40 +11,55 @@ export default
         
         this.changeTheme = this.setTheme.bind(this);
         this.runTest = this.runTest.bind(this);
-        this.onToggleLike = this.toggleLike.bind(this);
+        this.toggleLike = this.toggleLike.bind(this);
 
         this.state = {
-            theme: eventHub.getTheme(),
+            theme: app.getTheme(),
             isTestRunning: false,
+            isTestEnabled: true,
             isLiked: false
         }
 
-        this.themes = eventHub.getThemes();
+        this.themes = app.getThemes();
 
-        eventHub.on('testRunStarted', () => this.setState({ isTestRunning: true }));
-        eventHub.on('testRunEnded', () => this.setState({ isTestRunning: false }));
-        eventHub.on('themeChanged', theme => this.setState(() => ({ theme })));
-        eventHub.on('liked', () => this.setState({ isLiked: true }));
-        eventHub.on('unliked', () => this.setState({ isLiked: false }));
+        app.on('testsStarted', () => this.setState({ isTestRunning: true }));
+        app.on('testsEnded', () => this.setState({ isTestRunning: false }));
+        app.on('testsDisabled', () => this.setState({ isTestEnabled: false }));
+        app.on('testsEnabled', () => this.setState({ isTestEnabled: true }));
+        app.on('themeChanged', theme => this.setState(() => ({ theme })));
+        app.on('liked', () => this.setState({ isLiked: true }));
+        app.on('unliked', () => this.setState({ isLiked: false }));
     }
 
     setTheme(t) {
-        eventHub.setTheme(t.value);
+        app.setTheme(t.value);
     }
 
     runTest() {
-        if (!this.state.isTestRunning) {
-            eventHub.test();
-        }
+        app.test();
     }
 
     toggleLike() {
         if (this.state.isLiked) {
-            eventHub.unlike();
+            app.unlike();
         }
         else {
-            eventHub.like();
+            app.like();
         }
+    }
+
+    renderTestButton() {
+        let innerButton = <span>&nbsp;<i className="fa fa-play-circle"></i>&nbsp;&nbsp;Run Tests</span>;
+        let buttonClass = "btn btn-run";
+        if (this.state.isTestRunning) {
+            innerButton = <span>&nbsp;<i className="fa fa-spinner fa-spin"></i>&nbsp;Running...</span>;
+            buttonClass = "btn btn-running";
+        }
+        else if (!this.state.isTestEnabled) {
+            innerButton = <span>&nbsp;<i className="fa fa-ban"></i>&nbsp;&nbsp;Run Tests</span>;
+            buttonClass = "btn btn-norun";
+        }
+        return <div className={buttonClass} onClick={this.runTest}>{innerButton}</div>;
     }
 
     render() {
@@ -61,11 +77,7 @@ export default
                     <div className="item" title="Theme" style={{ marginRight: '6px' }}>
                         <Dropdown options={this.themes} value={this.state.theme} onChange={this.setTheme} />
                     </div>
-                    <div className={this.state.isTestRunning ? "btn btn-running" : "btn btn-run"} onClick={this.runTest}>
-                        {this.state.isTestRunning ? 
-                        <span>&nbsp;<i className="fa fa-spinner fa-spin"></i>&nbsp;Running...</span> :
-                        <span>&nbsp;<i className="fa fa-play-circle"></i>&nbsp;&nbsp;Run Tests</span>}
-                    </div>
+                    {this.renderTestButton()}
                     <div className={this.state.isLiked ? "btn btn-liked" : "btn btn-unliked"} onClick={this.toggleLike}>
                         {this.state.isLiked ? 
                         <span>&nbsp;<i className="fa fa-heart"></i></span> :

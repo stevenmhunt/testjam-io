@@ -1,6 +1,6 @@
 const _ = require('lodash');
 
-module.exports = function stepDefinitionProcessor({ source, id }) {
+module.exports = function stepDefinitionFormatter({ source, id }) {
     const result = `
     function require(i) {
         if (!__dependencies[i]) {
@@ -9,11 +9,11 @@ module.exports = function stepDefinitionProcessor({ source, id }) {
         return __dependencies[i];
     }
 
-    function ${id}() {
+    function fn_${id}() {
         ${source}
     }
     
-    return ${id}.call(this);
+    return fn_${id}.call(this);
     `;
     return result;
 };

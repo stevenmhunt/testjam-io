@@ -1,25 +1,33 @@
+const cucumberjsRuntimeBuilder = require('./cucumberjsRuntimeBuilder');
+
 const mapping = {
-    'CucumberJS 6.x': require('./cucumber6x'),
-    'CucumberJS 5.x': require('./cucumber5x'),
-    'CucumberJS 4.x': require('./cucumber4x'),
-    'CucumberJS 3.x': require('./cucumber3x'),
-    'CucumberJS 2.x': require('./cucumber2x'),
-    'CucumberJS 1.x': require('./cucumber1x')
+    'CucumberJS 6.x': cucumberjsRuntimeBuilder('6.0.5'),
+    'CucumberJS 5.x': cucumberjsRuntimeBuilder('5.1.0'),
+    'CucumberJS 4.x': cucumberjsRuntimeBuilder('4.2.1'),
+    'CucumberJS 3.x': cucumberjsRuntimeBuilder('3.2.1'),
+    'CucumberJS 2.x': require('./cucumberjs2x'),
+    'CucumberJS 1.x': require('./cucumberjs1x')
 }
 
-function getRunner(version) {
+function getRuntime(version) {
     if (mapping[version]) {
         return mapping[version]
     }
-    throw new Error(`Unable to locate a runtime for ${version}.`);
+    throw new Error(`Unable to locate a runtime for '${version}'.`);
 }
 
-function execute(version, ...args) {
-    const runner = getRunner(version);
-    return runner(...args);
+function executeRuntime(version, ...args) {
+    const { execute } = getRuntime(version);
+    return execute(...args);
+}
+
+function loadRuntime(version) {
+    const { load } = getRuntime(version);
+    return load();
 }
 
 module.exports = {
-    getRunner,
-    execute
+    getRuntime,
+    executeRuntime,
+    loadRuntime
 };

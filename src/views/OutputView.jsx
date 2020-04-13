@@ -2,7 +2,8 @@ import React from 'react';
 import ansiHtml from 'ansi-html';
 import _ from 'lodash';
 
-import eventHub from '../eventHub';
+import app from '../app';
+const { logger } = app;
 
 function processOutput(output, formatter) {
     if (!output || output === true) {
@@ -33,18 +34,22 @@ export default
             output: []
         };
         const formatter = props.formatter || (i => i);
-        if (props.logger && props.logger.on) {
-            props.logger.on('output', (data) => {
-                this.setState(state => ({
-                    output: [...state.output, processOutput(data, formatter)]
-                }));
-            });
-            props.logger.on('clear', () => this.clearOutput());
-        }
+        logger.on('output', (data) => {
+            this.setState(state => ({
+                output: [...state.output, processOutput(data, formatter)]
+            }));
+            this.scrollToBottom();
+        });
+        logger.on('clear', () => this.clearOutput());
+    }
+
+    scrollToBottom() {
+        const element = document.getElementById('outputLogView').parentElement;
+        element.scrollTop = element.scrollHeight - element.clientHeight;
     }
 
     displayHelp() {
-        this.props.logger.log(`
+        logger.log(`
 - Execute tests
 test
 
@@ -98,7 +103,7 @@ unlike
                 this.clearOutput();
             }
             else {
-                eventHub.execute(e.target.value, this.props.logger);
+                app.execute(e.target.value);
             }
             e.target.value = '';
         }
