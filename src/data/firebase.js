@@ -43,30 +43,65 @@ function getJam(id) {
             if (result.exists) {
                 return result.data();
             }
-            throw new Error(`Data record ${id} does not exist.`);
+            throw new Error('The requested resource does not exist.');
         });
 }
 
-function saveJam(id, { features, stepDefinitions, runtime }) {
+function saveJam(id, { name, features, stepDefinitions, runtime, fork }) {
     if (!features || !stepDefinitions || !runtime) {
-        return Promise.reject('Required data fields are missing.');
+        return Promise.reject(new Error('Required data fields are missing.'));
+    }
+    if (!authUser || !authUser.uid) {
+        return Promise.reject(new Error('You must be an authenticated user to save a jam.'));
     }
     if (!id) {
-        return db.collection('jams').add({
-            name: 'New Jam',
+        const jam = {
+            name,
             dateCreated: firebase.firestore.FieldValue.serverTimestamp(),
             features,
             stepDefinitions,
             runtime,
             uid: authUser.uid,
-            createdBy: { name: authUser.displayName, photo: authUser.photoURL }
-        }).then(r => r.id);
+            createdBy: { uid: authUser.uid, name: authUser.displayName, photo: authUser.photoURL },
+            fork: fork || null
+        };
+        return db.collection('jams').add(jam).then(r => r.id);
     }
     return db.collection('jams').doc(id).update({
+        name,
         features,
         stepDefinitions,
         runtime
     }).then(() => null);
+}
+
+function like(id) {
+}
+
+function unlike(id) {    
+}
+
+function fork(id, { name, features, stepDefinitions, runtime, createdBy }) {
+    return saveJam(null, {
+        name: `${name} (copy)`, features, stepDefinitions, runtime, fork: {
+            id,
+            name,
+            createdBy
+        }
+    })
+}
+
+function getMyJams() {
+    if (!authUser || !authUser.uid) {
+        return Promise.resolve([]);
+    }
+    return db.collection('jams')
+        .where('uid', '==', authUser.uid)
+        .get()
+        .then(r => r.docs.map(i => ({
+            id: i.id,
+            name: i.data().name
+        })));
 }
 
 module.exports = {
@@ -74,5 +109,7 @@ module.exports = {
     signOut,
     onAuthChanged,
     getJam,
-    saveJam
+    saveJam,
+    getMyJams,
+    fork
 };

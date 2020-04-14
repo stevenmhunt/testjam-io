@@ -14,7 +14,7 @@ function cucumberRuntimeBuilder(version) {
 
     function load() {
         return loadStackChain(`cucumber${major}x_preload`, '2.0.0')
-            .then(() => executeScriptUrl(`cucumber${major}x`, `/js/runtimes/cucumberjs-${major}.x.js`))
+            .then(() => executeScriptUrl(`cucumber${major}x`, `/js/runtimes/cucumberjs-${major}.x.min.js`))
             .then(result => waitUntilExists(libname, result));
     }
 

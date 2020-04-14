@@ -1,11 +1,15 @@
 
 body.theme-Light {
-    $bg-color: #eeeeee;
-    $bg-alt-color: #fafafa;
+    $bg-color: #dddddd;
+    $bg-alt-color: #eeeeee;
     $border-color: #bdbdbd;
     $text-color: black;
 
     background-color: $bg-color;
+
+    a, a:visited {
+        color: $text-color;
+    }
 
     div.header-view {
         border-bottom: 1px solid $border-color;
@@ -66,5 +70,14 @@ body.theme-Light {
 
     input.commands {
         color: black;
+    }
+
+    .jam-name-editable input {
+        color: $text-color;
+        border: 1px solid $border-color;
+    }
+
+    .fork-tooltip .view-header {
+        background-color: white;
     }
 }

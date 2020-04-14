@@ -1,6 +1,3 @@
-$fa-font-path: "~font-awesome/fonts";
-@import "~font-awesome/scss/font-awesome";
-
 @import "~react-dropdown/style.css";
 @import '~react-notifications/lib/notifications.css';
 
@@ -80,7 +77,7 @@ div.header-view {
     width: 100%;
     height: 45px;
 
-    div.header-left, div.header-right {
+    div.header-left, div.header-center, div.header-right {
         display: -webkit-flex;
         display: flex;
         -webkit-flex-direction: row;
@@ -98,6 +95,8 @@ div.header-view {
         div.title {
             display: inline-flex;
             align-items: center;
+            margin-right: 10px;
+
             div {
                 font-weight: normal;
                 margin: 0;
@@ -129,6 +128,10 @@ div.header-view {
 
     div.header-right {
         justify-content: flex-end;
+    }
+
+    div.header-center {
+        justify-content: center;
     }
 }
 
@@ -226,8 +229,86 @@ input.commands {
     border: 0;
 }
 
-.user-photo {
-    border-radius: 50%;
-    width: 30px;
-    height: 30px;
+.user-signin {
+    font-size: 10pt !important;
+    padding: 15px 25px 15px 25px !important;
+}
+
+.user-info {
+    font-size: 10pt !important;
+    min-width: 175px;
+    flex-direction: row;
+    justify-content: space-between;
+    position: relative;
+    padding: 8px 15px 8px 15px !important;
+
+    img {
+        border-radius: 50%;
+        width: 30px;
+        height: 30px
+    }
+
+    .user-name {
+        margin: 0 10px 0 10px;
+    }
+}
+
+.jam-info {
+    font-size: 10pt !important;
+    flex-direction: row;
+    justify-content: space-between;
+    position: relative;
+    padding: 8px 15px 8px 15px !important;
+
+    img {
+        border-radius: 50%;
+        width: 20px;
+        height: 20px
+    }
+
+    .user-name {
+        margin: 0 5px 0 5px;
+    }
+}
+
+.item-fork {
+    font-size: 16pt;
+    cursor: pointer;
+}
+
+.fork-tooltip {
+    padding: 5px;
+    overflow: hidden;
+
+    img {
+        border-radius: 50%;
+        width: 16px;
+        height: 16px;
+        margin-right: 5px;
+    }
+    .view-header {
+        border-bottom: 0 !important;
+    }
+}
+
+.jam-info {
+    min-width: inherit;
+}
+
+.jam-name {
+    margin-left: 15px;
+    margin-right: 15px;
+    font-size: 16pt;
+}
+
+.jam-name-editable {
+    cursor: pointer;
+
+    input {
+        background-color: transparent;
+        font-size: 16pt !important;
+        border: 0;
+        width: 100%;
+        text-align: center;
+    }
 }

@@ -31,7 +31,7 @@ function page(p = null) {
     if (!p) {
         return getQueryVariable('p');
     }
-    history.pushState(null, '', `/?p=${p}`);
+    history.replaceState(null, '', `/?p=${p}`);
 }
 
 function enableApp() {
@@ -39,7 +39,14 @@ function enableApp() {
     document.getElementById('loading').style.display = 'none';
 }
 
+function title(t = null) {
+    if (!t) {
+        return document.title;
+    }
+    document.title = `${t} - testjam.io`;
+}
+
 module.exports = {
     get, set, exists,
-    global, page, enableApp
+    global, page, enableApp, title
 };

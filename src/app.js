@@ -40,20 +40,30 @@ app.signOut = () => {
     hub.emit('signedOut');
 };
 
+
+const getOwner = () => cache.owner;
+const setOwner = (owner) => {
+    cache.owner = owner;
+    hub.emit('ownerChanged', owner);
+}
+
 // Persistence
 
 function loadJam() {
     const id = browser.page();
     if (!id) {
         return Promise.all([
-            Promise.resolve(hub.emit('jamChanged', null)),
+            Promise.resolve(setOwner(null)),
+            Promise.resolve(app.setName('New Jam')),
             app.setFeature({ id: 1, name: 'test.feature', source: featureSource }),
             app.setStepDefinition({ id: 1, name: 'steps.js', source: stepSource })
         ]);
     }
     return firebase.getJam(id)
         .then(jam => Promise.all([
-            Promise.resolve(hub.emit('jamChanged', jam)),
+            Promise.resolve(setOwner({ uid: jam.uid, name: jam.createdBy.name, photo: jam.createdBy.photo })),
+            Promise.resolve(app.setName(jam.name)),
+            Promise.resolve(app.setFork(jam.fork)),
             app.setRuntime(jam.runtime),
             ...(jam.features.map(i => app.setFeature(i))),
             ...(jam.stepDefinitions.map(i => app.setStepDefinition(i)))
@@ -63,6 +73,7 @@ function loadJam() {
 app.save = () => 
     Promise.resolve(hub.emit('saving'))
     .then(() => firebase.saveJam(browser.page(), {
+        name: app.getName(),
         runtime: app.getRuntime(),
         features: app.getFeatures(),
         stepDefinitions: app.getStepDefinitions()
@@ -72,6 +83,31 @@ app.save = () =>
             browser.page(id);
         }
     });
+
+app.fork = () =>
+    Promise.resolve(hub.emit('forking'))
+    .then(() => firebase.fork(browser.page(), {
+        name: app.getName(),
+        runtime: app.getRuntime(),
+        features: app.getFeatures(),
+        stepDefinitions: app.getStepDefinitions(),
+        createdBy: getOwner()
+    })).then((id) => {
+        hub.emit('forked', id);
+        browser.page(id);
+        return loadJam();
+    });
+
+app.getMyJams = () => {
+    if (!cache.jams) {
+        return firebase.getMyJams()
+            .then((jams) => {
+                cache.jams = jams;
+                return jams;
+            });
+    }
+    return Promise.resolve(cache.jams);
+}
 
 // Theme Management
 
@@ -83,6 +119,19 @@ app.setTheme = (t) => {
         return Promise.resolve(hub.emit('themeChanged', t));
     }
     return Promise.reject(new Error(`Unrecognized theme '${t}'.`));
+};
+
+app.getName = () => cache.name;
+app.setName = (name) => {
+    cache.name = name;
+    browser.title(name);
+    hub.emit('nameChanged', name);
+};
+
+app.getFork = () => cache.fork;
+app.setFork = (fork) => {
+    cache.fork = fork;
+    hub.emit('forkChanged', fork);
 };
 
 // Test Execution
@@ -114,9 +163,9 @@ const startTests = () => {
 /**
  * @private
  */
-const endTests = () => {
+const endTests = (err) => {
     cache.isTestRunning = false;
-    hub.emit('testsEnded');
+    hub.emit('testsEnded', err);
 }
 
 /**
@@ -145,15 +194,15 @@ function runTestsInternal() {
                 else {
                     app.logger.log('\nCucumberJS exited with status code 1.\n\n');
                 }
-                endTests();
+                endTests(!success);
             }).catch((err) => {
                 app.logger.error(errorFormatter(err));
-                endTests();
+                endTests(err);
             });
     }
     catch (err) {
         app.logger.error(errorFormatter(err));
-        endTests();
+        endTests(err);
     }
 };
 
@@ -292,5 +341,9 @@ setImmediate(() => {
     const theme = browser.exists('theme') ? browser.get('theme') : app.getThemes()[0];
     loadJam()
         .then(() => app.setTheme(theme))
-        .then(() => browser.enableApp());
+        .then(() => browser.enableApp())
+        .catch((err) => {
+            document.getElementById('loadingIcon').className = 'fa fa-warning';
+            document.getElementById('loadingMessage').innerHTML = `${err.name}: ${err.message}`;
+        });
 });

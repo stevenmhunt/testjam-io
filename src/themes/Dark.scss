@@ -8,6 +8,10 @@ body.theme-Dark {
     background-color: $bg-color;
     color: $text-color;
 
+    a, a:visited {
+        color: $text-color;
+    }
+
     div.header-view {
         border-bottom: 1px solid $border-color;
         background-color: $bg-alt-color;
@@ -82,7 +86,25 @@ body.theme-Dark {
         color: $gherkin-text-color
     }
 
+    .popup-content {
+        color: $text-color;
+        background: $bg-color !important;
+        border: 1px solid $border-color !important;
+    }
+
+    .popup-arrow {
+        color: $text-color;
+        background: $bg-color !important;
+        border-bottom: 1px solid $border-color !important;
+        border-right: 1px solid $border-color !important;
+    }
+
     input.commands {
         color: white;
+    }
+
+    .jam-name-editable input {
+        color: $text-color;
+        border: 1px solid $border-color;
     }
 }
