@@ -1,6 +1,6 @@
 {
   "name": "testjam-io",
-  "version": "0.4.17",
+  "version": "0.4.19",
   "description": "React web application for testjam.io",
   "main": "index.js",
   "scripts": {
@@ -47,7 +47,7 @@
     "webpack": "^3.11.0"
   },
   "build": {
-    "version": "0.4.17",
-    "date": "2020-04-15T18:17:34.148Z"
+    "version": "0.4.19",
+    "date": "2020-04-15T20:24:17.375Z"
   }
 }
