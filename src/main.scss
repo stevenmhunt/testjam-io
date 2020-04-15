@@ -246,6 +246,7 @@ input.commands {
 }
 
 .Dropdown-option-disabled:hover {
+    color: inherit !important;
     background-color: inherit !important;
     cursor: default !important;
 }
