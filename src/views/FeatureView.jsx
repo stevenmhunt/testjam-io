@@ -53,9 +53,6 @@ export default
                 </div>
                 <div className="view-header-right">
                     <div className="menu">
-                    <a className="btn" title="[Link] Learn more about the Gherkin syntax" target="_blank" href="https://cucumber.io/docs/gherkin/reference/">
-                        <i className="fa fa-info-circle"></i>
-                    </a>
                     <div onClick={this.formatGherkin} className="btn" title="Format Gherkin"><i className="fa fa-magic"></i></div>
                         <div className="item" title="Runtime">
                             <Dropdown options={this.runtimes} value={this.state.runtime} onChange={this.changeRuntime} />

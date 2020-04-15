@@ -40,9 +40,6 @@ export default
                 </div>
                 <div className="view-header-right">
                     <div className="menu">
-                        <a className="btn" title="[Link] Learn more about step definitions" target="_blank" href="https://cucumber.io/docs/cucumber/step-definitions/">
-                            <i className="fa fa-info-circle"></i>
-                        </a>
                         <div onClick={this.formatJS} className="btn" title="Format JavaScript"><i className="fa fa-magic"></i></div>
                     </div>
                 </div>

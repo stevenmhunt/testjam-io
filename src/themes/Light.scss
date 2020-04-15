@@ -14,6 +14,10 @@ body.theme-Light {
     div.header-view {
         border-bottom: 1px solid $border-color;
         background-color: $bg-alt-color;
+
+        .site-info, .btn {
+            border-right: 1px solid $border-color;
+        }    
     }
 
     div.output-view {
@@ -22,6 +26,10 @@ body.theme-Light {
 
     div.testrunner-view {
         background-color: $border-color;
+
+        .btn {
+            border-left: 1px solid $border-color;
+        }
     }
 
     div.view-header {
@@ -33,12 +41,12 @@ body.theme-Light {
         color: black;
     }
     .btn:hover {
-        background-color: $gherkin-color;
+        background-color: $gherkin-alt-color;
         color: $gherkin-text-color;
     }
 
     .btn-run {
-        background-color: #39B54A;
+        background-color: $gherkin-color;
         color: white;
     }
 
@@ -58,8 +66,12 @@ body.theme-Light {
         background-color: $bg-alt-color;
     }
 
+    .header-left .Dropdown-option {
+        color: $text-color !important;
+    }
+
     .Dropdown-option:hover {
-        background-color: $gherkin-color;
+        background-color: $gherkin-alt-color;
         color: $gherkin-text-color;
     }
       
@@ -79,5 +91,14 @@ body.theme-Light {
 
     .fork-tooltip .view-header {
         background-color: white;
+    }
+
+    .link-item {
+        border: 1px solid $border-color;
+        background-color: $bg-alt-color;
+        border-radius: 7px;
+    }
+    .link-item:hover {
+        background-color: $gherkin-alt-color;
     }
 }

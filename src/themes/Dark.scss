@@ -15,6 +15,10 @@ body.theme-Dark {
     div.header-view {
         border-bottom: 1px solid $border-color;
         background-color: $bg-alt-color;
+
+        .site-info, .btn {
+            border-right: 1px solid $border-color;
+        }
     }
 
     div.output-view {
@@ -23,6 +27,10 @@ body.theme-Dark {
 
     div.testrunner-view {
         background-color: $border-color;
+
+        .btn {
+            border-left: 1px solid $border-color;
+        }
     }
 
     div.view-header {
@@ -34,12 +42,12 @@ body.theme-Dark {
         color: $text-color;
     }
     .btn:hover {
-        background-color: $gherkin-color;
+        background-color: $gherkin-alt-color;
         color: $gherkin-text-color
     }
 
     .btn-run {
-        background-color: #39B54A;
+        background-color: $gherkin-color;
         color: white;
     }
 
@@ -51,16 +59,6 @@ body.theme-Dark {
 
     .btn-liked, .btn-liked:hover, .btn-unliked:hover {
         color: #db15d8;
-        background-color: $bg-alt-color;
-    }
-
-    .btn-fork:hover {
-        color: #1286c0;
-        background-color: $bg-alt-color;
-    }
-
-    .btn-save:hover {
-        color: rgb(81, 212, 99);
         background-color: $bg-alt-color;
     }
 
@@ -78,7 +76,7 @@ body.theme-Dark {
         color: $text-color;
     }
     .Dropdown-option:hover {
-        background-color: $gherkin-color;
+        background-color: $gherkin-alt-color;
         color: $gherkin-text-color
     }
     .Dropdown-option.is-selected {
@@ -106,5 +104,18 @@ body.theme-Dark {
     .jam-name-editable input {
         color: $text-color;
         border: 1px solid $border-color;
+    }
+
+    .site-info, .btn {
+        border-right: 1px solid $border-color;
+    }
+
+    .link-item {
+        border: 1px solid $border-color;
+        background-color: $bg-alt-color;
+        border-radius: 7px;
+    }
+    .link-item:hover {
+        background-color: $gherkin-alt-color;
     }
 }

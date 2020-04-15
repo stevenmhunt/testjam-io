@@ -188,6 +188,7 @@ export default
             return <Popup trigger={this.renderUserDisplay()}
                 position="bottom right"
                 closeOnDocumentClick
+                closeOnEscape
                 mouseLeaveDelay={300}
                 contentStyle={{ padding: "0px", border: "none" }}
                 arrow={false}>
@@ -210,29 +211,70 @@ export default
 
     renderMenu() {
         return <div className="menu">
-            <div className="item" title="Theme" style={{ marginRight: '6px' }}>
-                <Dropdown options={this.themes} value={this.state.theme} onChange={this.setTheme} />
-            </div>
             {this.renderTestButton()}
             {/* this.renderLikeButton() */}
-            {this.renderForkButton()}
-            {this.renderSaveButton()}
             {this.renderSignInArea()}
+        </div>;
+    }
+
+    renderSiteInfo() {
+        return <div className="btn site-info">
+            <img src="/images/cucumber.png" />
+            <span className="site-name">testjam</span>
         </div>;
     }
 
     render() {
         return (<div className="header-view">
             <div className="header-left">
-                <div className="logo">
-                    <img src="/images/cucumber.png" />
-                </div>
-                <div className="title">
-                    <div title="Jam on!" style={{ cursor: "grab" }}>testjam</div>
-                </div>
-                <a href={window.location.origin} target="_blank" className="btn" title="Create a new jam!">
+                <Popup trigger={this.renderSiteInfo()}
+                    position="bottom left"
+                    closeOnDocumentClick
+                    closeOnEscape
+                    mouseLeaveDelay={300}
+                    contentStyle={{ padding: "0px", border: "none" }}
+                    arrow={false}>
+                    <div className="Dropdown-menu" aria-expanded="true">
+                        <div className="Dropdown-option">
+                            Theme: <Dropdown options={this.themes} value={this.state.theme} onChange={this.setTheme} />
+                        </div>
+                        <a className="Dropdown-option" href="https://cucumber.io/docs/gherkin/" target="_blank">
+                            <i className="fa fa-external-link"></i>&nbsp;&nbsp;Learn more about Gherkin
+                        </a>
+                        <Popup
+                            trigger={<div className="Dropdown-option">About</div>}
+                            modal
+                            closeOnDocumentClick>
+                            <div style={{ width: '100%' }}>
+                                <h3>What is testjam?</h3>
+                                <p>
+                                    Welcome to testjam.io, an online coding environment specifically designed for Cucumber and Gherkin. When I first started building this project, I realized that most major programming languages and frameworks have some sort of online sandbox environment for sharing code examples, but Cucumber did not. As BDD gets more popular in the modern QA toolkit, the need to quickly share and experiment with testing tools over the Internet will increase.
+                                </p>
+                                <h3>Project Objectives</h3>
+                                <ul>
+                                    <li>Deliver an easy-to-use web-based tool for creating and sharing feature files and their accompanying step definitions.</li>
+                                    <li>Improve the quality of online documentation and Q&amp;A responses regarding Cucumber and Gherkin.</li>
+                                    <li>Provide a useful service to the wider QA automation community.</li>
+                                    <li><i>Personal Goal:</i>&nbsp;Avoid boredom during the COVID-19 quarantine by developing and launching a new web-based software tool.</li>
+                                </ul>
+                                <h3>About Me</h3>
+                                <p>
+                                    My name is Steven, and I'm an automation engineer and software developer. I have been using Cucumber (<a href="https://specflow.org/" target="_blank">SpecFlow</a> and <a href="https://github.com/cucumber/cucumber-js" target="_blank">CucumberJS</a>) at various organizations since 2014, both as a developer and an automation engineer. I hope to continue to learn more about automated testing in the future and also help mentor others on software and maintaining quality during a project.
+                                    <br /><br />
+                                </p>
+                                <a className="link-item" href="https://www.github.com/stevenmhunt" target="_blank"><i className="fa fa-github"></i>&nbsp;@stevenmhunt</a>
+                                <a className="link-item" href="https://www.twitter.com/stevenmhunt" target="_blank"><i className="fa fa-twitter"></i>&nbsp;@stevenmhunt</a>
+                                <a className="link-item" href="http://www.linkedin.com/in/stevenmhunt" target="_blank"><i className="fa fa-linkedin"></i>&nbsp;stevenmhunt</a>
+                                <br /><br />
+                            </div>
+                        </Popup>
+                    </div>
+                </Popup>
+                <a href={window.location.origin} target="_blank" className="btn" title="New Jam...">
                     <span><i className="fa fa-plus"></i></span>
                 </a>
+                {this.renderForkButton()}
+                {this.renderSaveButton()}
             </div>
             <div className="header-center">
                 {this.state.fork ?
@@ -261,9 +303,9 @@ export default
                     <div className="item jam-name jam-name-editable">
                         <input type="text" defaultValue={this.state.name} onBlur={this.setName} />
                     </div> : ''}
-                {this.state.name && this.isOwner()&& !this.state.isEditName ?
+                {this.state.name && this.isOwner() && !this.state.isEditName ?
                     <div className="item jam-name jam-name-editable" onClick={this.editName}>
-                        <span style={this.state.isNew ? {fontStyle: 'italic'} : {}}>{this.state.name}</span>
+                        <span style={this.state.isNew ? { fontStyle: 'italic' } : {}}>{this.state.name}</span>
                     </div> : ''}
                 {this.state.name && !this.isOwner() ?
                     <div className="item jam-name">

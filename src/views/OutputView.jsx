@@ -60,22 +60,22 @@ User authentication
 Managing the tests
    test
    getName
-   setName <name>
+   setName {name}
    save
    fork
 
 Configuring the runtime environment
    getRuntime
-   setRuntime "<name>"
+   setRuntime "{name}"
 
 Configuring package dependencies
    getPackages
-   addPackage <name> <version>
-   removePackage <name>
+   addPackage {name} {version}
+   removePackage {name}
 
 Themes
    getTheme
-   setTheme <theme>
+   setTheme {theme}
 
 Command-line utilities
    help
