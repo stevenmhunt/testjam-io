@@ -70,33 +70,34 @@ function loadJam() {
         ]));
 }
 
-app.save = () => 
+app.save = () =>
     Promise.resolve(hub.emit('saving'))
-    .then(() => firebase.saveJam(browser.page(), {
-        name: app.getName(),
-        runtime: app.getRuntime(),
-        features: app.getFeatures(),
-        stepDefinitions: app.getStepDefinitions()
-    })).then((id) => {
-        hub.emit('saved', id);
-        if (id) {
-            browser.page(id);
-        }
-    });
+        .then(() => firebase.saveJam(browser.page(), {
+            name: app.getName(),
+            runtime: app.getRuntime(),
+            features: app.getFeatures(),
+            stepDefinitions: app.getStepDefinitions()
+        })).then((id) => {
+            hub.emit('saved', id);
+            if (id) {
+                browser.page(id);
+                return loadJam();
+            }
+        });
 
 app.fork = () =>
     Promise.resolve(hub.emit('forking'))
-    .then(() => firebase.forkJam(browser.page(), {
-        name: app.getName(),
-        runtime: app.getRuntime(),
-        features: app.getFeatures(),
-        stepDefinitions: app.getStepDefinitions(),
-        createdBy: getOwner()
-    })).then((id) => {
-        hub.emit('forked', id);
-        browser.page(id);
-        return loadJam();
-    });
+        .then(() => firebase.forkJam(browser.page(), {
+            name: app.getName(),
+            runtime: app.getRuntime(),
+            features: app.getFeatures(),
+            stepDefinitions: app.getStepDefinitions(),
+            createdBy: getOwner()
+        })).then((id) => {
+            hub.emit('forked', id);
+            browser.page(id);
+            return loadJam();
+        });
 
 app.getMyJams = () => {
     if (!cache.jams) {
@@ -251,7 +252,7 @@ app.setRuntime = (r) => {
 app.getPackages = () => {
     disableTests();
     return npm.getPackages()
-        .then((result) => {            
+        .then((result) => {
             enableTests();
             return result;
         });
@@ -306,7 +307,7 @@ app.setStepDefinition = ({ id, name, source }) => {
         .then(() => enableTests(), (err) => {
             disableTests();
             throw err;
-         });
+        });
 }
 
 app.execute = (text) => {
@@ -337,7 +338,7 @@ app.on = hub.on.bind(hub);
 
 module.exports = app;
 
-setImmediate(() => {
+setTimeout(() => {
     const theme = browser.local('theme') ? browser.local('theme') : app.getThemes()[0];
     loadJam()
         .then(() => app.setTheme(theme))
@@ -346,4 +347,4 @@ setImmediate(() => {
             document.getElementById('loadingIcon').className = 'fa fa-warning';
             document.getElementById('loadingMessage').innerHTML = `${err.name}: ${err.message}`;
         });
-});
+}, 0);

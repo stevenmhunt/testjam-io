@@ -187,21 +187,21 @@ export default
     renderShareButton() {
         if (!this.state.isNew) {
             return <Popup
-            trigger={open => {
-                if (open) { setTimeout(() => this.copyLink(), 100); }
-                return <div title="Share" className="btn">
-                    <span><i style={{fontWeight: 200}} className="fa fa-share-alt"></i></span>
-                </div>;
-            }}
-            contentStyle={{ width: '267px' }}
-            position="bottom center"
-            closeOnDocumentClick>
+                trigger={open => {
+                    if (open) { setTimeout(() => this.copyLink(), 100); }
+                    return <div title="Share" className="btn">
+                        <span><i style={{ fontWeight: 200 }} className="fa fa-share-alt"></i></span>
+                    </div>;
+                }}
+                contentStyle={{ width: '267px' }}
+                position="bottom center"
+                closeOnDocumentClick>
                 <div>
                     <input readOnly id="shareLinkText" style={{ width: '200px' }} type="text" value={window.location} onFocus={e => e.target.select()} />
                     &nbsp;&nbsp;
                     <span onClick={this.copyLink} style={{ cursor: 'pointer' }}><i className="fa fa-clipboard"></i>&nbsp;Copy</span>
                 </div>
-          </Popup>;
+            </Popup>;
         }
         return '';
     }
@@ -210,7 +210,6 @@ export default
         return <div className="btn user-info">
             <img src={this.state.user.photoURL} />
             <span className="user-name">{this.state.user.displayName}</span>
-            <span className="user-menu"><i className="fa fa-bars"></i></span>
         </div>;
     }
 
@@ -269,13 +268,16 @@ export default
                         <div className="Dropdown-option Dropdown-option-disabled">
                             Theme: <Dropdown options={this.themes} value={this.state.theme} onChange={this.setTheme} />
                         </div>
+                        <a className="Dropdown-option" href={`${window.location.origin}/?p=0Djdc5ps8TE1ssv558rU`}>Getting Started</a>
                         <Popup
-                            trigger={<div className="Dropdown-option">About</div>}
+                            trigger={<div className="Dropdown-option">About testjam.io</div>}
                             modal
+                            contentStyle={{ padding: '10px 20px 10px 20px' }}
                             closeOnDocumentClick>
                             <div style={{ width: '100%' }}>
-                                <h2>testjam.io v{build.version}</h2>
-                                <h5>Last Updated {build.date}</h5>
+                                <h2 style={{ marginBottom: '0' }}>testjam.io v{build.version}</h2>
+                                <p>Last Updated {new Date(build.date).toLocaleString('en-US')}</p>
+                                <br />
                                 <h3>What is testjam?</h3>
                                 <p>
                                     Welcome to testjam.io, an online coding environment specifically designed for Cucumber and Gherkin. When I first started building this project, I realized that most major programming languages and frameworks have some sort of online sandbox environment for sharing code examples, but Cucumber did not. As BDD gets more popular in the modern QA toolkit, the need to quickly share and experiment with testing tools over the Internet will increase.
