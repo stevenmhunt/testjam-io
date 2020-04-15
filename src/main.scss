@@ -114,11 +114,6 @@ div.header-view {
             align-items: center;
         }
 
-        div.menu {
-            display: inline-flex;
-            align-items: center;
-        }
-
         .btn {
             display: inline-flex;
             align-items: center;
@@ -126,6 +121,11 @@ div.header-view {
             text-align: center;
             font-size: 18px;
             padding: 12px 15px 12px 15px;                
+        }
+
+        div.menu {
+            display: inline-flex;
+            align-items: center;
         }
     }
 
@@ -359,4 +359,12 @@ input.commands {
     margin: 12px;
     margin-right: 0;
     font-size: 14pt;
+}
+
+.btn-small {
+    font-size: 12px !important;
+    i {
+        font-size: 18px !important;
+        margin-right: 6px;
+    }
 }

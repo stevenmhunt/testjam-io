@@ -40,7 +40,7 @@ export default
                 </div>
                 <div className="view-header-right">
                     <div className="menu">
-                        <div onClick={this.formatJS} className="btn" title="Format JavaScript"><i className="fa fa-magic"></i></div>
+                        <div onClick={this.formatJS} className="btn btn-small"><i className="fa fa-magic"></i>Tidy</div>
                     </div>
                 </div>
             </div>

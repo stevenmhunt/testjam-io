@@ -53,7 +53,7 @@ export default
                 </div>
                 <div className="view-header-right">
                     <div className="menu">
-                    <div onClick={this.formatGherkin} className="btn" title="Format Gherkin"><i className="fa fa-magic"></i></div>
+                    <div onClick={this.formatGherkin} className="btn btn-small"><i className="fa fa-magic"></i>Tidy</div>
                         <div className="item" title="Runtime">
                             <Dropdown options={this.runtimes} value={this.state.runtime} onChange={this.changeRuntime} />
                         </div>

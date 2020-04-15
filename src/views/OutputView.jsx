@@ -1,4 +1,5 @@
 import React from 'react';
+import { NotificationManager } from 'react-notifications';
 import ansiHtml from 'ansi-html';
 import _ from 'lodash';
 
@@ -87,13 +88,14 @@ Command-line utilities
     copyOutput() {
         const copyText = document.getElementById('outputLogView').textContent;
         const textArea = document.createElement('textarea');
-        textArea.textContent = `${copyText}\n\nJam on! Another automated test run brought to you by testjam.io`;
+        textArea.textContent = `${copyText}\n\nThe test result is brought to you by testjam.io`;
         textArea.style.position = 'absolute';
         textArea.style.left = '-100%';
         document.body.append(textArea);
         textArea.select();
         document.execCommand("copy");
         textArea.remove();
+        NotificationManager.info('The test log output is now on your computer\'s clipboard.', 'Copy operation completed.', 1500);
     }
 
     clearOutput() {
@@ -126,8 +128,8 @@ Command-line utilities
                 </div>
                 <div className="view-header-right">
                     <div className="menu">
-                        <div onClick={this.copyOutput} className="btn" title="Copy Output to Clipboard"><i className="fa fa-copy"></i></div>
-                        <div onClick={this.clearOutput} className="btn" title="Clear Output"><i className="fa fa-trash"></i></div>
+                        <div onClick={this.copyOutput} className="btn btn-small"><i className="fa fa-1x fa-copy"></i>Copy</div>
+                        <div onClick={this.clearOutput} className="btn btn-small"><i className="fa fa-1x fa-times"></i>Clear Logs</div>
                     </div>
                 </div>
             </div>

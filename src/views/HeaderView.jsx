@@ -304,8 +304,9 @@ export default
                         <input type="text" defaultValue={this.state.name} onBlur={this.setName} />
                     </div> : ''}
                 {this.state.name && this.isOwner() && !this.state.isEditName ?
-                    <div className="item jam-name jam-name-editable" onClick={this.editName}>
+                    <div title="Edit title..." className="item jam-name jam-name-editable" onClick={this.editName}>
                         <span style={this.state.isNew ? { fontStyle: 'italic' } : {}}>{this.state.name}</span>
+                        <span style={{ fontSize: '14px', marginLeft: '10px' }}><i className="fa fa-pencil"></i></span>
                     </div> : ''}
                 {this.state.name && !this.isOwner() ?
                     <div className="item jam-name">
