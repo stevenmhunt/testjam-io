@@ -5,6 +5,8 @@ import Popup from 'reactjs-popup';
 
 import app from '../app';
 
+const { build } = require('../../package.json');
+
 export default
     class HeaderView extends React.Component {
 
@@ -272,6 +274,8 @@ export default
                             modal
                             closeOnDocumentClick>
                             <div style={{ width: '100%' }}>
+                                <h2>testjam.io v{build.version}</h2>
+                                <h5>Last Updated {build.date}</h5>
                                 <h3>What is testjam?</h3>
                                 <p>
                                     Welcome to testjam.io, an online coding environment specifically designed for Cucumber and Gherkin. When I first started building this project, I realized that most major programming languages and frameworks have some sort of online sandbox environment for sharing code examples, but Cucumber did not. As BDD gets more popular in the modern QA toolkit, the need to quickly share and experiment with testing tools over the Internet will increase.

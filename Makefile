@@ -9,13 +9,16 @@ init:
 	cp -r ./www/* ./build && \
 	mkdir -p ./build/js/runtimes;
 
-build-web: npm-install
+build-web: npm-install increment-version
 	npm run client-build;
 
 npm-install:
 	if [ ! -d "./node_modules" ]; then \
 	    npm install; \
 	fi;
+
+increment-version:
+	node ./lib/build/increment-version.js
 
 github_url=https://raw.githubusercontent.com/cucumber/cucumber-js
 cucumberjs_1x=./build/js/runtimes/cucumberjs-1.x
