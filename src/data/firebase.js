@@ -75,13 +75,7 @@ function saveJam(id, { name, features, stepDefinitions, runtime, fork }) {
     }).then(() => null);
 }
 
-function like(id) {
-}
-
-function unlike(id) {    
-}
-
-function fork(id, { name, features, stepDefinitions, runtime, createdBy }) {
+function forkJam(id, { name, features, stepDefinitions, runtime, createdBy }) {
     return saveJam(null, {
         name: `${name} (copy)`, features, stepDefinitions, runtime, fork: {
             id,
@@ -110,6 +104,6 @@ module.exports = {
     onAuthChanged,
     getJam,
     saveJam,
-    getMyJams,
-    fork
+    forkJam,
+    getMyJams
 };

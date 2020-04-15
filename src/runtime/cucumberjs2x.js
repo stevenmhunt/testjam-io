@@ -5,7 +5,7 @@ const libname = '__cucumber2';
 
 function load() {
     return loadStackChain('cucumber2x_preload', '1.3.7')
-        .then(() => executeScriptUrl('cucumber2x', '/js/runtimes/cucumberjs-2.x.min.js'))
+        .then(() => executeScriptUrl('cucumber2x', '/js/runtimes/cucumberjs-2.x.min.js?r=1'))
         .then(result => waitUntilExists(libname, result));
 }
 

@@ -86,7 +86,7 @@ app.save = () =>
 
 app.fork = () =>
     Promise.resolve(hub.emit('forking'))
-    .then(() => firebase.fork(browser.page(), {
+    .then(() => firebase.forkJam(browser.page(), {
         name: app.getName(),
         runtime: app.getRuntime(),
         features: app.getFeatures(),
@@ -112,10 +112,10 @@ app.getMyJams = () => {
 // Theme Management
 
 app.getThemes = () => themes;
-app.getTheme = () => browser.get('theme');
+app.getTheme = () => browser.local('theme');
 app.setTheme = (t) => {
     if (themes.indexOf(t) >= 0) {
-        browser.set('theme', t);
+        browser.local('theme', t);
         return Promise.resolve(hub.emit('themeChanged', t));
     }
     return Promise.reject(new Error(`Unrecognized theme '${t}'.`));
@@ -338,7 +338,7 @@ app.on = hub.on.bind(hub);
 module.exports = app;
 
 setImmediate(() => {
-    const theme = browser.exists('theme') ? browser.get('theme') : app.getThemes()[0];
+    const theme = browser.local('theme') ? browser.local('theme') : app.getThemes()[0];
     loadJam()
         .then(() => app.setTheme(theme))
         .then(() => browser.enableApp())

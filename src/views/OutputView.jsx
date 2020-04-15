@@ -50,28 +50,37 @@ export default
 
     displayHelp() {
         logger.log(`
-- Execute tests
-test
 
-- Console
-help
-clear
-copy
+Welcome to the testjam.io command-line environment.
 
-- Test Runtimes
-getRuntimes
-getRuntime
-setRuntime
+User authentication
+   signIn
+   signOut
 
-- Themes
-getThemes
-getTheme
-setTheme
+Managing the tests
+   test
+   getName
+   setName <name>
+   save
+   fork
 
-- Likes
-like
-unlike
+Configuring the runtime environment
+   getRuntime
+   setRuntime "<name>"
 
+Configuring package dependencies
+   getPackages
+   addPackage <name> <version>
+   removePackage <name>
+
+Themes
+   getTheme
+   setTheme <theme>
+
+Command-line utilities
+   help
+   clear
+   copy
 `);
     }
 
