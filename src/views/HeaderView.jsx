@@ -1,4 +1,5 @@
 import React from 'react';
+import { NotificationManager } from 'react-notifications';
 import Dropdown from 'react-dropdown';
 import Popup from 'reactjs-popup';
 
@@ -19,6 +20,7 @@ export default
         this.signOut = this.signOut.bind(this);
         this.save = this.save.bind(this);
         this.fork = this.fork.bind(this);
+        this.copyLink = this.copyLink.bind(this);
 
         this.state = {
             theme: app.getTheme(),
@@ -86,6 +88,12 @@ export default
                 isEditName: true
             });
         }
+    }
+
+    copyLink() {
+        document.getElementById('shareLinkText').select();
+        document.execCommand("copy");
+        NotificationManager.info('A shareable link is now on your computer\'s clipboard.', 'Copy operation completed.', 1500);
     }
 
     setName(e) {
@@ -174,6 +182,27 @@ export default
         return '';
     }
 
+    renderShareButton() {
+        if (!this.state.isNew) {
+            return <Popup
+            trigger={open => {
+                if (open) { setTimeout(() => this.copyLink(), 100); }
+                return <div title="Share" className="btn">
+                    <span><i style={{fontWeight: 200}} className="fa fa-share-alt"></i></span>
+                </div>;
+            }}
+            contentStyle={{ width: '267px' }}
+            position="bottom center"
+            closeOnDocumentClick>
+                <div>
+                    <input readOnly id="shareLinkText" style={{ width: '200px' }} type="text" value={window.location} onFocus={e => e.target.select()} />
+                    &nbsp;&nbsp;
+                    <span onClick={this.copyLink} style={{ cursor: 'pointer' }}><i className="fa fa-clipboard"></i>&nbsp;Copy</span>
+                </div>
+          </Popup>;
+        }
+        return '';
+    }
 
     renderUserDisplay() {
         return <div className="btn user-info">
@@ -235,12 +264,9 @@ export default
                     contentStyle={{ padding: "0px", border: "none" }}
                     arrow={false}>
                     <div className="Dropdown-menu" aria-expanded="true">
-                        <div className="Dropdown-option">
+                        <div className="Dropdown-option Dropdown-option-disabled">
                             Theme: <Dropdown options={this.themes} value={this.state.theme} onChange={this.setTheme} />
                         </div>
-                        <a className="Dropdown-option" href="https://cucumber.io/docs/gherkin/" target="_blank">
-                            <i className="fa fa-external-link"></i>&nbsp;&nbsp;Learn more about Gherkin
-                        </a>
                         <Popup
                             trigger={<div className="Dropdown-option">About</div>}
                             modal
@@ -268,6 +294,9 @@ export default
                                 <br /><br />
                             </div>
                         </Popup>
+                        <a className="Dropdown-option" href="https://cucumber.io/docs/gherkin/" target="_blank">
+                            <i className="fa fa-external-link"></i>&nbsp;&nbsp;Learn more about Gherkin
+                        </a>
                     </div>
                 </Popup>
                 <a href={window.location.origin} target="_blank" className="btn" title="New Jam...">
@@ -275,6 +304,7 @@ export default
                 </a>
                 {this.renderForkButton()}
                 {this.renderSaveButton()}
+                {this.renderShareButton()}
             </div>
             <div className="header-center">
                 {this.state.fork ?

@@ -128,7 +128,7 @@ Command-line utilities
                 </div>
                 <div className="view-header-right">
                     <div className="menu">
-                        <div onClick={this.copyOutput} className="btn btn-small"><i className="fa fa-1x fa-copy"></i>Copy</div>
+                        <div onClick={this.copyOutput} className="btn btn-small"><i className="fa fa-1x fa-clipboard"></i>Copy</div>
                         <div onClick={this.clearOutput} className="btn btn-small"><i className="fa fa-1x fa-times"></i>Clear Logs</div>
                     </div>
                 </div>

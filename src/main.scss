@@ -233,7 +233,7 @@ input.commands {
     border: 0;
 }
 
-.ace_gutter {
+.ace_gutter, .ace_scrollbar {
     z-index: inherit !important;
 }
 
@@ -243,6 +243,11 @@ input.commands {
 
 .Dropdown-option {
     text-decoration: none;
+}
+
+.Dropdown-option-disabled:hover {
+    background-color: inherit !important;
+    cursor: default !important;
 }
 
 .user-signin {
