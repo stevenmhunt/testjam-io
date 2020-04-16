@@ -41,7 +41,9 @@ class App extends React.Component {
                             [<a href="https://github.com/cucumber-ltd/brand/blob/master/LICENSE" target="_blank">^</a>]
                         </div>
                         <div className="item-right">
-                            testjam.io version {build.version}
+                            testjam.io version {build.version}&nbsp;
+                            [<a href="/docs/privacy.html" target="_blank">Privacy Policy</a>]&nbsp;
+                            [<a href="/docs/terms.html" target="_blank">Terms of Service</a>]&nbsp;
                         </div>
                     </div>
                     <NotificationContainer />

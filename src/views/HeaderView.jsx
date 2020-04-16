@@ -164,7 +164,7 @@ export default
     }
 
     renderForkButton() {
-        if (this.state.user && !this.isOwner()) {
+        if (this.state.user) {
             return <div title="Fork" className="btn btn-fork" onClick={this.fork}>
                 {this.state.isForking ?
                     <span><i className="fa fa-spin fa-circle-o-notch"></i></span> :
