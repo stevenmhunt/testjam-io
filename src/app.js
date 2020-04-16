@@ -343,8 +343,14 @@ setTimeout(() => {
     loadJam()
         .then(() => app.setTheme(theme))
         .then(() => browser.enableApp())
+        .then(() => setImmediate(() => {
+            // after the page loads, start running tests.
+            if (browser.page()) {
+                app.test();
+            }
+        }))
         .catch((err) => {
             document.getElementById('loadingIcon').className = 'fa fa-warning';
             document.getElementById('loadingMessage').innerHTML = `${err.name}: ${err.message}`;
         });
-}, 0);
+}, 800);

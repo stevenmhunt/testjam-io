@@ -139,7 +139,7 @@ div.header-view {
 }
 
 div.testrunner-view {
-    height: calc(100% - 46px);
+    height: calc(100% - 46px - 30px);
     width: 100%;
 }
 
@@ -372,5 +372,22 @@ input.commands {
     i {
         font-size: 18px !important;
         margin-right: 6px;
+    }
+}
+
+.footer {
+    font-size: 10pt;
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+
+    .item-left {
+        float: left;
+        margin: 6px;
+    }
+
+    .item-right {
+        float: right;
+        margin: 6px;
     }
 }

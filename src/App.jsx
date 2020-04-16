@@ -5,6 +5,7 @@ import { NotificationContainer, NotificationManager } from 'react-notifications'
 
 import app from './app'
 import { strings } from '../config';
+const { build } = require('../package.json');
 
 import TestRunnerView from './views/TestRunnerView.jsx';
 import HeaderView from './views/HeaderView.jsx';
@@ -32,6 +33,17 @@ class App extends React.Component {
                 <div className="app-container">
                     <HeaderView />
                     <TestRunnerView />
+                    <div className="footer">
+                        <div className="item-left">
+                            The <a href="https://github.com/cucumber-ltd/brand/blob/master/images/png/notm/cucumber-mark-green/cucumber-mark-green-32.png" target="_blank">Cucumber logo</a> by&nbsp; 
+                            <a href="https://github.com/cucumber-ltd" target="_blank">Cucumber Ltd</a> is licensed under&nbsp;
+                            <a href="https://creativecommons.org/licenses/by-nc/3.0/" target="_blank">CC BY-NC 3.0</a>
+                            [<a href="https://github.com/cucumber-ltd/brand/blob/master/LICENSE" target="_blank">^</a>]
+                        </div>
+                        <div className="item-right">
+                            testjam.io version {build.version}
+                        </div>
+                    </div>
                     <NotificationContainer />
                 </div>
             </Router>

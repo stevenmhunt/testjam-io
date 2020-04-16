@@ -227,7 +227,7 @@ export default
                 </div>
             </Popup>;
         }
-        return <div onClick={this.signIn} className="btn user-signin">Sign In</div>
+        return <div onClick={this.signIn} className="btn user-signin">Log In/Sign Up</div>
     }
 
     renderOptionsButton() {
@@ -275,7 +275,7 @@ export default
                             contentStyle={{ padding: '10px 20px 10px 20px' }}
                             closeOnDocumentClick>
                             <div style={{ width: '100%' }}>
-                                <h2 style={{ marginBottom: '0' }}>testjam.io v{build.version}</h2>
+                                <h2 style={{ marginBottom: '0' }}>testjam.io version {build.version}</h2>
                                 <p>Last Updated {new Date(build.date).toLocaleString('en-US')}</p>
                                 <br />
                                 <h3>What is testjam?</h3>

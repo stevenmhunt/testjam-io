@@ -136,7 +136,7 @@ Command-line utilities
             <div className="output-container" style={{ overflow: 'auto' }}>
                 <pre id="outputLogView" dangerouslySetInnerHTML={{ __html: ansiHtml(this.state.output.join('')) }}></pre>
             </div>
-            <div className="view-header">
+            <div className="view-header" style={{ height: '33px' }}>
                 <div className="view-header-left" style={{ width: '100%' }}>
                     <div className="title"><div style={{fontSize: '18px'}}><i className="fa fa-terminal"></i></div></div>
                     <div className="item commands">

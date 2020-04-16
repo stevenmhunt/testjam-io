@@ -118,4 +118,10 @@ body.theme-Dark {
     .link-item:hover {
         background-color: $gherkin-alt-color;
     }
+
+    .footer {
+        background-color: $bg-color;
+        color: $text-color;
+        border-top: 1px solid $border-color;
+    }
 }
