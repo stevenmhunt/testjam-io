@@ -69,7 +69,10 @@ function saveJam(id, { name, features, stepDefinitions, runtime, fork }) {
             createdBy: { uid: authUser.uid, name: authUser.displayName, photo: authUser.photoURL },
             fork: fork || null
         };
-        return db.collection('jams').add(jam).then(r => r.id);
+        return db.collection('jams').add(jam).then((r) => {
+            analytics.logEvent('share', { content_type: 'jam', item_id: r.id });
+            return r.id
+        });
     }
     return db.collection('jams').doc(id).update({
         name,
