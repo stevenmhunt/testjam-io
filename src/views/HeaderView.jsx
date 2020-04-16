@@ -276,7 +276,7 @@ export default
                             closeOnDocumentClick>
                             <div style={{ width: '100%' }}>
                                 <h2 style={{ marginBottom: '0' }}>testjam.io version {build.version}</h2>
-                                <p>Last Updated {new Date(build.date).toLocaleString('en-US')}</p>
+                                <p>Last Updated on {new Date(build.date).toDateString()}</p>
                                 <br />
                                 <h3>What is testjam?</h3>
                                 <p>

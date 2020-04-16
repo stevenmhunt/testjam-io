@@ -1,6 +1,6 @@
 {
     "apiKey": "AIzaSyC6qk_3JJ-s-BvgIe_j7uv_CGdOTfVhBx8",
-    "authDomain": "testjam-webapp.firebaseapp.com",
+    "authDomain": "testjam.io",
     "databaseURL": "https://testjam-webapp.firebaseio.com",
     "projectId": "testjam-webapp",
     "storageBucket": "testjam-webapp.appspot.com",
