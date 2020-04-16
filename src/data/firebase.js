@@ -5,6 +5,9 @@ firebase.initializeApp(config.firebase);
 
 const auth = firebase.auth();
 const db = firebase.firestore();
+const analytics = firebase.analytics();
+
+analytics.setAnalyticsCollectionEnabled(true);
 
 // User Authentication
 
@@ -41,6 +44,7 @@ function getJam(id) {
     return db.collection('jams').doc(id).get()
         .then((result) => {
             if (result.exists) {
+                analytics.logEvent('page_view');
                 return result.data();
             }
             throw new Error('The requested resource does not exist.');
