@@ -25,7 +25,14 @@ const hub = new EventEmitter();
 
 firebase.onAuthChanged(({ action, user }) => {
     if (action === 'signIn') {
-        hub.emit('signedIn', user);
+        firebase.loadUser()
+            .then((u) => {
+                cache.user = u;
+                if (cache.user.likes.indexOf(browser.page()) >= 0) {
+                    hub.emit('liked');
+                }
+                hub.emit('signedIn', user);
+            });
     }
     else {
         hub.emit('signedOut');
@@ -48,6 +55,10 @@ const setOwner = (owner) => {
 }
 
 // Persistence
+function setLikedBy(likedBy) {
+    cache.likedBy = likedBy;
+    hub.emit(cache.user && likedBy.indexOf(cache.user.uid) >= 0 ? 'liked' : 'unliked');
+}
 
 function loadJam() {
     const id = browser.page();
@@ -64,6 +75,7 @@ function loadJam() {
             Promise.resolve(setOwner({ uid: jam.uid, name: jam.createdBy.name, photo: jam.createdBy.photo })),
             Promise.resolve(app.setName(jam.name)),
             Promise.resolve(app.setFork(jam.fork)),
+            Promise.resolve(setLikedBy(jam.likedBy)),
             app.setRuntime(jam.runtime),
             ...(jam.features.map(i => app.setFeature(i))),
             ...(jam.stepDefinitions.map(i => app.setStepDefinition(i)))
@@ -227,8 +239,13 @@ app.cucumber = app.test;
 
 // Favorites
 
-app.like = () => hub.emit('liked');
-app.unlike = () => hub.emit('unliked');
+app.like = () => Promise.resolve(hub.emit('changingLike'))
+    .then(() => firebase.likeJam(browser.page()))
+    .then(() => Promise.resolve(hub.emit('liked')));
+
+app.unlike = () => Promise.resolve(hub.emit('changingLike'))
+.then(() => firebase.unlikeJam(browser.page()))
+.then(() => Promise.resolve(hub.emit('unliked')))
 
 // Runtime Management
 

@@ -1,6 +1,6 @@
 {
   "name": "testjam-io",
-  "version": "0.4.31",
+  "version": "0.4.32",
   "description": "React web application for testjam.io",
   "main": "index.js",
   "scripts": {
@@ -28,6 +28,7 @@
     "css-loader": "^0.28.9",
     "extract-text-webpack-plugin": "^3.0.2",
     "file-loader": "^1.1.6",
+    "firebase": "^7.14.1",
     "indent.js": "^0.3.5",
     "lodash": "^4.17.15",
     "node-sass": "^4.7.2",
@@ -47,7 +48,7 @@
     "webpack": "^3.11.0"
   },
   "build": {
-    "version": "0.4.31",
-    "date": "2020-04-16T18:04:04.048Z"
+    "version": "0.4.32",
+    "date": "2020-04-17T07:11:42.788Z"
   }
 }

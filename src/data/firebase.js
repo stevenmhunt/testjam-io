@@ -1,13 +1,15 @@
-import _ from 'lodash';
-import config from '../../config';
+const _ = require('lodash');
+const config = require('../../config');
 
 firebase.initializeApp(config.firebase);
 
 const auth = firebase.auth();
 const db = firebase.firestore();
-const analytics = firebase.analytics();
+const analytics = firebase.analytics ? firebase.analytics() : null;
 
-analytics.setAnalyticsCollectionEnabled(true);
+if (analytics) {
+    analytics.setAnalyticsCollectionEnabled(true);
+}
 
 // User Authentication
 
@@ -19,13 +21,13 @@ function onAuthChanged(cb) {
 let authUser = null;
 
 auth.onAuthStateChanged((user) => {
-    authUser = user;
+    authUser = user;    
     return onAuthChangedFn({ action: user ? 'signIn' : 'signOut', user });
 });
 
 function signIn() {
     var provider = new firebase.auth.GoogleAuthProvider();
-    auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+    return auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
         .then(() => auth.signInWithPopup(provider))
         .then(result => result.user);
 }
@@ -83,6 +85,9 @@ function saveJam(id, { name, features, stepDefinitions, runtime, fork }) {
 }
 
 function forkJam(id, { name, features, stepDefinitions, runtime, createdBy }) {
+    if (!authUser || !authUser.uid) {
+        return Promise.reject(new Error('You must be an authenticated user to fork a jam.'));
+    }
     return saveJam(null, {
         name: `${name} (copy)`, features, stepDefinitions, runtime, fork: {
             id,
@@ -92,9 +97,51 @@ function forkJam(id, { name, features, stepDefinitions, runtime, createdBy }) {
     })
 }
 
+function likeJam(id) {
+    if (!id) {
+        return Promise.reject('An id is required.');
+    }
+    if (!authUser || !authUser.uid) {
+        return Promise.reject(new Error('You must be an authenticated user to like a jam.'));
+    }
+
+    const batch = db.batch();
+
+    batch.update(db.collection('jams').doc(id), {
+        likedBy: firebase.firestore.FieldValue.arrayUnion(authUser.uid)
+    });
+    
+    batch.update(db.collection('users').doc(authUser.uid), {
+        likes: firebase.firestore.FieldValue.arrayUnion(id)
+    });
+    
+    return batch.commit();
+}
+
+function unlikeJam(id) {
+    if (!id) {
+        return Promise.reject('An id is required.');
+    }
+    if (!authUser || !authUser.uid) {
+        return Promise.reject(new Error('You must be an authenticated user to unlike a jam.'));
+    }
+
+    const batch = db.batch();
+
+    batch.update(db.collection('jams').doc(id), {
+        likedBy: firebase.firestore.FieldValue.arrayRemove(authUser.uid)
+    });
+    
+    batch.update(db.collection('users').doc(authUser.uid), {
+        likes: firebase.firestore.FieldValue.arrayRemove(id)
+    });
+    
+    return batch.commit();
+}
+
 function getMyJams() {
     if (!authUser || !authUser.uid) {
-        return Promise.resolve([]);
+        return Promise.reject(new Error('You must be an authenticated user to get your jams.'));
     }
     return db.collection('jams')
         .where('uid', '==', authUser.uid)
@@ -105,6 +152,41 @@ function getMyJams() {
         })));
 }
 
+function loadUser() {
+    if (!authUser || !authUser.uid) {
+        return Promise.reject(new Error('You must be an authenticated user to load a user.'));
+    }
+
+    const defaultUser = { likes: [] };
+    return db.collection('users').doc(authUser.uid).get()
+        .then(r => r.exists ? r.data() : 
+            db.collection('users').doc(authUser.uid).set(defaultUser).then(() => defaultUser)
+        );
+}
+
+function loadProfile(id) {
+    function attemptCreateProfile() {
+        const defaultProfile = { name: authUser.displayName, photo: authUser.photoURL };
+        if (id === authUser.uid) {
+            return db.collection('profiles').doc(id).set(defaultProfile).then(() => defaultProfile);
+        }
+        return null;
+    }
+    return db.collection('profiles').doc(id).get()
+        .then(r => r.exists ? r.data() : attemptCreateProfile());
+}
+
+function initUserProfile(user) {
+    return Promise.all([
+        db.collection('profiles').doc(user.uid).set({
+            name: user.displayName, photo: user.photoURL
+        }, { merge: true }),
+        db.collection('users').doc(user.uid).set({
+
+        }, { merge: true })
+    ]).then(() => user);
+}
+
 module.exports = {
     signIn,
     signOut,
@@ -112,5 +194,10 @@ module.exports = {
     getJam,
     saveJam,
     forkJam,
-    getMyJams
+    likeJam,
+    unlikeJam,
+    getMyJams,
+    loadUser,
+    loadProfile,
+    db: () => db
 };

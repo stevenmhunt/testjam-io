@@ -49,8 +49,9 @@ export default
         app.on('themeChanged', theme => this.setState(() => ({ theme })));
         app.on('forkChanged', fork => this.setState(() => ({ fork })));
 
-        app.on('liked', () => this.setState({ isLiked: true }));
-        app.on('unliked', () => this.setState({ isLiked: false }));
+        app.on('changingLike', () => this.setState({ likeChanging: true }));
+        app.on('liked', () => this.setState({ isLiked: true, likeChanging: false }));
+        app.on('unliked', () => this.setState({ isLiked: false, likeChanging: false }));
 
         app.on('signedIn', user => this.setState({ user }));
         app.on('signedOut', () => this.setState({ user: null }));
@@ -107,11 +108,13 @@ export default
     }
 
     toggleLike() {
-        if (this.state.isLiked) {
-            app.unlike();
-        }
-        else {
-            app.like();
+        if (!this.state.likeChanging) {
+            if (this.state.isLiked) {
+                app.unlike();
+            }
+            else {
+                app.like();
+            }
         }
     }
 
@@ -155,9 +158,11 @@ export default
                 className={this.state.isLiked ? "btn btn-liked" : "btn btn-unliked"}
                 title={this.state.isLiked ? "Unlike" : "Like"}
                 onClick={this.toggleLike}>
-                {this.state.isLiked ?
-                    <span>&nbsp;<i className="fa fa-heart"></i></span> :
-                    <span>&nbsp;<i className="fa fa-heart-o"></i></span>}
+                {this.state.likeChanging ?
+                    <span><i className="fa fa-spin fa-circle-o-notch"></i></span> :
+                    this.state.isLiked ?
+                        <span>&nbsp;<i className="fa fa-heart"></i></span> :
+                        <span>&nbsp;<i className="fa fa-heart-o"></i></span>}
             </div>;
         }
         return '';
@@ -242,7 +247,6 @@ export default
     renderMenu() {
         return <div className="menu">
             {this.renderTestButton()}
-            {/* this.renderLikeButton() */}
             {this.renderSignInArea()}
         </div>;
     }
@@ -311,6 +315,7 @@ export default
                 {this.renderForkButton()}
                 {this.renderSaveButton()}
                 {this.renderShareButton()}
+                {this.renderLikeButton()}
             </div>
             <div className="header-center">
                 {this.state.fork ?
