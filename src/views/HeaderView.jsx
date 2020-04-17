@@ -161,8 +161,8 @@ export default
                 {this.state.likeChanging ?
                     <span><i className="fa fa-spin fa-circle-o-notch"></i></span> :
                     this.state.isLiked ?
-                        <span>&nbsp;<i className="fa fa-heart"></i></span> :
-                        <span>&nbsp;<i className="fa fa-heart-o"></i></span>}
+                        <span><i className="fa fa-heart"></i></span> :
+                        <span><i className="fa fa-heart-o"></i></span>}
             </div>;
         }
         return '';

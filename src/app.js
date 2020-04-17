@@ -27,9 +27,9 @@ firebase.onAuthChanged(({ action, user }) => {
     if (action === 'signIn') {
         firebase.loadUser()
             .then((u) => {
-                cache.user = u;
-                if (cache.user.likes.indexOf(browser.page()) >= 0) {
-                    hub.emit('liked');
+                cache.user = u || {};
+                if ((cache.user.likes || []).indexOf(browser.page()) >= 0) {
+                    setImmediate(() => hub.emit('liked'));
                 }
                 hub.emit('signedIn', user);
             });
@@ -55,10 +55,6 @@ const setOwner = (owner) => {
 }
 
 // Persistence
-function setLikedBy(likedBy) {
-    cache.likedBy = likedBy;
-    hub.emit(cache.user && likedBy.indexOf(cache.user.uid) >= 0 ? 'liked' : 'unliked');
-}
 
 function loadJam() {
     const id = browser.page();
@@ -75,7 +71,6 @@ function loadJam() {
             Promise.resolve(setOwner({ uid: jam.uid, name: jam.createdBy.name, photo: jam.createdBy.photo })),
             Promise.resolve(app.setName(jam.name)),
             Promise.resolve(app.setFork(jam.fork)),
-            Promise.resolve(setLikedBy(jam.likedBy)),
             app.setRuntime(jam.runtime),
             ...(jam.features.map(i => app.setFeature(i))),
             ...(jam.stepDefinitions.map(i => app.setStepDefinition(i)))
