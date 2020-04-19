@@ -101,6 +101,16 @@ body.theme-Dark {
         color: white;
     }
 
+    .popup-myjams .myjam {
+        border: 1px solid $border-color;        
+        color: $text-color;
+    }
+
+    .popup-myjams .myjam:hover {
+        background-color: $gherkin-alt-color;
+        color: $gherkin-text-color;
+    }
+
     .jam-name-editable input {
         color: $text-color;
         border: 1px solid $border-color;

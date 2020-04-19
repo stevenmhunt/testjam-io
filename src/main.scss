@@ -353,6 +353,32 @@ input.commands {
     }
 }
 
+.popup-myjams-loading {
+    margin: 150px 0 150px 0;
+    text-align: center;
+}
+
+.popup-myjams {
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: flex;
+    flex-wrap: wrap;
+
+    .myjam {
+        box-sizing: border-box;
+        width: calc(50% - 10px);
+        padding: 10px;
+        margin: 0 10px 10px 0;
+        display: block;
+        text-decoration: none;
+
+        h3 {
+            margin-top: 0;
+        }
+    }
+}
+
 .about-photo {
     border-radius: 50%;
     width: 32px;

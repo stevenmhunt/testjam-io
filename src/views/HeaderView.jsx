@@ -36,7 +36,9 @@ export default
             isOwner: false,
             isEditName: false,
             name: '',
-            jams: []
+            isMyJamsLoading: true,
+            myJams: [],
+            user: {}
         }
 
         this.themes = app.getThemes();
@@ -54,7 +56,7 @@ export default
         app.on('unliked', () => this.setState({ isLiked: false, likeChanging: false }));
 
         app.on('signedIn', user => this.setState({ user }));
-        app.on('signedOut', () => this.setState({ user: null }));
+        app.on('signedOut', () => this.setState({ user: {} }));
 
         app.on('saving', () => this.setState({ isSaving: true }));
         app.on('saved', () => this.setState({ isSaving: false, isNew: false }));
@@ -70,12 +72,11 @@ export default
         });
         app.on('nameChanged', name => this.setState({ name, isEditName: false }));
 
-        // app.getMyJams().then(jams => this.setState({ jams }));
+        app.on('myJamsLoaded', myJams => this.setState({ myJams, isMyJamsLoading: false }))
     }
 
     isOwner() {
-        return (this.state.user &&
-            this.state.user.uid &&
+        return (this.state.user.uid &&
             this.state.owner &&
             this.state.owner.uid &&
             this.state.user.uid === this.state.owner.uid) || this.state.isNew;
@@ -138,6 +139,10 @@ export default
         }
     }
 
+    loadMyJams() {
+        app.getMyJams();
+    }
+
     renderTestButton() {
         let innerButton = <span>&nbsp;<i className="fa fa-play-circle"></i>&nbsp;&nbsp;Run Tests</span>;
         let buttonClass = "btn btn-run";
@@ -153,7 +158,7 @@ export default
     }
 
     renderLikeButton() {
-        if (this.state.user && !this.isOwner()) {
+        if (this.state.user.uid && !this.isOwner()) {
             return <div
                 className={this.state.isLiked ? "btn btn-liked" : "btn btn-unliked"}
                 title={this.state.isLiked ? "Unlike" : "Like"}
@@ -169,7 +174,7 @@ export default
     }
 
     renderForkButton() {
-        if (this.state.user) {
+        if (this.state.user.uid) {
             return <div title="Fork" className="btn btn-fork" onClick={this.fork}>
                 {this.state.isForking ?
                     <span><i className="fa fa-spin fa-circle-o-notch"></i></span> :
@@ -180,7 +185,7 @@ export default
     }
 
     renderSaveButton() {
-        if (this.state.user && this.isOwner()) {
+        if (this.state.user.uid && this.isOwner()) {
             return <div title="Save" className="btn btn-save" onClick={this.save}>
                 {this.state.isSaving ?
                     <span><i className="fa fa-spin fa-circle-o-notch"></i></span> :
@@ -213,13 +218,43 @@ export default
 
     renderUserDisplay() {
         return <div className="btn user-info">
-            <img src={this.state.user.photoURL} />
-            <span className="user-name">{this.state.user.displayName}</span>
+            <img src={this.state.user.photo} />
+            <span className="user-name">{this.state.user.name}</span>
         </div>;
     }
 
+    renderMyJams() {
+        return <Popup
+            trigger={(isOpen) => {
+                if (isOpen) { setImmediate(() => this.loadMyJams()); }
+                return <div className="Dropdown-option"><i className="fa fa-book"></i>&nbsp;&nbsp;My Jams&nbsp;({this.state.user.jamsCount || 0})</div>;
+            }}
+            modal
+            contentStyle={{ padding: '10px 20px 10px 20px' }}
+            closeOnDocumentClick>
+            <div style={{ width: '100%' }}>
+                {this.state.isMyJamsLoading ?
+                    <div className="popup-myjams-loading"><i className="fa fa-spin fa-circle-o-notch"></i></div> :
+                    <div className="popup-myjams">
+                        {this.state.myJams.map(jam =>
+                            <a className="myjam" href={`${window.location.origin}/?p=${jam.id}`} key={jam.id}>
+                                <h3>{jam.name}</h3>
+                                <div>Last Updated {new Date(jam.dateUpdated).toLocaleString()}</div>
+                                <div>Runtime: {jam.runtime}</div>
+                                <div>Scenarios: {jam.features.scenarioCount} ({jam.features.lineCount} lines)</div>
+                                <div>Step Definitions: JavaScript ({jam.stepDefinitions.lineCount} lines)</div>
+                            </a>)}
+                    </div>}
+            </div>
+        </Popup>;
+    }
+
+    renderMyLikes() {
+        return <div className="Dropdown-option"><i className="fa fa-heart"></i>&nbsp;&nbsp;My Likes&nbsp;({(this.state.user.likes || []).length})</div>;
+    }
+
     renderSignInArea() {
-        if (this.state.user) {
+        if (this.state.user.uid) {
             return <Popup trigger={this.renderUserDisplay()}
                 position="bottom right"
                 closeOnDocumentClick
@@ -228,6 +263,7 @@ export default
                 contentStyle={{ padding: "0px", border: "none" }}
                 arrow={false}>
                 <div className="Dropdown-menu" aria-expanded="true">
+                    {this.renderMyJams()}
                     <div className="Dropdown-option" onClick={this.signOut}><i className="fa fa-sign-out"></i>&nbsp;&nbsp;Sign Out</div>
                 </div>
             </Popup>;
@@ -235,20 +271,45 @@ export default
         return <div onClick={this.signIn} className="btn user-signin">Log In/Sign Up</div>
     }
 
-    renderOptionsButton() {
-        if (this.state.user) {
-            return <div title="Settings" className="btn" onClick={this.signOut}>
-                <span><i className="fa fa-bars"></i></span>
-            </div>
-        }
-        return '';
-    }
-
     renderMenu() {
         return <div className="menu">
             {this.renderTestButton()}
             {this.renderSignInArea()}
         </div>;
+    }
+
+    renderAboutSite() {
+        return <Popup
+            trigger={<div className="Dropdown-option">About testjam.io</div>}
+            modal
+            contentStyle={{ padding: '10px 20px 10px 20px' }}
+            closeOnDocumentClick>
+            <div style={{ width: '100%' }}>
+                <h2 style={{ marginBottom: '0' }}>testjam.io version {build.version}</h2>
+                <p>Last Updated on {new Date(build.date).toDateString()}</p>
+                <br />
+                <h3>What is testjam?</h3>
+                <p>
+                    Welcome to testjam.io, an online coding environment specifically designed for Cucumber and Gherkin. When I first started building this project, I realized that most major programming languages and frameworks have some sort of online sandbox environment for sharing code examples, but Cucumber did not. As BDD gets more popular in the modern QA toolkit, the need to quickly share and experiment with testing tools over the Internet will increase.
+            </p>
+                <h3>Project Objectives</h3>
+                <ul>
+                    <li>Deliver an easy-to-use web-based tool for creating and sharing feature files and their accompanying step definitions.</li>
+                    <li>Improve the quality of online documentation and Q&amp;A responses regarding Cucumber and Gherkin.</li>
+                    <li>Provide a useful service to the wider QA automation community.</li>
+                    <li><i>Personal Goal:</i>&nbsp;Avoid boredom during the COVID-19 quarantine by developing and launching a new web-based software tool.</li>
+                </ul>
+                <h3>About Me</h3>
+                <p>
+                    My name is Steven, and I'm an automation engineer and software developer. I have been using Cucumber (<a href="https://specflow.org/" target="_blank">SpecFlow</a> and <a href="https://github.com/cucumber/cucumber-js" target="_blank">CucumberJS</a>) at various organizations since 2014, both as a developer and an automation engineer. I hope to continue to learn more about automated testing in the future and also help mentor others on software and maintaining quality during a project.
+                <br /><br />
+                </p>
+                <a className="link-item" href="https://www.github.com/stevenmhunt" target="_blank"><i className="fa fa-github"></i>&nbsp;@stevenmhunt</a>
+                <a className="link-item" href="https://www.twitter.com/stevenmhunt" target="_blank"><i className="fa fa-twitter"></i>&nbsp;@stevenmhunt</a>
+                <a className="link-item" href="http://www.linkedin.com/in/stevenmhunt" target="_blank"><i className="fa fa-linkedin"></i>&nbsp;stevenmhunt</a>
+                <br /><br />
+            </div>
+        </Popup>;
     }
 
     renderSiteInfo() {
@@ -273,37 +334,7 @@ export default
                             Theme: <Dropdown options={this.themes} value={this.state.theme} onChange={this.setTheme} />
                         </div>
                         <a className="Dropdown-option" href={`${window.location.origin}/?p=0Djdc5ps8TE1ssv558rU`}>Getting Started</a>
-                        <Popup
-                            trigger={<div className="Dropdown-option">About testjam.io</div>}
-                            modal
-                            contentStyle={{ padding: '10px 20px 10px 20px' }}
-                            closeOnDocumentClick>
-                            <div style={{ width: '100%' }}>
-                                <h2 style={{ marginBottom: '0' }}>testjam.io version {build.version}</h2>
-                                <p>Last Updated on {new Date(build.date).toDateString()}</p>
-                                <br />
-                                <h3>What is testjam?</h3>
-                                <p>
-                                    Welcome to testjam.io, an online coding environment specifically designed for Cucumber and Gherkin. When I first started building this project, I realized that most major programming languages and frameworks have some sort of online sandbox environment for sharing code examples, but Cucumber did not. As BDD gets more popular in the modern QA toolkit, the need to quickly share and experiment with testing tools over the Internet will increase.
-                                </p>
-                                <h3>Project Objectives</h3>
-                                <ul>
-                                    <li>Deliver an easy-to-use web-based tool for creating and sharing feature files and their accompanying step definitions.</li>
-                                    <li>Improve the quality of online documentation and Q&amp;A responses regarding Cucumber and Gherkin.</li>
-                                    <li>Provide a useful service to the wider QA automation community.</li>
-                                    <li><i>Personal Goal:</i>&nbsp;Avoid boredom during the COVID-19 quarantine by developing and launching a new web-based software tool.</li>
-                                </ul>
-                                <h3>About Me</h3>
-                                <p>
-                                    My name is Steven, and I'm an automation engineer and software developer. I have been using Cucumber (<a href="https://specflow.org/" target="_blank">SpecFlow</a> and <a href="https://github.com/cucumber/cucumber-js" target="_blank">CucumberJS</a>) at various organizations since 2014, both as a developer and an automation engineer. I hope to continue to learn more about automated testing in the future and also help mentor others on software and maintaining quality during a project.
-                                    <br /><br />
-                                </p>
-                                <a className="link-item" href="https://www.github.com/stevenmhunt" target="_blank"><i className="fa fa-github"></i>&nbsp;@stevenmhunt</a>
-                                <a className="link-item" href="https://www.twitter.com/stevenmhunt" target="_blank"><i className="fa fa-twitter"></i>&nbsp;@stevenmhunt</a>
-                                <a className="link-item" href="http://www.linkedin.com/in/stevenmhunt" target="_blank"><i className="fa fa-linkedin"></i>&nbsp;stevenmhunt</a>
-                                <br /><br />
-                            </div>
-                        </Popup>
+                        {this.renderAboutSite()}
                         <a className="Dropdown-option" href="https://cucumber.io/docs/gherkin/" target="_blank">
                             <i className="fa fa-external-link"></i>&nbsp;&nbsp;Learn more about Gherkin
                         </a>

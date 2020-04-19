@@ -28,10 +28,19 @@ firebase.onAuthChanged(({ action, user }) => {
         firebase.loadUser()
             .then((u) => {
                 cache.user = u || {};
+                cache.user.uid = user.uid;
+                if (cache.user.photo !== user.photoURL) {
+                    cache.user.photo = user.photoURL;
+                    cache.user.isPhotoChanged = true;
+                }
+                if (cache.user.name !== user.displayName) {
+                    cache.user.name = user.displayName;
+                    cache.user.isNameChanged = true;
+                }
                 if ((cache.user.likes || []).indexOf(browser.page()) >= 0) {
                     setImmediate(() => hub.emit('liked'));
                 }
-                hub.emit('signedIn', user);
+                hub.emit('signedIn', cache.user);
             });
     }
     else {
@@ -107,14 +116,18 @@ app.fork = () =>
         });
 
 app.getMyJams = () => {
-    if (!cache.jams) {
+    if (!cache.myJams) {
         return firebase.getMyJams()
             .then((jams) => {
-                cache.jams = jams;
-                return jams;
+                cache.myJams = jams.map(jam => Object.assign({}, jam, {
+                    dateUpdated: new Date(jam.dateUpdated._seconds * 1000)
+                }));
+                hub.emit('myJamsLoaded', cache.myJams);
+                return cache.myJams;
             });
-    }
-    return Promise.resolve(cache.jams);
+    }    
+    hub.emit('myJamsLoaded', cache.myJams);
+    return Promise.resolve(cache.myJams);
 }
 
 // Theme Management
