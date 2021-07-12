@@ -1,0 +1,9 @@
+{
+    "notifications": {
+        "changesSaved": {
+            "title": "Changes Saved",
+            "messageNew": "A new jam has been created and your changes have been saved.",
+            "messageExisting": "Your existing jam was updated successfully."
+        }
+    }
+} 
