@@ -9,6 +9,7 @@
     "watch": "./node_modules/.bin/webpack -d --watch",
     "dev-build": "./node_modules/.bin/webpack --mode=development",
     "client-build": "./node_modules/.bin/webpack --mode=production",
+    "deploy": "firebase deploy --only hosting",
     "build": "make",
     "clean": "make clean"
   },
