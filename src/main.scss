@@ -31,6 +31,7 @@ $loading-color: rgb(115, 205, 130);
     border-top: 0 !important;
     margin-top: 1px !important;
     padding: 8px 52px 7px 10px !important;
+    height: 30px !important;
 }
 
 pre {
@@ -145,7 +146,7 @@ div.view-header {
     flex-direction: row;
     justify-content: space-between;
     width: 100%;
-    height: 32px;
+    height: 30px;
 
     div.view-header-left, div.view-header-right {
         display: -webkit-flex;
@@ -192,7 +193,7 @@ div.view-header {
 
 div.editor-container {
     width: 100%;
-    height: calc(100% - 33px);
+    height: calc(100% - 31px);
 }
 
 div.output-container {
@@ -376,7 +377,7 @@ input.commands {
 .btn-small {
     font-size: 12px !important;
     i {
-        font-size: 18px !important;
+        font-size: 12px !important;
         margin-right: 6px;
     }
 }

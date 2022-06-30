@@ -1,12 +1,13 @@
 @use 'colors';
 
 body.theme-Light {
-    $bg-color: #dddddd;
-    $bg-alt-color: #eeeeee;
-    $border-color: #bdbdbd;
+    $bg-color: #bbeebb;
+    $bg-alt-color: #ffffff;
+    $border-color: #68cc68;
     $text-color: black;
 
     background-color: $bg-color;
+    color: $text-color;
 
     a, a:visited {
         color: $text-color;
@@ -39,7 +40,7 @@ body.theme-Light {
     }
 
     .btn {
-        color: black;
+        color: $text-color;
     }
     .btn:hover {
         background-color: colors.$gherkin-alt-color;
@@ -49,20 +50,17 @@ body.theme-Light {
     .btn-run {
         background-color: colors.$gherkin-color;
         color: white;
+        border-bottom: 1px solid $border-color;
     }
 
     .btn-running, .btn-running:hover, .btn-norun, .btn-norun:hover {
         background-color: $bg-alt-color;
         color: $text-color;
+        border-bottom: 1px solid $border-color;
         cursor: wait;
     }
 
-    .btn-liked, .btn-liked:hover {
-        color: #db15d8;
-        background-color: $bg-alt-color;
-    }
-
-    .btn-unliked:hover {
+    .btn-liked, .btn-liked:hover, .btn-unliked:hover {
         color: #db15d8;
         background-color: $bg-alt-color;
     }
@@ -71,11 +69,33 @@ body.theme-Light {
         color: $text-color !important;
     }
 
+    .Dropdown-control {
+        background-color: $bg-color;
+        border: 1px solid $border-color;
+        color: $text-color;
+    }
+
+    div.view-header-right {
+        div.Dropdown-control {
+            border-right: 0px;
+        }
+    }
+
+    .Dropdown-menu {
+        background-color: $bg-alt-color;
+        border: 1px solid $border-color;
+        color: $text-color;
+    }
+
+    .Dropdown-option {
+        color: $text-color;
+    }
+
     .Dropdown-option:hover {
         background-color: colors.$gherkin-alt-color;
         color: colors.$gherkin-text-color;
     }
-      
+
     .Dropdown-option.is-selected {
         background-color: colors.$gherkin-color;
         color: colors.$gherkin-text-color;

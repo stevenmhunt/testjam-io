@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "firebase emulators:start",
-    "watch": "./node_modules/.bin/webpack -d --watch",
+    "watch": "./node_modules/.bin/webpack --mode=production --watch",
     "dev-build": "./node_modules/.bin/webpack --mode=development",
     "client-build": "./node_modules/.bin/webpack --mode=production",
     "deploy": "firebase deploy --only hosting",

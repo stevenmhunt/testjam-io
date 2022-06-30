@@ -9,6 +9,8 @@ import errorFormatter from './formatters/errorFormatter';
 
 import Logger from './Logger';
 
+const setImmediate = (fn) => setTimeout(fn, 0);
+
 const cache = {
     runtime: 'CucumberJS 6.x',
     isTestingEnabled: true,

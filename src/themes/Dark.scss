@@ -3,7 +3,7 @@
 body.theme-Dark {
     $bg-color: #272822;
     $bg-alt-color: #333333;
-    $border-color: #444444;
+    $border-color: #447744;
     $text-color: #eeeeee;
 
     background-color: $bg-color;
@@ -44,17 +44,19 @@ body.theme-Dark {
     }
     .btn:hover {
         background-color: colors.$gherkin-alt-color;
-        color: colors.$gherkin-text-color
+        color: colors.$gherkin-text-color;
     }
 
     .btn-run {
         background-color: colors.$gherkin-color;
         color: white;
+        border-bottom: 1px solid $border-color;
     }
 
     .btn-running, .btn-running:hover, .btn-norun, .btn-norun:hover {
         background-color: $bg-alt-color;
         color: $text-color;
+        border-bottom: 1px solid $border-color;
         cursor: wait;
     }
 
@@ -63,26 +65,40 @@ body.theme-Dark {
         background-color: $bg-alt-color;
     }
 
+    .header-left .Dropdown-option {
+        color: $text-color !important;
+    }
+
     .Dropdown-control {
         background-color: $bg-color;
         border: 1px solid $border-color;
         color: $text-color;
     }
+
+    div.view-header-right {
+        div.Dropdown-control {
+            border-right: 0px;
+        }
+    }
+
     .Dropdown-menu {
-        background-color: $bg-color;
+        background-color: $bg-alt-color;
         border: 1px solid $border-color;
         color: $text-color;
     }
+
     .Dropdown-option {
         color: $text-color;
     }
+
     .Dropdown-option:hover {
         background-color: colors.$gherkin-alt-color;
-        color: colors.$gherkin-text-color
+        color: colors.$gherkin-text-color;
     }
+
     .Dropdown-option.is-selected {
         background-color: colors.$gherkin-color;
-        color: colors.$gherkin-text-color
+        color: colors.$gherkin-text-color;
     }
 
     .popup-content {
@@ -115,10 +131,6 @@ body.theme-Dark {
     .jam-name-editable input {
         color: $text-color;
         border: 1px solid $border-color;
-    }
-
-    .site-info, .btn {
-        border-right: 1px solid $border-color;
     }
 
     .link-item {
