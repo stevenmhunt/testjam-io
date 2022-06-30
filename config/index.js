@@ -13,7 +13,6 @@ const featureSource = "# Gherkin feature file:\n\n" +
 module.exports = {
   runtimes: require('./runtimes.json'),
   themes: require('./themes.json'),
-  firebase: require('./firebase.json'),
   strings: require('./lang/en-US.json'),
   featureSource: featureSource,
   stepSource: stepSource

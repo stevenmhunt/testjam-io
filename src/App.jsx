@@ -46,7 +46,6 @@ class App extends React.Component {
                             [<a href="/docs/terms.html" target="_blank">Terms of Service</a>]&nbsp;
                         </div>
                     </div>
-                    <NotificationContainer />
                 </div>
             </Router>
         );

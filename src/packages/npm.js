@@ -11,7 +11,7 @@ function isDownloaded(name) {
 
 function downloadPackage(name, version = 'latest') {
     if (!isDownloaded(name)) {
-        return executeScriptUrl(`script_${name}`, `https://wzrd.in/standalone/${name}@${version}`)
+        return executeScriptUrl(`script_${name}`, `https://cdn.testjam.io/standalone/${name}@${version}`)
             .then(r => waitUntilExists(_.camelCase(name), r))
             .catch((err) => {
                 removePackage(name);

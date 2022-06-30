@@ -5,8 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "firebase emulators:start",
     "watch": "./node_modules/.bin/webpack -d --watch",
-    "client-build": "./node_modules/.bin/webpack -p",
+    "dev-build": "./node_modules/.bin/webpack --mode=development",
+    "client-build": "./node_modules/.bin/webpack --mode=production",
     "build": "make",
     "clean": "make clean"
   },
@@ -14,8 +16,8 @@
   "license": "UNLICENSED",
   "dependencies": {
     "ace-builds": "^1.4.9",
-    "ansi-html": "0.0.7",
-    "axios": "^0.18.0",
+    "ansi-html": "^0.0.9",
+    "axios": "^0.27.2",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.3",
@@ -25,30 +27,35 @@
     "babel-preset-es2016": "^6.24.1",
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
-    "css-loader": "^0.28.9",
-    "extract-text-webpack-plugin": "^3.0.2",
+    "css-loader": "^6.7.1",
     "file-loader": "^1.1.6",
-    "firebase": "^7.14.1",
+    "firebase": "^9.8.4",
     "indent.js": "^0.3.5",
     "lodash": "^4.17.15",
-    "node-sass": "^4.7.2",
     "react": "^16.2.0",
-    "react-ace": "^8.1.0",
+    "react-ace": "^10.1.0",
     "react-dom": "^16.2.0",
     "react-dropdown": "^1.7.0",
     "react-notifications": "^1.6.0",
-    "react-resize-detector": "^4.2.1",
+    "react-resize-detector": "^7.1.2",
     "react-router-bootstrap": "^0.24.4",
     "react-router-dom": "^4.2.2",
     "react-split-pane": "^2.0.3",
     "reactjs-popup": "^1.5.0",
     "regenerator-runtime": "^0.13.5",
-    "sass-loader": "^6.0.6",
-    "shell-quote": "^1.7.2",
-    "webpack": "^3.11.0"
+    "shell-quote": "^1.7.2"
   },
   "build": {
-    "version": "0.4.36",
-    "date": "2020-04-19T04:59:41.621Z"
+    "version": "0.5.0",
+    "date": "2022-06-29T19:13:40Z"
+  },
+  "devDependencies": {
+    "html-webpack-plugin": "^5.5.0",
+    "mini-css-extract-plugin": "^2.6.1",
+    "sass": "^1.53.0",
+    "sass-loader": "^13.0.2",
+    "uglify-js": "^3.16.1",
+    "webpack": "^5.73.0",
+    "webpack-cli": "^4.10.0"
   }
 }

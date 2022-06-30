@@ -1,23 +1,28 @@
-var webpack = require('webpack');
-var path = require('path');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
+const path = require('path');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 
-var JS_DIR = path.resolve(__dirname, './build/js');
-var CSS_DIR = path.resolve(__dirname, './build/css');
+var BUILD_DIR = path.resolve(__dirname, './build');
+var CSS_DIR = path.resolve(BUILD_DIR, 'css');
 var APP_DIR = path.resolve(__dirname, './src');
 
 var jsxConfig = {
   entry: APP_DIR + '/App.jsx',
   output: {
-    path: JS_DIR,
-    filename: 'testjam.js'
+    path: BUILD_DIR,
+    filename: './js/testjam.js'
   },
+  plugins: [
+    new HtmlWebpackPlugin({
+        template: "./www/index.html"
+    })
+  ],
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.jsx?/,
         include: APP_DIR,
-        loader: 'babel-loader'
+        use: 'babel-loader'
       }
     ]
   }
@@ -30,21 +35,28 @@ var sassConfig = {
     filename: 'testjam.styles.js'
   },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.(sass|scss)$/,
-        loader: ExtractTextPlugin.extract(['css-loader', 'sass-loader'])
+        use: [MiniCssExtractPlugin.loader, 'css-loader', {
+          loader: "sass-loader",
+          options: {
+            sassOptions: {
+              indentWidth: 4,
+              includePaths: [path.resolve(__dirname, '../node_modules')],
+            },
+          },
+        },]
       },
-      {test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: 'file-loader?mimetype=image/svg+xml'},
-      {test: /\.woff(\?v=\d+\.\d+\.\d+)?$/, loader: "file-loader?mimetype=application/font-woff"},
-      {test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/, loader: "file-loader?mimetype=application/font-woff"},
-      {test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, loader: "file-loader?mimetype=application/octet-stream"},
-      {test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: "file-loader"}
+      {test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, use: 'file-loader?mimetype=image/svg+xml'},
+      {test: /\.woff(\?v=\d+\.\d+\.\d+)?$/, use: "file-loader?mimetype=application/font-woff"},
+      {test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/, use: "file-loader?mimetype=application/font-woff"},
+      {test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, use: "file-loader?mimetype=application/octet-stream"},
+      {test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, use: "file-loader"}
     ]
   },
-  plugins: [new ExtractTextPlugin({
-      filename: 'testjam.css',
-      allChunks: true
+  plugins: [new MiniCssExtractPlugin({
+      filename: 'testjam.css'
     })]
 };
 

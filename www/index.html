@@ -6,8 +6,19 @@
         <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/lato-font@3.0.0/css/lato-font.min.css">
         <link rel="preload" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/fonts/fontawesome-webfont.woff2?v=4.7.0" as="font" type="font/woff" crossorigin>
         <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="/css/react-dropdown.css">
+        <link rel="stylesheet" type="text/css" href="/css/react-notifications.css">
+        <link rel="stylesheet" type="text/css" href="/css/react-split-pane.css">
         <link rel="stylesheet" type="text/css" href="/css/testjam.css">
         <script type="text/javascript">var _loadingMessages = ["Preparing to jam...","Planting cucumbers...","Harvesting cucumbers...","Pickling cucumbers...","Testing the testers...","Opening pickle jar...","Assuring quality...","Aggregating TPS reports...","Scrubbing the gherkins...","Demystifying regular expressions...","Watching the spinner...","Iterating across examples..."];</script>
+        <!-- update the version number as needed -->
+        <script defer src="/__/firebase/9.6.5/firebase-app-compat.js"></script>
+        <!-- include only the Firebase features as you need -->
+        <script defer src="/__/firebase/9.6.5/firebase-analytics-compat.js"></script>
+        <script defer src="/__/firebase/9.6.5/firebase-auth-compat.js"></script>
+        <script defer src="/__/firebase/9.6.5/firebase-functions-compat.js"></script>
+        <script defer src="/__/firebase/9.6.5/firebase-firestore-compat.js"></script>
+        <script defer src="/__/firebase/init.js?useEmulator=true"></script>
     </head>
     <body class="app-page">
         <div id="app" style="opacity: 0;"></div>
@@ -18,11 +29,5 @@
             </div>
         </div>
         <script type="text/javascript">document.getElementById('loadingMessage').innerHTML=_loadingMessages[Math.floor(Math.random()*_loadingMessages.length)];</script>
-        <script src="https://www.gstatic.com/firebasejs/7.14.0/firebase-app.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/7.14.0/firebase-analytics.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/7.14.0/firebase-auth.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/7.14.0/firebase-functions.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/7.14.0/firebase-firestore.js"></script>
-        <script type="text/javascript" src="/js/testjam.js"></script>
-        </body>
+    </body>
 </html>

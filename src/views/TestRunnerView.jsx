@@ -1,8 +1,6 @@
 import React from 'react';
 import SplitPane from 'react-split-pane';
 
-import app from '../app';
-
 import OutputView from './OutputView.jsx';
 import FeatureView from './FeatureView.jsx';
 import StepDefinitionView from './StepDefinitionView.jsx';

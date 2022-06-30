@@ -1,3 +1,4 @@
+@use 'colors';
 
 body.theme-Light {
     $bg-color: #dddddd;
@@ -41,12 +42,12 @@ body.theme-Light {
         color: black;
     }
     .btn:hover {
-        background-color: $gherkin-alt-color;
-        color: $gherkin-text-color;
+        background-color: colors.$gherkin-alt-color;
+        color: colors.$gherkin-text-color;
     }
 
     .btn-run {
-        background-color: $gherkin-color;
+        background-color: colors.$gherkin-color;
         color: white;
     }
 
@@ -71,13 +72,13 @@ body.theme-Light {
     }
 
     .Dropdown-option:hover {
-        background-color: $gherkin-alt-color;
-        color: $gherkin-text-color;
+        background-color: colors.$gherkin-alt-color;
+        color: colors.$gherkin-text-color;
     }
       
     .Dropdown-option.is-selected {
-        background-color: $gherkin-color;
-        color: $gherkin-text-color;
+        background-color: colors.$gherkin-color;
+        color: colors.$gherkin-text-color;
     }
 
     input.commands {
@@ -90,8 +91,8 @@ body.theme-Light {
     }
 
     .popup-myjams .myjam:hover {
-        background-color: $gherkin-alt-color;
-        color: $gherkin-text-color;
+        background-color: colors.$gherkin-alt-color;
+        color: colors.$gherkin-text-color;
     }
 
     .jam-name-editable input {
@@ -109,7 +110,7 @@ body.theme-Light {
         border-radius: 7px;
     }
     .link-item:hover {
-        background-color: $gherkin-alt-color;
+        background-color: colors.$gherkin-alt-color;
     }
 
     .footer {

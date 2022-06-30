@@ -1,8 +1,3 @@
-const _ = require('lodash');
-const config = require('../../config');
-
-firebase.initializeApp(config.firebase);
-
 const auth = firebase.auth();
 const db = firebase.firestore();
 const analytics = firebase.analytics ? firebase.analytics() : null;
@@ -13,7 +8,7 @@ if (analytics) {
     analytics.setAnalyticsCollectionEnabled(true);
 }
 
-var fnGetMyJams = firebase.functions().httpsCallable('getMyJams')
+var fnGetMyJams = functions.httpsCallable('getMyJams')
 
 // User Authentication
 

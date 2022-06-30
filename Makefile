@@ -5,20 +5,19 @@ clean:
 	(test -d ./build && rm -r ./build || echo "build folder already cleaned");
 
 init:
-	mkdir -p ./build && \
+	mkdir -p ./build/css && \
 	cp -r ./www/* ./build && \
+	cp ./node_modules/react-dropdown/style.css ./build/css/react-dropdown.css && \
+	cp ./node_modules/react-notifications/lib/notifications.css ./build/css/react-notifications.css && \
 	mkdir -p ./build/js/runtimes;
 
-build-web: npm-install increment-version
+build-web: npm-install
 	npm run client-build;
 
 npm-install:
 	if [ ! -d "./node_modules" ]; then \
 	    npm install; \
 	fi;
-
-increment-version:
-	node ./lib/build/increment-version.js
 
 github_url=https://raw.githubusercontent.com/cucumber/cucumber-js
 cucumberjs_1x=./build/js/runtimes/cucumberjs-1.x
@@ -68,7 +67,7 @@ min=min
 
 download-1.x: init
 	if [ ! -f "${cucumberjs_1x}.js" ]; then \
-	    curl -s https://wzrd.in/standalone/cucumber@1.3.3 -o ${cucumberjs_1x}.js; \
+	    curl -s https://cdn.testjam.io/standalone/cucumber@1.3.3 -o ${cucumberjs_1x}.js; \
 	fi;
 
 download-2.x: init

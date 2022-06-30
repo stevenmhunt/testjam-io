@@ -1,0 +1,14 @@
+html,
+body,
+#app,
+.app-container {
+    width: 100%;
+    height: 100%;    
+    margin: 0;
+    padding: 0;
+    transition: opacity 400ms ease-out;
+
+    font-family: 'Lato', 'Segoe UI', Tahoma, Geneva, Ubuntu, "Droid Sans", Arial, sans-serif;
+    /* -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";*/
+    font-size: 10pt;
+}
