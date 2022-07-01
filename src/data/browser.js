@@ -67,6 +67,7 @@ function title(t = null) {
 function enableApp() {
     document.getElementById('app').style.opacity = 1;
     document.getElementById('loading').style.display = 'none';
+    console.log('App is ready.');
 }
 
 module.exports = {

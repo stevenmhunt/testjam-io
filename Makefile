@@ -1,5 +1,5 @@
 
-build: 1.x 2.x 3.x 4.x 5.x 6.x build-web
+build: 1.x 2.x 3.x 4.x 5.x 6.x 7.x build-web
 
 clean:
 	(test -d ./build && rm -r ./build || echo "build folder already cleaned");
@@ -12,7 +12,7 @@ init:
 	mkdir -p ./build/js/runtimes;
 
 build-web: npm-install
-	npm run client-build;
+	npm run prod-build;
 
 npm-install:
 	if [ ! -d "./node_modules" ]; then \
@@ -26,6 +26,7 @@ cucumberjs_3x=./build/js/runtimes/cucumberjs-3.x
 cucumberjs_4x=./build/js/runtimes/cucumberjs-4.x
 cucumberjs_5x=./build/js/runtimes/cucumberjs-5.x
 cucumberjs_6x=./build/js/runtimes/cucumberjs-6.x
+cucumberjs_7x=./build/js/runtimes/cucumberjs-7.x
 min=min
 1.x: download-1.x
 	if [ ! -f "${cucumberjs_1x}.${min}.js" ]; then \
@@ -63,6 +64,21 @@ min=min
 		cat ${cucumberjs_6x}.js | npx babel -s false --presets stage-0 --minified --compact true -o ${cucumberjs_6x}.${min}.js; \
 	fi
 
+7.x: download-7.x
+	if [ ! -f "${cucumberjs_7x}.${min}.js" ]; then \
+		sed -i \
+			-e 's/g.Cucumber =/g.__cucumber7 =/g' \
+			-e 's/super\./Object\.getPrototypeOf(this\.constructor\.prototype)\./g' \
+			-e 's/_c\.fs\.O_CREAT/512/g' \
+			-e 's/_c\.fs\.O_EXCL/2048/g' \
+			-e 's/_c\.fs\.O_RDWR/2/g' \
+			-e 's/_c\.os\.errno\.EBADF/9/g' \
+			-e 's/_c\.os\.errno\.ENOENT/2/g' \
+			-e 's/fs\.rmdirSync\.bind(fs)/function() {}/g' \
+			${cucumberjs_7x}.js; \
+		cat ${cucumberjs_7x}.js | npx babel -s false --presets stage-0 --minified --compact true --plugins transform-es2015-object-super -o ${cucumberjs_7x}.${min}.js; \
+	fi
+
 ################## Download required files from the Internet ######################
 
 download-1.x: init
@@ -94,3 +110,6 @@ download-6.x: init
 	if [ ! -f "${cucumberjs_6x}.js" ]; then \
 		curl -s ${github_url}/6.x/dist/cucumber.js -o ${cucumberjs_6x}.js; \
 	fi;
+
+download-7.x: init
+	chmod +x ./scripts/cucumberjs-7.x.sh && ./scripts/cucumberjs-7.x.sh

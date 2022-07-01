@@ -12,7 +12,7 @@ import Logger from './Logger';
 const setImmediate = (fn) => setTimeout(fn, 0);
 
 const cache = {
-    runtime: 'CucumberJS 6.x',
+    runtime: 'CucumberJS 7.x',
     isTestingEnabled: true,
     isTestRunning: false
 };
@@ -70,6 +70,7 @@ const setOwner = (owner) => {
 function loadJam() {
     const id = browser.page();
     if (!id) {
+        console.log('Initiating new jam...');
         return Promise.all([
             Promise.resolve(setOwner(null)),
             Promise.resolve(app.setName('New Jam')),
@@ -77,6 +78,7 @@ function loadJam() {
             app.setStepDefinition({ id: 1, name: 'steps.js', source: stepSource })
         ]);
     }
+    console.log(`Loading existing jam ${id}...`);
     return firebase.getJam(id)
         .then(jam => Promise.all([
             Promise.resolve(setOwner({ uid: jam.uid, name: jam.createdBy.name, photo: jam.createdBy.photo })),
@@ -364,18 +366,18 @@ app.execute = (text) => {
 app.on = hub.on.bind(hub);
 
 module.exports = app;
-
+console.log("testjam.io app start.");
 setTimeout(() => {
     const theme = browser.local('theme') ? browser.local('theme') : app.getThemes()[0];
     loadJam()
         .then(() => app.setTheme(theme))
         .then(() => browser.enableApp())
-        .then(() => setImmediate(() => {
+        .then(() => setTimeout(() => {
             // after the page loads, start running tests.
             if (browser.page()) {
                 app.test();
             }
-        }))
+        }, 0))
         .catch((err) => {
             document.getElementById('loadingIcon').className = 'fa fa-warning';
             document.getElementById('loadingMessage').innerHTML = `${err.name}: ${err.message}`;

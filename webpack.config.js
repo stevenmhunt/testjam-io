@@ -1,6 +1,7 @@
 const path = require('path');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const NodePolyfillPlugin = require("node-polyfill-webpack-plugin")
 
 var BUILD_DIR = path.resolve(__dirname, './build');
 var CSS_DIR = path.resolve(BUILD_DIR, 'css');
