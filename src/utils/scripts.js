@@ -48,6 +48,7 @@ function loadStackChain(name, version) {
     return executeScript(name, `
     window._stackChain = { version: '${version}' };
     window._stackChain.prepareStackTrace = function () { };
+    window._stackChain.callSite = function () { return []; };
     window._stackChain.filter = {
         attach: function () { },
         deattach: function () { }

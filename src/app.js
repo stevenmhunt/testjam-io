@@ -12,7 +12,7 @@ import Logger from './Logger';
 const setImmediate = (fn) => setTimeout(fn, 0);
 
 const cache = {
-    runtime: 'CucumberJS 7.x',
+    runtime: 'CucumberJS 8.x',
     isTestingEnabled: true,
     isTestRunning: false
 };

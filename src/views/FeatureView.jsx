@@ -19,7 +19,7 @@ export default
         this.indent = new GherkinIndent({});
 
         this.state = {
-            runtime: 'CucumberJS 7.x',
+            runtime: 'CucumberJS 8.x',
             name: '',
             source: ''
         }

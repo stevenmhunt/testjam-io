@@ -2,6 +2,7 @@ const cucumberjsRuntimeBuilder = require('./cucumberjsRuntimeBuilder');
 const cucumberjsLegacyRuntimeBuilder = require('./cucumberjsLegacyRuntimeBuilder');
 
 const mapping = {
+    'CucumberJS 8.x': cucumberjsRuntimeBuilder('8.4.0'),
     'CucumberJS 7.x': cucumberjsRuntimeBuilder('7.3.2'),
     'CucumberJS 6.x': cucumberjsLegacyRuntimeBuilder('6.0.5'),
     'CucumberJS 5.x': cucumberjsLegacyRuntimeBuilder('5.1.0'),

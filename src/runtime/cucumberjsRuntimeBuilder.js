@@ -11,7 +11,7 @@ function cucumberRuntimeBuilder(version) {
 
     function load() {
         return loadStackChain(`cucumber${major}x_preload`, '2.0.0')
-            .then(() => executeScriptUrl(`cucumber${major}x`, `/js/runtimes/cucumberjs-${major}.x.min.js?r=1`))
+            .then(() => executeScriptUrl(`cucumber${major}x`, `/js/runtimes/cucumberjs-${major}.x.js?r=1`))
             .then(result => waitUntilExists(libname, result));
     }
 
@@ -30,8 +30,6 @@ function cucumberRuntimeBuilder(version) {
                 .forEach(i => new Function('__dependencies', i)(dependencies));
         });
         
-        console.log(features);
-
         await cucumber.executeTests({
             parsedArgvOptions: {},
             runtimeOptions: {},

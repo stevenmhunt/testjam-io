@@ -1,5 +1,5 @@
 
-build: 1.x 2.x 3.x 4.x 5.x 6.x 7.x build-web
+build: 1.x 2.x 3.x 4.x 5.x 6.x 7.x 8.x build-web
 
 clean:
 	(test -d ./build && rm -r ./build || echo "build folder already cleaned");
@@ -27,6 +27,7 @@ cucumberjs_4x=./build/js/runtimes/cucumberjs-4.x
 cucumberjs_5x=./build/js/runtimes/cucumberjs-5.x
 cucumberjs_6x=./build/js/runtimes/cucumberjs-6.x
 cucumberjs_7x=./build/js/runtimes/cucumberjs-7.x
+cucumberjs_8x=./build/js/runtimes/cucumberjs-8.x
 min=min
 1.x: download-1.x
 	if [ ! -f "${cucumberjs_1x}.${min}.js" ]; then \
@@ -79,6 +80,22 @@ min=min
 		cat ${cucumberjs_7x}.js | npx babel -s false --presets stage-0 --minified --compact true --plugins transform-es2015-object-super -o ${cucumberjs_7x}.${min}.js; \
 	fi
 
+8.x: download-8.x
+	if [ ! -f "${cucumberjs_8x}.${min}.js" ]; then \
+		sed -i \
+			-e 's/g.Cucumber =/g.__cucumber8 =/g' \
+			-e 's/_c\.fs\.O_CREAT/512/g' \
+			-e 's/_c\.fs\.O_EXCL/2048/g' \
+			-e 's/_c\.fs\.O_RDWR/2/g' \
+			-e 's/_c\.os\.errno\.EBADF/9/g' \
+			-e 's/_c\.os\.errno\.ENOENT/2/g' \
+			-e 's/fs\.rmdirSync\.bind(fs)/function() {}/g' \
+			-e 's/catch {/catch (err) {/g' \
+			-e 's/= detectSupport(stream, env, enabled)/= false/g' \
+			-e 's/methods\.performance\.now()/Date\.now()/g' \
+			${cucumberjs_8x}.js; \
+		cat ${cucumberjs_8x}.js | npx babel -s false --presets stage-0 --minified --compact true --plugins transform-es2015-object-super -o ${cucumberjs_8x}.${min}.js; \
+	fi
 ################## Download required files from the Internet ######################
 
 download-1.x: init
@@ -113,3 +130,6 @@ download-6.x: init
 
 download-7.x: init
 	chmod +x ./scripts/cucumberjs-7.x.sh && ./scripts/cucumberjs-7.x.sh
+
+download-8.x: init
+	chmod +x ./scripts/cucumberjs-8.x.sh && ./scripts/cucumberjs-8.x.sh
