@@ -53,7 +53,7 @@ function scanForPackages(source) {
     
     return getPackages()
         .then(packages => packages.map(i => i.name))
-        .then(packages => requires.filter(i => packages.indexOf(i) === -1 && i !== 'cucumber'))
+        .then(packages => requires.filter(i => packages.indexOf(i) === -1 && i !== 'cucumber' && i !== '@cucumber/cucumber'))
         .then(newPackages => Promise.all(newPackages.map(i => addPackage(i))));
 }
 

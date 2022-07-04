@@ -1,8 +1,10 @@
 // configuration for testjam.io
 
 const stepSource = "// Step definition file:\n\n" +
-  "const { Given, When, Then } = require('cucumber'); // load CucumberJS based on selected runtime version.\n" +
-  "const assert = require('assert'); // imported modules are automatically downloaded using browserify-cdn.\n\n" +
+  "// load CucumberJS based on selected runtime version.\n" +
+  "const { Given, When, Then } = require('@cucumber/cucumber');\n\n" +
+  "// imported modules are automatically downloaded using browserify-cdn.\n" +
+  "const assert = require('assert');\n\n" +
   "Given('my step definition runs...', function () {\n    // step definition code.\n});\n";
 
 const featureSource = "# Gherkin feature file:\n\n" +

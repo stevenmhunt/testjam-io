@@ -24,7 +24,7 @@ function cucumberRuntimeBuilder(version) {
 
         logger.info(`Starting CucumberJS ${version}...\n`);
         const supportCodeLibrary = cucumber.buildSupportCodeLibrary(function (cucumber) {
-            const dependencies = Object.assign({}, packages, { cucumber });
+            const dependencies = Object.assign({}, packages, { cucumber, '@cucumber/cucumber': cucumber });
             stepDefinitions
                 .map(stepDefinitionFormatter)
                 .forEach(i => new Function('__dependencies', i)(dependencies));
