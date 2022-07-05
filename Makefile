@@ -1,10 +1,13 @@
 
-build: 1.x 2.x 3.x 4.x 5.x 6.x 7.x 8.x build-web
+build: legacy.x 7.x 8.x build-web
 
 clean:
 	(test -d ./build && rm -r ./build || echo "build folder already cleaned");
 
-init:
+npm-install:
+	npm install --legacy-peer-deps
+
+init: npm-install
 	mkdir -p ./build/css && \
 	cp -r ./www/* ./build && \
 	cp ./node_modules/react-dropdown/style.css ./build/css/react-dropdown.css && \
@@ -13,11 +16,6 @@ init:
 
 build-web: npm-install
 	npm run prod-build;
-
-npm-install:
-	if [ ! -d "./node_modules" ]; then \
-	    npm install; \
-	fi;
 
 github_url=https://raw.githubusercontent.com/cucumber/cucumber-js
 cucumberjs_1x=./build/js/runtimes/cucumberjs-1.x
