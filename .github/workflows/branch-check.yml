@@ -3,8 +3,7 @@ name: Check build on commit
 on:
   push:
     branches:
-      - '*'
-      - '!main'
+      - "feature/*"
 
 jobs:
   run_branch_check:
