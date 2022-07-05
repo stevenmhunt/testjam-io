@@ -19,10 +19,10 @@ if [ ! -f $cucumberjs_7x ]; then
     echo "export const executeTests = executeTestsFn" >> ./src/index.ts
     echo "export const buildSupportCodeLibrary = buildSupportCodeLibraryFn" >> ./src/index.ts
     npm install
-    tsc -p tsconfig.node.json
+    npx tsc -p tsconfig.node.json
     cp ./package.json ./lib
-    browserify ./lib/src/index.js --standalone Cucumber -o ../cucumber.js
+    npx browserify ./lib/src/index.js --standalone Cucumber -o ../cucumber.js
     popd
     cp $CUKEDIR/cucumber.js $cucumberjs_7x
-    # chmod -R 777 $CUKEDIR && rm -r $CUKEDIR
+    chmod -R 777 $CUKEDIR && rm -r $CUKEDIR
 fi;

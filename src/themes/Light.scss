@@ -5,12 +5,13 @@ body.theme-Light {
     $bg-alt-color: #ffffff;
     $border-color: #68cc68;
     $text-color: black;
+    $link-color: #336633;
 
     background-color: $bg-color;
     color: $text-color;
 
     a, a:visited {
-        color: $text-color;
+        color: $link-color;
     }
 
     div.header-view {
