@@ -1,6 +1,6 @@
 {
   "name": "testjam-io",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "description": "React web application for testjam.io",
   "main": "index.js",
   "scripts": {
@@ -52,8 +52,8 @@
     "shell-quote": "^1.7.2"
   },
   "build": {
-    "version": "0.6.2",
-    "date": "2022-07-05T11:23:00Z"
+    "version": "0.6.3",
+    "date": "2022-07-05T14:06:00Z"
   },
   "devDependencies": {
     "browserify": "^17.0.0",
