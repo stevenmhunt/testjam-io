@@ -218,6 +218,10 @@ input.commands {
     z-index: inherit !important;
 }
 
+div[data-testid=editor-toolbar] {
+    display: none;
+}
+
 .Dropdown-menu {
     z-index: 9999;
 }

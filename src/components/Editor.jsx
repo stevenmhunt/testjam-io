@@ -1,10 +1,10 @@
 import React from 'react';
 import AceEditor from 'react-ace';
+import GherkinEditor from '@smartbear/react-gherkin-editor'
 import ReactResizeDetector from 'react-resize-detector';
 
 import app from '../app';
 
-import 'ace-builds/src-noconflict/mode-gherkin';
 import 'ace-builds/src-noconflict/mode-javascript';
 
 import 'ace-builds/src-noconflict/theme-chrome';
@@ -51,6 +51,26 @@ export default
     render() {
         return (<div style={{ width: '100%', height: '100%' }}>
             <ReactResizeDetector handleWidth handleHeight onResize={this.onResize} />
+            {this.props.type === 'gherkin' ?
+            <GherkinEditor
+                theme={this.getAceTheme()}
+                language='en'
+                fontSize={14}
+                showPrintMargin={false}
+                onBlur={this.props.onBlur}
+                onChange={this.props.onChange}
+                height={this.state.height}
+                width={this.state.width}
+                name={this.props.id}
+                initialValue={this.props.value}
+                useSoftTabs={true}
+                editorProps={{
+                    hScrollBarAlwaysVisible: false,
+                    vScrollBarAlwaysVisible: true,
+                    animatedScroll: true,
+                }}
+            />
+            :
             <AceEditor
                 mode={this.props.type}
                 theme={this.getAceTheme()}
@@ -68,7 +88,7 @@ export default
                     vScrollBarAlwaysVisible: true,
                     animatedScroll: true,
                 }}
-            />
+            />}
         </div>);
     }
 }
