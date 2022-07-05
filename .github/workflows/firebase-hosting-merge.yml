@@ -14,7 +14,10 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16
-      - run: npm install --legacy-peer-deps && make
+      - name: Install NPM libraries
+        run: npm install --legacy-peer-deps
+      - name: Build Production Webapp
+        run: make
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
