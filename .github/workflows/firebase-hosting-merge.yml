@@ -16,6 +16,12 @@ jobs:
           node-version: 16
       - name: Install NPM libraries
         run: npm install --legacy-peer-deps
+      - name: Build Cucumber.js 1.x - 6.x browser-compatible libraries
+        run: make legacy.x
+      - name: Build Cucumber.js 7.x browser-compatible library
+        run: make 7.x
+      - name: Build Cucumber.js 8.x browser-compatible library
+        run: make 8.x
       - name: Build Production Webapp
         run: make
       - uses: FirebaseExtended/action-hosting-deploy@v0
