@@ -1,8 +1,9 @@
 name: Check build on commit
 on:
-  pull_request:
+  push:
     branches:
-      - master
+      - '*'
+      - '!master'
 jobs:
   run_lint:
     runs-on: ubuntu-latest
