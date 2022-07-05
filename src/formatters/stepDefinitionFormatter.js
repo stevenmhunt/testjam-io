@@ -1,5 +1,3 @@
-const _ = require('lodash');
-
 module.exports = function stepDefinitionFormatter({ source, id }) {
     const result = `
     function require(i) {

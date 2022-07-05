@@ -1,4 +1,5 @@
+/* eslint-disable global-require */
 
 module.exports = {
-    npm: require('./npm')
+    npm: require('./npm'),
 };

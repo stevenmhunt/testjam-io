@@ -1,14 +1,15 @@
+/* eslint-disable no-undef */
+
 const auth = firebase.auth();
 const db = firebase.firestore();
 const analytics = firebase.analytics ? firebase.analytics() : null;
 const functions = firebase.functions();
 
-
 if (analytics) {
     analytics.setAnalyticsCollectionEnabled(true);
 }
 
-var fnGetMyJams = functions.httpsCallable('getMyJams')
+const fnGetMyJams = functions.httpsCallable('getMyJams');
 
 // User Authentication
 
@@ -20,15 +21,15 @@ function onAuthChanged(cb) {
 let authUser = null;
 
 auth.onAuthStateChanged((user) => {
-    authUser = user;    
+    authUser = user;
     return onAuthChangedFn({ action: user ? 'signIn' : 'signOut', user });
 });
 
 function signIn() {
-    var provider = new firebase.auth.GoogleAuthProvider();
+    const provider = new firebase.auth.GoogleAuthProvider();
     return auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
         .then(() => auth.signInWithPopup(provider))
-        .then(result => result.user);
+        .then((result) => result.user);
 }
 
 function signOut() {
@@ -40,7 +41,7 @@ function signOut() {
 
 function getJam(id) {
     if (!id) {
-        return Promise.reject('An id is required.');
+        return Promise.reject(new Error('An id is required.'));
     }
     return db.collection('jams').doc(id).get()
         .then((result) => {
@@ -52,7 +53,9 @@ function getJam(id) {
         });
 }
 
-function saveJam(id, { name, features, stepDefinitions, runtime, fork }) {
+function saveJam(id, {
+    name, features, stepDefinitions, runtime, fork,
+}) {
     if (!features || !stepDefinitions || !runtime) {
         return Promise.reject(new Error('Required data fields are missing.'));
     }
@@ -69,13 +72,13 @@ function saveJam(id, { name, features, stepDefinitions, runtime, fork }) {
             runtime,
             uid: authUser.uid,
             createdBy: { uid: authUser.uid, name: authUser.displayName, photo: authUser.photoURL },
-            fork: fork || null
+            fork: fork || null,
         };
 
         return db.collection('jams').add(jam).then((r) => {
             analytics.logEvent('share', { content_type: 'jam', item_id: r.id });
             return db.collection('users').doc(authUser.uid).update({
-                jamsCount: firebase.firestore.FieldValue.increment(1)
+                jamsCount: firebase.firestore.FieldValue.increment(1),
             }).then(() => r.id);
         });
     }
@@ -84,26 +87,32 @@ function saveJam(id, { name, features, stepDefinitions, runtime, fork }) {
         features,
         stepDefinitions,
         runtime,
-        dateUpdated: firebase.firestore.FieldValue.serverTimestamp()
+        dateUpdated: firebase.firestore.FieldValue.serverTimestamp(),
     }).then(() => null);
 }
 
-function forkJam(id, { name, features, stepDefinitions, runtime, createdBy }) {
+function forkJam(id, {
+    name, features, stepDefinitions, runtime, createdBy,
+}) {
     if (!authUser || !authUser.uid) {
         return Promise.reject(new Error('You must be an authenticated user to fork a jam.'));
     }
     return saveJam(null, {
-        name: `${name} (copy)`, features, stepDefinitions, runtime, fork: {
+        name: `${name} (copy)`,
+        features,
+        stepDefinitions,
+        runtime,
+        fork: {
             id,
             name,
-            createdBy
-        }
-    })
+            createdBy,
+        },
+    });
 }
 
 function likeJam(id) {
     if (!id) {
-        return Promise.reject('An id is required.');
+        return Promise.reject(new Error('An id is required.'));
     }
     if (!authUser || !authUser.uid) {
         return Promise.reject(new Error('You must be an authenticated user to like a jam.'));
@@ -112,19 +121,19 @@ function likeJam(id) {
     const batch = db.batch();
 
     batch.update(db.collection('jams').doc(id), {
-        likedBy: firebase.firestore.FieldValue.arrayUnion(authUser.uid)
+        likedBy: firebase.firestore.FieldValue.arrayUnion(authUser.uid),
     });
-    
+
     batch.update(db.collection('users').doc(authUser.uid), {
-        likes: firebase.firestore.FieldValue.arrayUnion(id)
+        likes: firebase.firestore.FieldValue.arrayUnion(id),
     });
-    
+
     return batch.commit();
 }
 
 function unlikeJam(id) {
     if (!id) {
-        return Promise.reject('An id is required.');
+        return Promise.reject(new Error('An id is required.'));
     }
     if (!authUser || !authUser.uid) {
         return Promise.reject(new Error('You must be an authenticated user to unlike a jam.'));
@@ -133,13 +142,13 @@ function unlikeJam(id) {
     const batch = db.batch();
 
     batch.update(db.collection('jams').doc(id), {
-        likedBy: firebase.firestore.FieldValue.arrayRemove(authUser.uid)
+        likedBy: firebase.firestore.FieldValue.arrayRemove(authUser.uid),
     });
-    
+
     batch.update(db.collection('users').doc(authUser.uid), {
-        likes: firebase.firestore.FieldValue.arrayRemove(id)
+        likes: firebase.firestore.FieldValue.arrayRemove(id),
     });
-    
+
     return batch.commit();
 }
 
@@ -148,33 +157,23 @@ function getMyJams(startAfter = null, limit = 10) {
         return Promise.reject(new Error('You must be an authenticated user to get your jams.'));
     }
     return fnGetMyJams({ limit, startAfter })
-        .then(r => r.data);
+        .then((r) => r.data);
 }
-
 
 function loadUser(id) {
     const userId = id || authUser.uid;
 
     function attemptCreateProfile() {
-        const defaultProfile = { name: authUser.displayName, photo: authUser.photoURL, likes: [], jamsCount: 0 };
+        const defaultProfile = {
+            name: authUser.displayName, photo: authUser.photoURL, likes: [], jamsCount: 0,
+        };
         if (userId === authUser.uid) {
             return db.collection('users').doc(userId).set(defaultProfile).then(() => defaultProfile);
         }
         return null;
     }
     return db.collection('users').doc(userId).get()
-        .then(r => r.exists ? r.data() : attemptCreateProfile());
-}
-
-function initUserProfile(user) {
-    return Promise.all([
-        db.collection('profiles').doc(user.uid).set({
-            name: user.displayName, photo: user.photoURL
-        }, { merge: true }),
-        db.collection('users').doc(user.uid).set({
-
-        }, { merge: true })
-    ]).then(() => user);
+        .then((r) => (r.exists ? r.data() : attemptCreateProfile()));
 }
 
 module.exports = {
@@ -188,5 +187,5 @@ module.exports = {
     unlikeJam,
     getMyJams,
     loadUser,
-    db: () => db
+    db: () => db,
 };

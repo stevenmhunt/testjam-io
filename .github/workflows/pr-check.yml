@@ -1,0 +1,19 @@
+name: Check build on commit
+on:
+  pull_request:
+    branches:
+      - master
+jobs:
+  run_lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: Install NPM libraries
+        run: npm install --legacy-peer-deps
+      - name: Run ESLint
+        run: npm run lint
+      - name: Build Development Web App
+        run: npm run dev-build
