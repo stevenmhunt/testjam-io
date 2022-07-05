@@ -1,10 +1,12 @@
 name: Deploy to Firebase Hosting on merge
-  on:
-    push:
-      branches:
-        - master
+
+on:
+  push:
+    branches:
+      - master
+
 jobs:
-  build_and_deploy:
+  run_build_and_deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3

@@ -1,11 +1,13 @@
 name: Check build on commit
+
 on:
   push:
     branches:
       - '*'
       - '!master'
+
 jobs:
-  run_lint:
+  run_branch_check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
