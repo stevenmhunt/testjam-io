@@ -91,7 +91,7 @@ min=min
 			-e 's/_c\.os\.errno\.ENOENT/2/g' \
 			-e 's/fs\.rmdirSync\.bind(fs)/function() {}/g' \
 			-e 's/catch {/catch (err) {/g' \
-			-e 's/= detectSupport(stream, env, enabled)/= true/g' \
+			-e 's/= detectSupport(stream, env, enabled)/= { level: 3 }/g' \
 			-e 's/methods\.performance\.now()/Date\.now()/g' \
 			${cucumberjs_8x}.js; \
 		cat ${cucumberjs_8x}.js | npx babel -s false --presets stage-0 --minified --compact true --plugins transform-es2015-object-super -o ${cucumberjs_8x}.${min}.js; \

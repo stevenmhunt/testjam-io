@@ -1,11 +1,11 @@
 {
   "name": "testjam-io",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "React web application for testjam.io",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "npx eslint ./src",
+    "lint": "npx eslint src/**/*.{js,jsx}",
     "start": "firebase emulators:start",
     "watch": "./node_modules/.bin/webpack --mode=development --watch",
     "dev-build": "./node_modules/.bin/webpack --mode=development",
@@ -56,8 +56,8 @@
     "shell-quote": "^1.7.2"
   },
   "build": {
-    "version": "0.7.0",
-    "date": "2022-07-16:37:00Z"
+    "version": "0.8.0",
+    "date": "2022-07-06T12:37:31.335Z"
   },
   "devDependencies": {
     "browserify": "^17.0.0",

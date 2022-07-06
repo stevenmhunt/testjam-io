@@ -1,5 +1,6 @@
 import { buildOptions, buildSupportCodeLibrary as buildSupportCodeLibraryFn } from './runtime_helpers'
-import { generateEvents } from './gherkin_helpers'
+import { IParsedSource, parse } from './gherkin_helpers'
+import { IGherkinOptions } from '@cucumber/gherkin'
 import Runtime, { IRuntimeOptions } from '../src/runtime'
 import { EventEmitter } from 'events'
 import { EventDataCollector } from '../src/formatter/helpers'
@@ -7,7 +8,6 @@ import FormatterBuilder from '../src/formatter/builder'
 import { IdGenerator } from '@cucumber/messages'
 import * as messages from '@cucumber/messages'
 import { ISupportCodeLibrary } from '../src/support_code_library_builder/types'
-import { ITestCaseAttempt } from '../src/formatter/helpers/event_data_collector'
 import { doesNotHaveValue } from '../src/value_checker'
 import { PassThrough } from 'stream'
 import { emitSupportCodeMessages } from '../src/cli/helpers'
@@ -51,19 +51,43 @@ export interface ITestRunOptions {
 export interface ITestFormatterOptions extends ITestRunOptions {
     parsedArgvOptions?: IParsedArgvFormatOptions
     type: string
+    language: string
 }
   
 export interface IEnvelopesAndEventDataCollector {
     envelopes: messages.Envelope[]
     eventDataCollector: EventDataCollector
 }
-  
+
+export interface IGenerateEventsRequest {
+  data: string
+  eventBroadcaster: EventEmitter
+  uri: string
+  options: IGherkinOptions
+}
+
+export async function generateEvents({
+  data,
+  eventBroadcaster,
+  uri,
+  options,
+}: IGenerateEventsRequest): Promise<IParsedSource> {
+  const { envelopes, source, gherkinDocument, pickles } = await parse({
+    data,
+    uri,
+    options,
+  })
+  envelopes.forEach((envelope) => eventBroadcaster.emit('envelope', envelope))
+  return { source, gherkinDocument, pickles }
+}
+
 export async function executeTests({
   parsedArgvOptions = {},
   runtimeOptions = {},
   supportCodeLibrary,
   sources = [],
   type,
+  language,
   logFn,
 }: ITestFormatterOptions) {
   if (doesNotHaveValue(supportCodeLibrary)) {
@@ -94,6 +118,9 @@ export async function executeTests({
       data: source.data,
       eventBroadcaster,
       uri: source.uri,
+      options: {
+        defaultDialect: language
+      }
     })
     pickleIds = pickleIds.concat(pickles.map((p) => p.id))
   }

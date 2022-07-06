@@ -24,7 +24,7 @@ class Editor extends React.Component {
             theme: 'Light',
         };
         this.onResize = this.onResize.bind(this);
-        app.on('themeChanged', (t) => this.setState({ theme: t }));
+        app.on('themeChanged', (theme) => this.setState({ theme }));
     }
 
     /**
@@ -51,11 +51,10 @@ class Editor extends React.Component {
     render() {
         const useSoftTabs = true;
         const highlightActiveLine = true;
-        const lang = 'en';
         const hideToolbar = true;
         const showGutter = true;
         const {
-            type, onBlur, onChange, id, value,
+            type, onBlur, onChange, id, value, language,
         } = this.props;
         const { width, height } = this.state;
         const options = {
@@ -68,7 +67,7 @@ class Editor extends React.Component {
                     ? (
                         <GherkinEditor
                             theme={this.getAceTheme()}
-                            language={lang}
+                            language={language}
                             fontSize={14}
                             showPrintMargin={false}
                             onBlur={onBlur}
@@ -115,11 +114,16 @@ class Editor extends React.Component {
 }
 
 Editor.propTypes = {
+    language: PropTypes.string,
     type: PropTypes.string.isRequired,
     onBlur: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired,
     id: PropTypes.string.isRequired,
     value: PropTypes.string.isRequired,
+};
+
+Editor.defaultProps = {
+    language: 'en',
 };
 
 export default Editor;

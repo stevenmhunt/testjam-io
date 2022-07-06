@@ -13,7 +13,7 @@ function cucumberRuntimeBuilder(version) {
     }
 
     async function execute({
-        features, stepDefinitions, packages, logger,
+        features, stepDefinitions, packages, logger, language,
     }) {
         const cucumber = window[libname];
         if (!cucumber) {
@@ -31,7 +31,10 @@ function cucumberRuntimeBuilder(version) {
         });
 
         await cucumber.executeTests({
-            parsedArgvOptions: {},
+            parsedArgvOptions: {
+                colorsEnabled: true,
+            },
+            language,
             runtimeOptions: {},
             supportCodeLibrary,
             sources: features.map((i) => ({ data: i.source || '', uri: i.name || '' })),

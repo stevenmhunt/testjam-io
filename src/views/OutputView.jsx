@@ -1,9 +1,13 @@
+/* eslint-disable react/no-danger */
+/* eslint-disable jsx-a11y/no-autofocus */
 import React from 'react';
+import PropTypes from 'prop-types';
 import { NotificationManager } from 'react-notifications';
 import ansiHtml from 'ansi-html';
 import _ from 'lodash';
 
 import app from '../app';
+
 const { logger } = app;
 
 function processOutput(output, formatter) {
@@ -17,13 +21,11 @@ function processOutput(output, formatter) {
 
     const { protocol, hostname, port } = window.location;
     let result = `${output}`;
-    result = result.replace(new RegExp(`${protocol}[/]{1,2}${hostname}${port !== 80 || port != 443 ? ':' + port : ''}`, 'g'), '');
+    result = result.replace(new RegExp(`${protocol}[/]{1,2}${hostname}${port !== 80 || port !== 443 ? `:${port}` : ''}`, 'g'), '');
     return formatter(result);
 }
 
-export default
-    class OutputView extends React.Component {
-
+class OutputView extends React.Component {
     constructor(props) {
         super(props);
 
@@ -32,23 +34,25 @@ export default
         this.onCommandKeyDown = this.onCommandKeyDown.bind(this);
 
         this.state = {
-            output: []
+            output: [],
         };
-        const formatter = props.formatter || (i => i);
+        const formatter = props.formatter || ((i) => i);
         logger.on('output', (data) => {
-            this.setState(state => ({
-                output: [...state.output, processOutput(data, formatter)]
+            this.setState((state) => ({
+                output: [...state.output, processOutput(data, formatter)],
             }));
             this.scrollToBottom();
         });
         logger.on('clear', () => this.clearOutput());
     }
 
+    // eslint-disable-next-line class-methods-use-this, react/sort-comp
     scrollToBottom() {
         const element = document.getElementById('outputLogView').parentElement;
         element.scrollTop = element.scrollHeight - element.clientHeight;
     }
 
+    // eslint-disable-next-line class-methods-use-this
     displayHelp() {
         logger.log(`
 
@@ -85,6 +89,7 @@ Command-line utilities
 `);
     }
 
+    // eslint-disable-next-line class-methods-use-this
     copyOutput() {
         const copyText = document.getElementById('outputLogView').textContent;
         const textArea = document.createElement('textarea');
@@ -93,7 +98,7 @@ Command-line utilities
         textArea.style.left = '-100%';
         document.body.append(textArea);
         textArea.select();
-        document.execCommand("copy");
+        document.execCommand('copy');
         textArea.remove();
         NotificationManager.info('The test log output is now on your computer\'s clipboard.', 'Copy operation completed.', 1500);
     }
@@ -106,14 +111,11 @@ Command-line utilities
         if (e.key === 'Enter') {
             if (e.target.value === 'help') {
                 this.displayHelp();
-            }
-            else if (e.target.value === 'copy') {
+            } else if (e.target.value === 'copy') {
                 this.copyOutput();
-            }
-            else if (e.target.value === 'clear') {
+            } else if (e.target.value === 'clear') {
                 this.clearOutput();
-            }
-            else {
+            } else {
                 app.execute(e.target.value);
             }
             e.target.value = '';
@@ -121,29 +123,48 @@ Command-line utilities
     }
 
     render() {
-        return (<div className="output-view">
-            <div className="view-header">
-                <div className="view-header-left">
-                    <div className="title"><div>Test Results</div></div>
+        const { output } = this.state;
+        return (
+            <div className="output-view">
+                <div className="view-header">
+                    <div className="view-header-left">
+                        <div className="title"><div>Test Results</div></div>
+                    </div>
+                    <div className="view-header-right">
+                        <div className="menu">
+                            <div onClick={this.copyOutput} role="button" tabIndex={0} className="btn btn-small">
+                                <i className="fa fa-1x fa-clipboard" />
+                                Copy
+                            </div>
+                            <div onClick={this.clearOutput} role="button" tabIndex={0} className="btn btn-small">
+                                <i className="fa fa-1x fa-times" />
+                                Clear Logs
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div className="view-header-right">
-                    <div className="menu">
-                        <div onClick={this.copyOutput} className="btn btn-small"><i className="fa fa-1x fa-clipboard"></i>Copy</div>
-                        <div onClick={this.clearOutput} className="btn btn-small"><i className="fa fa-1x fa-times"></i>Clear Logs</div>
+                <div className="output-container" style={{ overflow: 'auto' }}>
+                    <pre id="outputLogView" dangerouslySetInnerHTML={{ __html: ansiHtml(output.join('')) }} />
+                </div>
+                <div className="view-header" style={{ height: '33px' }}>
+                    <div className="view-header-left" style={{ width: '100%' }}>
+                        <div className="title"><div style={{ fontSize: '18px' }}><i className="fa fa-terminal" /></div></div>
+                        <div className="item commands">
+                            <input autoFocus type="text" className="commands" placeholder="For help with the terminal, type 'help'." />
+                        </div>
                     </div>
                 </div>
             </div>
-            <div className="output-container" style={{ overflow: 'auto' }}>
-                <pre id="outputLogView" dangerouslySetInnerHTML={{ __html: ansiHtml(this.state.output.join('')) }}></pre>
-            </div>
-            <div className="view-header" style={{ height: '33px' }}>
-                <div className="view-header-left" style={{ width: '100%' }}>
-                    <div className="title"><div style={{fontSize: '18px'}}><i className="fa fa-terminal"></i></div></div>
-                    <div className="item commands">
-                        <input autoFocus type="text" className="commands" placeholder="For help with the terminal, type 'help'." onKeyDown={this.onCommandKeyDown} />
-                    </div>
-                </div>
-            </div>
-        </div>);
+        );
     }
 }
+
+OutputView.propTypes = {
+    formatter: PropTypes.func,
+};
+
+OutputView.defaultProps = {
+    formatter: (i) => i,
+};
+
+export default OutputView;
