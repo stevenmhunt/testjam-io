@@ -18,7 +18,8 @@ const setImmediate = (fn) => setTimeout(fn, 0);
 
 const defaultValues = {
     runtime: 'CucumberJS 8.x',
-    language: 'en',
+    dialect: 'en',
+    language: 'javascript',
 };
 
 const cache = {
@@ -95,6 +96,7 @@ function loadJam() {
             Promise.resolve(app.setName(jam.name)),
             Promise.resolve(app.setFork(jam.fork)),
             app.setRuntime(jam.runtime || defaultValues.runtime),
+            app.setDialect(jam.dialect || defaultValues.dialect),
             app.setLanguage(jam.language || defaultValues.language),
             ...(jam.features.map((i) => app.setFeature(i))),
             ...(jam.stepDefinitions.map((i) => app.setStepDefinition(i))),
@@ -106,6 +108,7 @@ app.save = () => Promise.resolve(hub.emit('saving'))
         name: app.getName(),
         runtime: app.getRuntime(),
         language: app.getLanguage(),
+        dialect: app.getDialect(),
         features: app.getFeatures(),
         stepDefinitions: app.getStepDefinitions(),
     })).then((id) => {
@@ -122,6 +125,7 @@ app.fork = () => Promise.resolve(hub.emit('forking'))
         name: app.getName(),
         runtime: app.getRuntime(),
         language: app.getLanguage(),
+        dialect: app.getDialect(),
         features: app.getFeatures(),
         stepDefinitions: app.getStepDefinitions(),
         createdBy: getOwner(),
@@ -225,6 +229,7 @@ function runTestsInternal() {
                 features: app.getFeatures(),
                 stepDefinitions: app.getStepDefinitions(),
                 language: app.getLanguage(),
+                dialect: app.getDialect(),
                 packages,
                 logger: app.logger,
             }))
@@ -275,12 +280,24 @@ app.unlike = () => Promise.resolve(hub.emit('changingLike'))
     .then(() => firebase.unlikeJam(browser.page()))
     .then(() => Promise.resolve(hub.emit('unliked')));
 
-// Language Management
+// Dialect Management
 
-app.getLanguages = () => _.sortBy(_.keys(dialects).map((key) => ({
+app.getDialects = () => _.sortBy(_.keys(dialects).map((key) => ({
     value: key,
     label: dialects[key].native,
 })), (i) => i.label);
+app.getDialect = () => cache.dialect;
+app.setDialect = (d) => {
+    cache.dialect = d;
+    hub.emit('dialectChanged', d);
+};
+
+// Language Management
+
+app.getLanguages = () => [{
+    value: 'javascript',
+    label: 'NodeJS',
+}];
 app.getLanguage = () => cache.language;
 app.setLanguage = (lang) => {
     cache.language = lang;

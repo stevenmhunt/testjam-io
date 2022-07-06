@@ -54,7 +54,7 @@ function getJam(id) {
 }
 
 function saveJam(id, {
-    name, features, stepDefinitions, runtime, language, fork,
+    name, features, stepDefinitions, runtime, dialect, language, fork,
 }) {
     if (!features || !stepDefinitions || !runtime) {
         return Promise.reject(new Error('Required data fields are missing.'));
@@ -70,6 +70,7 @@ function saveJam(id, {
             features,
             stepDefinitions,
             runtime,
+            dialect,
             language,
             uid: authUser.uid,
             createdBy: { uid: authUser.uid, name: authUser.displayName, photo: authUser.photoURL },
@@ -88,13 +89,14 @@ function saveJam(id, {
         features,
         stepDefinitions,
         runtime,
+        dialect,
         language,
         dateUpdated: firebase.firestore.FieldValue.serverTimestamp(),
     }).then(() => null);
 }
 
 function forkJam(id, {
-    name, features, stepDefinitions, language, runtime, createdBy,
+    name, features, stepDefinitions, dialect, language, runtime, createdBy,
 }) {
     if (!authUser || !authUser.uid) {
         return Promise.reject(new Error('You must be an authenticated user to fork a jam.'));
@@ -103,6 +105,7 @@ function forkJam(id, {
         name: `${name} (copy)`,
         features,
         stepDefinitions,
+        dialect,
         language,
         runtime,
         fork: {

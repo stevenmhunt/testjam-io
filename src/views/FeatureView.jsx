@@ -10,23 +10,24 @@ export default class FeatureView extends React.Component {
 
         this.onBlur = this.onBlur.bind(this);
         this.changeRuntime = this.changeRuntime.bind(this);
+        this.changeDialect = this.changeDialect.bind(this);
         this.formatGherkin = this.formatGherkin.bind(this);
 
         this.indent = new GherkinIndent({});
 
         this.state = {
             runtime: 'CucumberJS 8.x',
-            language: 'en',
+            dialect: 'en',
             name: '',
             source: '',
         };
 
         app.on('runtimeChanged', (runtime) => this.setState({ runtime }));
-        app.on('languageChanged', (language) => this.setState({ language }));
+        app.on('dialectChanged', (dialect) => this.setState({ dialect }));
         app.on('featureUpdated', (source) => this.setState(() => source));
 
         this.runtimes = app.getRuntimes();
-        this.languages = app.getLanguages();
+        this.dialects = app.getDialects();
     }
 
     onBlur(e, code) {
@@ -41,8 +42,8 @@ export default class FeatureView extends React.Component {
     }
 
     // eslint-disable-next-line class-methods-use-this
-    changeLanguage(t) {
-        app.setLanguage(t.value);
+    changeDialect(d) {
+        app.setDialect(d.value);
     }
 
     formatGherkin() {
@@ -55,7 +56,7 @@ export default class FeatureView extends React.Component {
     render() {
         // eslint-disable-next-line react/prop-types
         const { id } = this.props;
-        const { runtime, source, language } = this.state;
+        const { runtime, source, dialect } = this.state;
         return (
             <div className="feature-view">
                 <div className="view-header">
@@ -68,11 +69,11 @@ export default class FeatureView extends React.Component {
                                 <i className="fa fa-magic" />
                                 Tidy
                             </div>
-                            <div className="item" title="Language">
+                            <div className="item" title="Dialect">
                                 <Dropdown
-                                    options={this.languages}
-                                    value={language}
-                                    onChange={this.changeLanguage}
+                                    options={this.dialects}
+                                    value={dialect}
+                                    onChange={this.changeDialect}
                                 />
                             </div>
                             <div className="item" title="Runtime">
@@ -86,7 +87,7 @@ export default class FeatureView extends React.Component {
                     </div>
                 </div>
                 <div className="editor-container">
-                    <Editor type="gherkin" language={language} id={id} value={source} onBlur={this.onBlur} />
+                    <Editor type="gherkin" dialect={dialect} id={id} value={source} onBlur={this.onBlur} />
                 </div>
             </div>
         );

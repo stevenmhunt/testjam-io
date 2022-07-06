@@ -10,7 +10,7 @@ function load() {
 }
 
 function execute({
-    features, stepDefinitions, packages, logger, language,
+    features, stepDefinitions, packages, logger, dialect,
 }) {
     const cucumber = window[libname];
     if (!cucumber) {
@@ -36,7 +36,7 @@ function execute({
 
     const formatterOptions = {
         colorsEnabled: true,
-        language,
+        language: dialect,
         logToFunction: (i) => logger.log(i),
     };
 

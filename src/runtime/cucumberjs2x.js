@@ -10,7 +10,7 @@ function load() {
 }
 
 function execute({
-    features, stepDefinitions, packages, logger, language,
+    features, stepDefinitions, packages, logger, dialect,
 }) {
     const cucumber = window[libname];
     if (!cucumber) {
@@ -22,7 +22,7 @@ function execute({
     const dependencies = { ...packages, cucumber };
 
     const loadedFeatures = features.map(({ name, source }) => cucumber.FeatureParser.parse({
-        language,
+        language: dialect,
         scenarioFilter: new cucumber.ScenarioFilter({}),
         source,
         uri: `/${name}`,

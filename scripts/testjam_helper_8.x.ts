@@ -51,7 +51,7 @@ export interface ITestRunOptions {
 export interface ITestFormatterOptions extends ITestRunOptions {
     parsedArgvOptions?: IParsedArgvFormatOptions
     type: string
-    language: string
+    dialect: string
 }
   
 export interface IEnvelopesAndEventDataCollector {
@@ -87,7 +87,7 @@ export async function executeTests({
   supportCodeLibrary,
   sources = [],
   type,
-  language,
+  dialect,
   logFn,
 }: ITestFormatterOptions) {
   if (doesNotHaveValue(supportCodeLibrary)) {
@@ -119,7 +119,7 @@ export async function executeTests({
       eventBroadcaster,
       uri: source.uri,
       options: {
-        defaultDialect: language
+        defaultDialect: dialect
       }
     })
     pickleIds = pickleIds.concat(pickles.map((p) => p.id))
