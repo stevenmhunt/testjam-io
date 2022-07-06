@@ -1,11 +1,12 @@
-const { loadStackChain, executeScriptUrl, waitUntilExists } = require('../utils/scripts');
-const stepDefinitionFormatter = require('../formatters/stepDefinitionFormatter');
+const { version: testjamVersion } = require('../../../package.json');
+const { loadStackChain, executeScriptUrl, waitUntilExists } = require('../../utils/scripts');
+const stepDefinitionFormatter = require('../../formatters/stepDefinitionFormatter');
 
 const libname = '__cucumber1';
 
 function load() {
     return loadStackChain('cucumber1x_preload', '1.3.7')
-        .then(() => executeScriptUrl('cucumber1x', '/js/runtimes/cucumberjs-1.x.min.js?r=1'))
+        .then(() => executeScriptUrl('cucumber1x', `/js/runtimes/cucumberjs-1.x.min.js?r=${testjamVersion}`))
         .then((result) => waitUntilExists(libname, result));
 }
 
@@ -14,11 +15,11 @@ function execute({
 }) {
     const cucumber = window[libname];
     if (!cucumber) {
-        logger.error('Expected CucumberJS 1.x script files to be loaded. Exiting...');
+        logger.error('Expected Cucumber.js 1.x script files to be loaded. Exiting...');
         return Promise.resolve();
     }
 
-    logger.info('Starting CucumberJS 1.3.3...\n');
+    logger.info('Starting Cucumber.js 1.3.3...\n');
     const dependencies = { ...packages, cucumber };
 
     const loadedFeatures = features.map(({ source }) => source).join('\n\n');

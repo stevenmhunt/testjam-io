@@ -55,32 +55,39 @@ class OutputView extends React.Component {
     // eslint-disable-next-line class-methods-use-this
     displayHelp() {
         logger.log(`
-
 Welcome to the testjam.io command-line environment.
 
 User authentication
-   signIn
-   signOut
+   sign-in
+   sign-out
 
 Managing the tests
-   test
-   getName
-   setName {name}
+   run
+   get-name
+   set-name {name}
    save
    fork
 
+Configuring the Gherkin dialect
+   get-dialect
+   set-dialect "{name}"
+
+Configuring the programming langauge
+    get-language
+    set-language "{name}"
+
 Configuring the runtime environment
-   getRuntime
-   setRuntime "{name}"
+   get-runtime
+   set-runtime "{name}"
 
 Configuring package dependencies
-   getPackages
-   addPackage {name} {version}
-   removePackage {name}
+   get-packages
+   add-package {name} {version}
+   remove-package {name}
 
 Themes
-   getTheme
-   setTheme {theme}
+   get-theme
+   set-theme {theme}
 
 Command-line utilities
    help
@@ -150,7 +157,7 @@ Command-line utilities
                     <div className="view-header-left" style={{ width: '100%' }}>
                         <div className="title"><div style={{ fontSize: '18px' }}><i className="fa fa-terminal" /></div></div>
                         <div className="item commands">
-                            <input autoFocus type="text" className="commands" placeholder="For help with the terminal, type 'help'." />
+                            <input autoFocus type="text" className="commands" placeholder="For help with the terminal, type 'help'." onKeyDown={this.onCommandKeyDown} />
                         </div>
                     </div>
                 </div>

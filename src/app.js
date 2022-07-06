@@ -1,8 +1,10 @@
+/* eslint-disable prefer-template */
 /* eslint-disable no-console */
 import { dialects } from '@cucumber/gherkin';
-import { loadRuntime, executeRuntime } from './runtime';
+import runtimes from './runtimes';
+import languages from './languages';
 import {
-    runtimes, themes, featureSource, stepSource,
+    themes, featureSource,
 } from '../config';
 import errorFormatter from './formatters/errorFormatter';
 
@@ -74,6 +76,10 @@ const setOwner = (owner) => {
     hub.emit('ownerChanged', owner);
 };
 
+app.getStepSource = () => languages[app.getLanguage()].stepSource;
+
+app.tidySource = (source) => languages[app.getLanguage()].tidy(source);
+
 // Persistence
 
 function loadJam() {
@@ -84,7 +90,7 @@ function loadJam() {
             Promise.resolve(setOwner(null)),
             Promise.resolve(app.setName('New Jam')),
             app.setFeature({ id: 1, name: 'test.feature', source: featureSource }),
-            app.setStepDefinition({ id: 1, name: 'steps.js', source: stepSource }),
+            app.setStepDefinition({ id: 1, name: 'steps.js', source: app.getStepSource() }),
         ]);
     }
     console.log(`Loading existing jam ${id}...`);
@@ -214,10 +220,11 @@ const endTests = (err) => {
 /**
  * @private
  */
-function runTestsInternal() {
+function runTestsInternal(tags) {
     try {
         startTests();
         const packages = {};
+        const { loadRuntime, executeRuntime } = runtimes[app.getLanguage()];
 
         app.getPackages().then((pkgData) => {
             pkgData.forEach((pkg) => {
@@ -232,13 +239,10 @@ function runTestsInternal() {
                 dialect: app.getDialect(),
                 packages,
                 logger: app.logger,
+                tags,
             }))
             .then((success) => {
-                if (success) {
-                    app.logger.log('\nCucumberJS exited with status code 0.\n\n');
-                } else {
-                    app.logger.log('\nCucumberJS exited with status code 1.\n\n');
-                }
+                app.logger.log(`\nProcess exited with status code ${success ? 0 : 1}.\n\n`);
                 endTests(!success);
             })
             .catch((err) => {
@@ -253,22 +257,22 @@ function runTestsInternal() {
 
 let testWaitFlag = false;
 
-app.test = () => {
+app.run = (tags) => {
     if (cache.isTestingEnabled && !cache.isTestRunning) {
-        return runTestsInternal();
+        return runTestsInternal(tags);
     }
     if (!testWaitFlag) {
         testWaitFlag = true;
         return new Promise((resolve) => {
             hub.once(!cache.isTestingEnabled ? 'testsEnabled' : 'testsEnded', () => {
                 testWaitFlag = false;
-                resolve(runTestsInternal());
+                resolve(runTestsInternal(tags));
             });
         });
     }
     return undefined;
 };
-app.cucumber = app.test;
+app.cucumber = app.run;
 
 // Favorites
 
@@ -294,32 +298,27 @@ app.setDialect = (d) => {
 
 // Language Management
 
-app.getLanguages = () => [{
-    value: 'javascript',
-    label: 'NodeJS',
-}];
+app.getLanguages = () => _.values(languages);
 app.getLanguage = () => cache.language;
 app.setLanguage = (lang) => {
     cache.language = lang;
     hub.emit('languageChanged', lang);
+    app.setRuntime(app.getRuntimes()[0].value);
 };
 
 // Runtime Management
 
-app.getRuntimes = () => runtimes;
+app.getRuntimes = () => runtimes[app.getLanguage()].getRuntimes();
 app.getRuntime = () => cache.runtime;
 app.setRuntime = (r) => {
-    if (runtimes.indexOf(r) >= 0) {
-        cache.runtime = r;
-        disableTests();
-        return loadRuntime(r)
-            .then(() => {
-                enableTests();
-                hub.emit('runtimeChanged', r);
-                console.log(`Runtime changed to ${r}`);
-            });
-    }
-    return Promise.reject(new Error(`Unrecognized runtime '${r}'.`));
+    cache.runtime = r;
+    disableTests();
+    return runtimes[app.getLanguage()].loadRuntime(r)
+        .then(() => {
+            enableTests();
+            hub.emit('runtimeChanged', r);
+            console.log(`Runtime changed to ${r}`);
+        });
 };
 
 // Package Management
@@ -383,20 +382,34 @@ app.setStepDefinition = ({ id, name, source }) => {
 
 app.execute = (text) => {
     const { logger } = app;
-    const [command, ...args] = parse(text || '');
+    const [cmdKebab, ...args] = parse(text || '');
+    const command = _.camelCase(cmdKebab);
+
+    const processCommandOutput = (output) => {
+        if (_.isArray(output) && output.length > 0 && output[0].label && output[0].value) {
+            return output.map((i) => `${i.label} (${i.value})`).join('\n') + '\n';
+        }
+        if (_.isArray(output) && output.length > 0 && output[0].name && output[0].version) {
+            return output.map((i) => `${i.name}@${i.version}`).join('\n') + '\n';
+        }
+        if (output) {
+            return output + '\n';
+        }
+        return undefined;
+    };
+
     logger.log(`$ ${text}\n`);
     if (app[command] && _.isFunction(app[command])) {
         try {
             const result = app[command](...args);
             if (result && result.then) {
-                result.then((r) => logger.log(r));
+                result.then((r) => logger.log(processCommandOutput(r)));
             } else {
-                logger.log(result);
+                logger.log(processCommandOutput(result));
             }
         } catch (err) {
-            logger.log(`${err.name}: ${err.message}`);
+            logger.log(`${err.name}: ${err.message}\n`);
         }
-        logger.log('\n');
     } else {
         logger.log(`CommandError: command '${command}' not found.\n`);
     }
@@ -422,7 +435,7 @@ setTimeout(() => {
         .then(() => setTimeout(() => {
             // after the page loads, start running tests.
             if (browser.page()) {
-                app.test();
+                app.run();
             }
         }, 0))
         .catch((err) => {
