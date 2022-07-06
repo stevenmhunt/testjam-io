@@ -107,7 +107,7 @@ export default class HeaderView extends React.Component {
     }
 
     runTest() {
-        app.test();
+        app.run();
     }
 
     toggleLike() {

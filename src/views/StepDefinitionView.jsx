@@ -2,7 +2,6 @@
 import React from 'react';
 import Dropdown from 'react-dropdown';
 import PropTypes from 'prop-types';
-import { indent } from 'indent.js';
 import Editor from '../components/Editor';
 
 import app from '../app';
@@ -13,7 +12,7 @@ class StepDefinitionView extends React.Component {
 
         this.onBlur = this.onBlur.bind(this);
         this.changeLanguage = this.changeLanguage.bind(this);
-        this.formatJS = this.formatJS.bind(this);
+        this.tidySource = this.tidySource.bind(this);
 
         this.state = {
             language: 'javascript',
@@ -23,6 +22,7 @@ class StepDefinitionView extends React.Component {
 
         this.languages = app.getLanguages();
 
+        app.on('languageChanged', (language) => this.setState({ language, source: app.getStepSource() }));
         app.on('stepDefinitionUpdated', (data) => this.setState(() => data));
     }
 
@@ -37,9 +37,9 @@ class StepDefinitionView extends React.Component {
             .catch((err) => app.logger.error(`${err.name}: ${err.message}\n`));
     }
 
-    formatJS() {
+    tidySource() {
         const { name, source: sourceInitial } = this.state;
-        const source = indent.js(sourceInitial, { tabString: '    ' });
+        const source = app.tidySource(sourceInitial);
         return app.setStepDefinition({ id: 1, name, source })
             .catch((err) => app.logger.error(`${err.name}: ${err.message}\n`));
     }
@@ -59,7 +59,7 @@ class StepDefinitionView extends React.Component {
                     </div>
                     <div className="view-header-right">
                         <div className="menu">
-                            <div onClick={this.formatJS} onKeyDown={app.handleEnter(this.formatJS)} role="button" tabIndex={0} className="btn btn-small">
+                            <div onClick={this.tidySource} onKeyDown={app.handleEnter(this.tidySource)} role="button" tabIndex={0} className="btn btn-small">
                                 <i className="fa fa-magic" />
                                 Tidy
                             </div>

@@ -16,17 +16,18 @@ export default class FeatureView extends React.Component {
         this.indent = new GherkinIndent({});
 
         this.state = {
+            runtimes: app.getRuntimes(),
             runtime: 'CucumberJS 8.x',
             dialect: 'en',
             name: '',
             source: '',
         };
 
+        app.on('languageChanged', () => this.setState({ runtimes: app.getRuntimes() }));
         app.on('runtimeChanged', (runtime) => this.setState({ runtime }));
         app.on('dialectChanged', (dialect) => this.setState({ dialect }));
         app.on('featureUpdated', (source) => this.setState(() => source));
 
-        this.runtimes = app.getRuntimes();
         this.dialects = app.getDialects();
     }
 
@@ -56,7 +57,10 @@ export default class FeatureView extends React.Component {
     render() {
         // eslint-disable-next-line react/prop-types
         const { id } = this.props;
-        const { runtime, source, dialect } = this.state;
+        const {
+            runtime, runtimes, source, dialect,
+        } = this.state;
+
         return (
             <div className="feature-view">
                 <div className="view-header">
@@ -78,7 +82,7 @@ export default class FeatureView extends React.Component {
                             </div>
                             <div className="item" title="Runtime">
                                 <Dropdown
-                                    options={this.runtimes}
+                                    options={runtimes}
                                     value={runtime}
                                     onChange={this.changeRuntime}
                                 />

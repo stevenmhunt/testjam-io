@@ -75,7 +75,6 @@ min=min
 			-e 's/_c\.os\.errno\.ENOENT/2/g' \
 			-e 's/fs\.rmdirSync\.bind(fs)/function() {}/g' \
 			${cucumberjs_7x}.js; \
-		cat ${cucumberjs_7x}.js | npx babel -s false --presets stage-0 --minified --compact true --plugins transform-es2015-object-super -o ${cucumberjs_7x}.${min}.js; \
 	fi
 
 8.x: download-8.x
@@ -92,7 +91,6 @@ min=min
 			-e 's/= detectSupport(stream, env, enabled)/= { level: 3 }/g' \
 			-e 's/methods\.performance\.now()/Date\.now()/g' \
 			${cucumberjs_8x}.js; \
-		cat ${cucumberjs_8x}.js | npx babel -s false --presets stage-0 --minified --compact true --plugins transform-es2015-object-super -o ${cucumberjs_8x}.${min}.js; \
 	fi
 ################## Download required files from the Internet ######################
 

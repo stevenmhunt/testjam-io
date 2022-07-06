@@ -1,6 +1,7 @@
-const { loadStackChain, executeScriptUrl, waitUntilExists } = require('../utils/scripts');
+const { version: testjamVersion } = require('../../../package.json');
+const { loadStackChain, executeScriptUrl, waitUntilExists } = require('../../utils/scripts');
 
-const stepDefinitionFormatter = require('../formatters/stepDefinitionFormatter');
+const stepDefinitionFormatter = require('../../formatters/stepDefinitionFormatter');
 
 function cucumberRuntimeBuilder(version) {
     const [major] = version.split('.');
@@ -8,20 +9,20 @@ function cucumberRuntimeBuilder(version) {
 
     function load() {
         return loadStackChain(`cucumber${major}x_preload`, '2.0.0')
-            .then(() => executeScriptUrl(`cucumber${major}x`, `/js/runtimes/cucumberjs-${major}.x.js?r=1`))
+            .then(() => executeScriptUrl(`cucumber${major}x`, `/js/runtimes/cucumberjs-${major}.x.js?r=${testjamVersion}`))
             .then((result) => waitUntilExists(libname, result));
     }
 
     async function execute({
-        features, stepDefinitions, packages, logger, dialect,
+        features, stepDefinitions, packages, logger, dialect, tags,
     }) {
         const cucumber = window[libname];
         if (!cucumber) {
-            logger.error(`Expected CucumberJS ${major}.x script files to be loaded. Exiting...`);
+            logger.error(`Expected Cucumber.js ${major}.x script files to be loaded. Exiting...`);
             return Promise.resolve();
         }
 
-        logger.info(`Starting CucumberJS ${version}...\n`);
+        logger.info(`Starting Cucumber.js ${version}...\n`);
         const supportCodeLibrary = cucumber.buildSupportCodeLibrary((cuke) => {
             const dependencies = { ...packages, cucumber: cuke, '@cucumber/cucumber': cuke };
             stepDefinitions
@@ -30,19 +31,26 @@ function cucumberRuntimeBuilder(version) {
                 .forEach((i) => new Function('__dependencies', i)(dependencies));
         });
 
-        await cucumber.executeTests({
+        let pickleFilter;
+        if (tags) {
+            pickleFilter = (pickle) => pickle.tags.map((i) => i.name).indexOf(tags) >= 0;
+        }
+
+        return cucumber.executeTests({
             parsedArgvOptions: {
                 colorsEnabled: true,
             },
             dialect,
-            runtimeOptions: {},
+            runtimeOptions: {
+                filterStacktraces: true,
+                tags,
+            },
             supportCodeLibrary,
             sources: features.map((i) => ({ data: i.source || '', uri: i.name || '' })),
+            pickleFilter,
             type: 'progress',
             logFn: (i) => logger.log(i),
         });
-
-        return true;
     }
 
     return { execute, load };

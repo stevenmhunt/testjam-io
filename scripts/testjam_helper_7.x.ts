@@ -67,6 +67,7 @@ export async function executeTests({
   runtimeOptions = {},
   supportCodeLibrary,
   sources = [],
+  pickleFilter = undefined,
   type,
   dialect,
   logFn,
@@ -102,7 +103,7 @@ export async function executeTests({
         defaultDialect: dialect
       }
     })
-    pickleIds = pickleIds.concat(pickles.map((p) => p.id))
+    pickleIds = pickleIds.concat(pickles.filter(pickleFilter || ((i) => true)).map((p) => p.id))
   }
   const runtime = new Runtime({
     eventBroadcaster,
@@ -113,7 +114,7 @@ export async function executeTests({
     supportCodeLibrary,
   })
 
-  await runtime.start()
+  return runtime.start()
 }
 
 export const buildSupportCodeLibrary = buildSupportCodeLibraryFn

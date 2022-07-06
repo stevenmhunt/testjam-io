@@ -4,9 +4,10 @@
 const _ = require('lodash');
 const regeneratorRuntime = require('regenerator-runtime');
 const EventEmitter = require('events');
-const { loadStackChain, executeScriptUrl, waitUntilExists } = require('../utils/scripts');
+const { version: testjamVersion } = require('../../../package.json');
+const { loadStackChain, executeScriptUrl, waitUntilExists } = require('../../utils/scripts');
 
-const stepDefinitionFormatter = require('../formatters/stepDefinitionFormatter');
+const stepDefinitionFormatter = require('../../formatters/stepDefinitionFormatter');
 
 /**
  * Note: this function came from a third-party source.
@@ -62,7 +63,7 @@ function cucumberRuntimeBuilder(version) {
 
     function load() {
         return loadStackChain(`cucumber${major}x_preload`, '2.0.0')
-            .then(() => executeScriptUrl(`cucumber${major}x`, `/js/runtimes/cucumberjs-${major}.x.min.js?r=1`))
+            .then(() => executeScriptUrl(`cucumber${major}x`, `/js/runtimes/cucumberjs-${major}.x.min.js?r=${testjamVersion}`))
             .then((result) => waitUntilExists(libname, result));
     }
 
@@ -71,11 +72,11 @@ function cucumberRuntimeBuilder(version) {
     }) {
         const cucumber = window[libname];
         if (!cucumber) {
-            logger.error(`Expected CucumberJS ${major}.x script files to be loaded. Exiting...`);
+            logger.error(`Expected Cucumber.js ${major}.x script files to be loaded. Exiting...`);
             return Promise.resolve();
         }
 
-        logger.info(`Starting CucumberJS ${version}...\n`);
+        logger.info(`Starting Cucumber.js ${version}...\n`);
         const dependencies = { ...packages, cucumber };
 
         function _runFeature() {
