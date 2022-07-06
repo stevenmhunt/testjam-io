@@ -54,7 +54,7 @@ class Editor extends React.Component {
         const hideToolbar = true;
         const showGutter = true;
         const {
-            type, onBlur, onChange, id, value, language,
+            type, onBlur, onChange, id, value, dialect,
         } = this.props;
         const { width, height } = this.state;
         const options = {
@@ -67,7 +67,7 @@ class Editor extends React.Component {
                     ? (
                         <GherkinEditor
                             theme={this.getAceTheme()}
-                            language={language}
+                            language={dialect}
                             fontSize={14}
                             showPrintMargin={false}
                             onBlur={onBlur}
@@ -114,7 +114,7 @@ class Editor extends React.Component {
 }
 
 Editor.propTypes = {
-    language: PropTypes.string,
+    dialect: PropTypes.string,
     type: PropTypes.string.isRequired,
     onBlur: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired,
@@ -123,7 +123,7 @@ Editor.propTypes = {
 };
 
 Editor.defaultProps = {
-    language: 'en',
+    dialect: 'en',
 };
 
 export default Editor;

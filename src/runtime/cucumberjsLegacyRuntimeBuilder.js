@@ -67,7 +67,7 @@ function cucumberRuntimeBuilder(version) {
     }
 
     function execute({
-        features, stepDefinitions, packages, logger, language,
+        features, stepDefinitions, packages, logger, dialect,
     }) {
         const cucumber = window[libname];
         if (!cucumber) {
@@ -99,7 +99,7 @@ function cucumberRuntimeBuilder(version) {
                                         eventBroadcaster,
                                         pickleFilter: new cucumber.PickleFilter({}),
                                         source,
-                                        language,
+                                        language: dialect,
                                         uri: `/${name}`,
                                     })),
                                 ).then((i) => _.flatten(i));

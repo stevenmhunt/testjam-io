@@ -1,4 +1,6 @@
+/* eslint-disable react/sort-comp */
 import React from 'react';
+import Dropdown from 'react-dropdown';
 import PropTypes from 'prop-types';
 import { indent } from 'indent.js';
 import Editor from '../components/Editor';
@@ -8,7 +10,9 @@ import app from '../app';
 class StepDefinitionView extends React.Component {
     constructor(props) {
         super(props);
+
         this.onBlur = this.onBlur.bind(this);
+        this.changeLanguage = this.changeLanguage.bind(this);
         this.formatJS = this.formatJS.bind(this);
 
         this.state = {
@@ -17,7 +21,14 @@ class StepDefinitionView extends React.Component {
             source: '',
         };
 
+        this.languages = app.getLanguages();
+
         app.on('stepDefinitionUpdated', (data) => this.setState(() => data));
+    }
+
+    // eslint-disable-next-line class-methods-use-this
+    changeLanguage(t) {
+        app.setLanguage(t.value);
     }
 
     onBlur(e, code) {
@@ -43,11 +54,6 @@ class StepDefinitionView extends React.Component {
                         <div className="title">
                             <div>
                                 Step Definitions
-                                <i>
-                                    (
-                                    {language}
-                                    )
-                                </i>
                             </div>
                         </div>
                     </div>
@@ -56,6 +62,13 @@ class StepDefinitionView extends React.Component {
                             <div onClick={this.formatJS} onKeyDown={app.handleEnter(this.formatJS)} role="button" tabIndex={0} className="btn btn-small">
                                 <i className="fa fa-magic" />
                                 Tidy
+                            </div>
+                            <div className="item" title="Language">
+                                <Dropdown
+                                    options={this.languages}
+                                    value={language}
+                                    onChange={this.changeLanguage}
+                                />
                             </div>
                         </div>
                     </div>
