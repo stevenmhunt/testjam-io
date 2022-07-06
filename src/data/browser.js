@@ -1,4 +1,5 @@
-
+/* eslint-disable no-console */
+/* eslint-disable no-restricted-globals */
 /**
  * Gets or sets a  local storage value.
  * @param {string} key The value to get.
@@ -10,6 +11,7 @@ function local(key, value) {
         return window.localStorage[key];
     }
     window.localStorage[key] = value;
+    return undefined;
 }
 
 /**
@@ -27,14 +29,15 @@ function global(name) {
  * @param {string} param The name of the query string parameter.
  */
 function getQueryVariable(variable) {
-    var query = window.location.search.substring(1);
-    var vars = query.split('&');
-    for (var i = 0; i < vars.length; i++) {
-        var pair = vars[i].split('=');
-        if (decodeURIComponent(pair[0]) == variable) {
+    const query = window.location.search.substring(1);
+    const vars = query.split('&');
+    for (let i = 0; i < vars.length; i += 1) {
+        const pair = vars[i].split('=');
+        if (decodeURIComponent(pair[0]) === variable) {
             return decodeURIComponent(pair[1]);
         }
     }
+    return undefined;
 }
 
 /**
@@ -47,6 +50,7 @@ function page(p = null) {
         return getQueryVariable('p');
     }
     history.replaceState(null, '', `/?p=${p}`);
+    return undefined;
 }
 
 /**
@@ -59,6 +63,7 @@ function title(t = null) {
         return document.title;
     }
     document.title = `${t} - testjam.io`;
+    return undefined;
 }
 
 /**
@@ -71,5 +76,5 @@ function enableApp() {
 }
 
 module.exports = {
-    local, global, page, title, enableApp
+    local, global, page, title, enableApp,
 };

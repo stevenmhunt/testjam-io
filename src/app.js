@@ -1,24 +1,28 @@
+/* eslint-disable no-console */
+import { loadRuntime, executeRuntime } from './runtime';
+import {
+    runtimes, themes, featureSource, stepSource,
+} from '../config';
+import errorFormatter from './formatters/errorFormatter';
+
+import Logger from './Logger';
+
 const EventEmitter = require('events');
 const _ = require('lodash');
 const { parse } = require('shell-quote');
 const { browser, firebase } = require('./data');
 const { npm } = require('./packages');
-import { loadRuntime, executeRuntime } from './runtime';
-import { runtimes, themes, featureSource, stepSource } from '../config';
-import errorFormatter from './formatters/errorFormatter';
-
-import Logger from './Logger';
 
 const setImmediate = (fn) => setTimeout(fn, 0);
 
 const cache = {
     runtime: 'CucumberJS 8.x',
     isTestingEnabled: true,
-    isTestRunning: false
+    isTestRunning: false,
 };
 
 const app = {
-    logger: new Logger()
+    logger: new Logger(),
 };
 
 const hub = new EventEmitter();
@@ -44,26 +48,24 @@ firebase.onAuthChanged(({ action, user }) => {
                 }
                 hub.emit('signedIn', cache.user);
             });
-    }
-    else {
+    } else {
         hub.emit('signedOut');
     }
 });
 
 app.signIn = () => firebase.signIn()
-    .then(user => hub.emit('signedIn', user));
+    .then((user) => hub.emit('signedIn', user));
 
 app.signOut = () => {
     firebase.signOut();
     hub.emit('signedOut');
 };
 
-
 const getOwner = () => cache.owner;
 const setOwner = (owner) => {
     cache.owner = owner;
     hub.emit('ownerChanged', owner);
-}
+};
 
 // Persistence
 
@@ -75,64 +77,67 @@ function loadJam() {
             Promise.resolve(setOwner(null)),
             Promise.resolve(app.setName('New Jam')),
             app.setFeature({ id: 1, name: 'test.feature', source: featureSource }),
-            app.setStepDefinition({ id: 1, name: 'steps.js', source: stepSource })
+            app.setStepDefinition({ id: 1, name: 'steps.js', source: stepSource }),
         ]);
     }
     console.log(`Loading existing jam ${id}...`);
     return firebase.getJam(id)
-        .then(jam => Promise.all([
-            Promise.resolve(setOwner({ uid: jam.uid, name: jam.createdBy.name, photo: jam.createdBy.photo })),
+        .then((jam) => Promise.all([
+            Promise.resolve(setOwner({
+                uid: jam.uid, name: jam.createdBy.name, photo: jam.createdBy.photo,
+            })),
             Promise.resolve(app.setName(jam.name)),
             Promise.resolve(app.setFork(jam.fork)),
             app.setRuntime(jam.runtime),
-            ...(jam.features.map(i => app.setFeature(i))),
-            ...(jam.stepDefinitions.map(i => app.setStepDefinition(i)))
+            ...(jam.features.map((i) => app.setFeature(i))),
+            ...(jam.stepDefinitions.map((i) => app.setStepDefinition(i))),
         ]));
 }
 
-app.save = () =>
-    Promise.resolve(hub.emit('saving'))
-        .then(() => firebase.saveJam(browser.page(), {
-            name: app.getName(),
-            runtime: app.getRuntime(),
-            features: app.getFeatures(),
-            stepDefinitions: app.getStepDefinitions()
-        })).then((id) => {
-            hub.emit('saved', id);
-            if (id) {
-                browser.page(id);
-                return loadJam();
-            }
-        });
-
-app.fork = () =>
-    Promise.resolve(hub.emit('forking'))
-        .then(() => firebase.forkJam(browser.page(), {
-            name: app.getName(),
-            runtime: app.getRuntime(),
-            features: app.getFeatures(),
-            stepDefinitions: app.getStepDefinitions(),
-            createdBy: getOwner()
-        })).then((id) => {
-            hub.emit('forked', id);
+app.save = () => Promise.resolve(hub.emit('saving'))
+    .then(() => firebase.saveJam(browser.page(), {
+        name: app.getName(),
+        runtime: app.getRuntime(),
+        features: app.getFeatures(),
+        stepDefinitions: app.getStepDefinitions(),
+    })).then((id) => {
+        hub.emit('saved', id);
+        if (id) {
             browser.page(id);
             return loadJam();
-        });
+        }
+        return undefined;
+    });
+
+app.fork = () => Promise.resolve(hub.emit('forking'))
+    .then(() => firebase.forkJam(browser.page(), {
+        name: app.getName(),
+        runtime: app.getRuntime(),
+        features: app.getFeatures(),
+        stepDefinitions: app.getStepDefinitions(),
+        createdBy: getOwner(),
+    })).then((id) => {
+        hub.emit('forked', id);
+        browser.page(id);
+        return loadJam();
+    });
 
 app.getMyJams = () => {
     if (!cache.myJams) {
         return firebase.getMyJams()
             .then((jams) => {
-                cache.myJams = jams.map(jam => Object.assign({}, jam, {
-                    dateUpdated: new Date(jam.dateUpdated._seconds * 1000)
+                cache.myJams = jams.map((jam) => ({
+                    ...jam,
+                    // eslint-disable-next-line no-underscore-dangle
+                    dateUpdated: new Date(jam.dateUpdated._seconds * 1000),
                 }));
                 hub.emit('myJamsLoaded', cache.myJams);
                 return cache.myJams;
             });
-    }    
+    }
     hub.emit('myJamsLoaded', cache.myJams);
     return Promise.resolve(cache.myJams);
-}
+};
 
 // Theme Management
 
@@ -167,7 +172,7 @@ app.setFork = (fork) => {
 const enableTests = () => {
     cache.isTestingEnabled = true;
     hub.emit('testsEnabled');
-}
+};
 
 /**
  * @private
@@ -175,7 +180,7 @@ const enableTests = () => {
 const disableTests = () => {
     cache.isTestingEnabled = false;
     hub.emit('testsDisabled');
-}
+};
 
 /**
  * @private
@@ -183,7 +188,7 @@ const disableTests = () => {
 const startTests = () => {
     cache.isTestRunning = true;
     hub.emit('testsStarted');
-}
+};
 
 /**
  * @private
@@ -191,7 +196,7 @@ const startTests = () => {
 const endTests = (err) => {
     cache.isTestRunning = false;
     hub.emit('testsEnded', err);
-}
+};
 
 /**
  * @private
@@ -211,25 +216,25 @@ function runTestsInternal() {
                 features: app.getFeatures(),
                 stepDefinitions: app.getStepDefinitions(),
                 packages,
-                logger: app.logger
-            })).then((success) => {
+                logger: app.logger,
+            }))
+            .then((success) => {
                 if (success) {
                     app.logger.log('\nCucumberJS exited with status code 0.\n\n');
-                }
-                else {
+                } else {
                     app.logger.log('\nCucumberJS exited with status code 1.\n\n');
                 }
                 endTests(!success);
-            }).catch((err) => {
+            })
+            .catch((err) => {
                 app.logger.error(errorFormatter(err));
                 endTests(err);
             });
-    }
-    catch (err) {
+    } catch (err) {
         app.logger.error(errorFormatter(err));
         endTests(err);
     }
-};
+}
 
 let testWaitFlag = false;
 
@@ -237,7 +242,7 @@ app.test = () => {
     if (cache.isTestingEnabled && !cache.isTestRunning) {
         return runTestsInternal();
     }
-    else if (!testWaitFlag) {
+    if (!testWaitFlag) {
         testWaitFlag = true;
         return new Promise((resolve) => {
             hub.once(!cache.isTestingEnabled ? 'testsEnabled' : 'testsEnded', () => {
@@ -246,6 +251,7 @@ app.test = () => {
             });
         });
     }
+    return undefined;
 };
 app.cucumber = app.test;
 
@@ -256,8 +262,8 @@ app.like = () => Promise.resolve(hub.emit('changingLike'))
     .then(() => Promise.resolve(hub.emit('liked')));
 
 app.unlike = () => Promise.resolve(hub.emit('changingLike'))
-.then(() => firebase.unlikeJam(browser.page()))
-.then(() => Promise.resolve(hub.emit('unliked')))
+    .then(() => firebase.unlikeJam(browser.page()))
+    .then(() => Promise.resolve(hub.emit('unliked')));
 
 // Runtime Management
 
@@ -285,7 +291,7 @@ app.getPackages = () => {
             enableTests();
             return result;
         });
-}
+};
 
 app.addPackage = (name, version) => {
     disableTests();
@@ -294,41 +300,37 @@ app.addPackage = (name, version) => {
             enableTests();
             return result;
         });
-}
+};
 
-app.removePackage = (name) => {
-    return npm.removePackage(name);
-}
+app.removePackage = (name) => npm.removePackage(name);
 
 // Feature Files
 
 app.getFeatures = () => cache.features || [];
 app.setFeature = ({ id, name, source }) => {
     cache.features = cache.features || [];
-    const selected = cache.features.filter(i => i.id === id)[0];
+    const selected = cache.features.filter((i) => i.id === id)[0];
     if (selected) {
         selected.name = name;
         selected.source = source;
-    }
-    else {
+    } else {
         cache.features.push({ id, name, source });
     }
 
     hub.emit('featureUpdated', { id, name, source });
     return Promise.resolve();
-}
+};
 
 // Step Definitions
 
 app.getStepDefinitions = () => cache.steps || [];
 app.setStepDefinition = ({ id, name, source }) => {
     cache.steps = cache.steps || [];
-    const selected = cache.steps.filter(i => i.id === id)[0];
+    const selected = cache.steps.filter((i) => i.id === id)[0];
     if (selected) {
         selected.name = name;
         selected.source = source;
-    }
-    else {
+    } else {
         cache.steps.push({ id, name, source });
     }
     return npm.scanForPackages(source)
@@ -337,7 +339,7 @@ app.setStepDefinition = ({ id, name, source }) => {
             disableTests();
             throw err;
         });
-}
+};
 
 app.execute = (text) => {
     const { logger } = app;
@@ -347,26 +349,24 @@ app.execute = (text) => {
         try {
             const result = app[command](...args);
             if (result && result.then) {
-                result.then(r => logger.log(r));
-            }
-            else {
+                result.then((r) => logger.log(r));
+            } else {
                 logger.log(result);
             }
-        }
-        catch (err) {
+        } catch (err) {
             logger.log(`${err.name}: ${err.message}`);
         }
         logger.log('\n');
-    }
-    else {
-        logger.log(`CommandError: command '${command}' not found.\n`)
+    } else {
+        logger.log(`CommandError: command '${command}' not found.\n`);
     }
 };
 
 app.on = hub.on.bind(hub);
 
-module.exports = app;
-console.log("testjam.io app start.");
+export default app;
+
+console.log('testjam.io app start.');
 setTimeout(() => {
     const theme = browser.local('theme') ? browser.local('theme') : app.getThemes()[0];
     loadJam()

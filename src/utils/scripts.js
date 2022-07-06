@@ -28,7 +28,8 @@ const TIMEOUT = 60000;
 
 function waitUntilExists(name, returns) {
     return new Promise((resolve, reject) => {
-        let handle = null, count = 0;
+        let handle = null; let
+            count = 0;
         handle = setInterval(() => {
             count += 1;
             if (window[name]) {
@@ -59,5 +60,5 @@ module.exports = {
     executeScriptUrl,
     executeScript,
     loadStackChain,
-    waitUntilExists
+    waitUntilExists,
 };

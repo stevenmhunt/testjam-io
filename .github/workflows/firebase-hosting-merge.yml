@@ -1,0 +1,33 @@
+name: Deploy to Firebase Hosting on merge
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  run_build_and_deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: Install NPM libraries
+        run: npm install --legacy-peer-deps
+      - name: Run ESLint
+        run: npm run lint
+      - name: Build Cucumber.js 1.x - 6.x browser-compatible libraries
+        run: make legacy.x
+      - name: Build Cucumber.js 7.x browser-compatible library
+        run: make 7.x
+      - name: Build Cucumber.js 8.x browser-compatible library
+        run: make 8.x
+      - name: Build Production Web App
+        run: make
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_TESTJAM_WEBAPP }}'
+          channelId: live
+          projectId: testjam-webapp

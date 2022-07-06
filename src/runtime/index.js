@@ -1,5 +1,7 @@
-const cucumberjsRuntimeBuilder = require('./cucumberjsRuntimeBuilder');
+const cucumber1 = require('./cucumberjs1x');
+const cucumber2 = require('./cucumberjs2x');
 const cucumberjsLegacyRuntimeBuilder = require('./cucumberjsLegacyRuntimeBuilder');
+const cucumberjsRuntimeBuilder = require('./cucumberjsRuntimeBuilder');
 
 const mapping = {
     'CucumberJS 8.x': cucumberjsRuntimeBuilder('8.4.0'),
@@ -8,13 +10,13 @@ const mapping = {
     'CucumberJS 5.x': cucumberjsLegacyRuntimeBuilder('5.1.0'),
     'CucumberJS 4.x': cucumberjsLegacyRuntimeBuilder('4.2.1'),
     'CucumberJS 3.x': cucumberjsLegacyRuntimeBuilder('3.2.1'),
-    'CucumberJS 2.x': require('./cucumberjs2x'),
-    'CucumberJS 1.x': require('./cucumberjs1x')
-}
+    'CucumberJS 2.x': cucumber2,
+    'CucumberJS 1.x': cucumber1,
+};
 
 function getRuntime(version) {
     if (mapping[version]) {
-        return mapping[version]
+        return mapping[version];
     }
     throw new Error(`Unable to locate a runtime for '${version}'.`);
 }
@@ -29,8 +31,8 @@ function loadRuntime(version) {
     return load();
 }
 
-module.exports = {
+export {
     getRuntime,
     executeRuntime,
-    loadRuntime
+    loadRuntime,
 };
