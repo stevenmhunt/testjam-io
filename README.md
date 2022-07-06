@@ -27,7 +27,6 @@ When I first started building this project, I realized that most major programmi
 
 ### Installation
 ```bash
-npm install
 make
 
 # assuming you have a firebase environment configured....
