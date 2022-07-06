@@ -53,7 +53,7 @@ class StepDefinitionView extends React.Component {
                     </div>
                     <div className="view-header-right">
                         <div className="menu">
-                            <div onClick={this.formatJS} role="button" tabIndex={0} className="btn btn-small">
+                            <div onClick={this.formatJS} onKeyDown={app.handleEnter(this.formatJS)} role="button" tabIndex={0} className="btn btn-small">
                                 <i className="fa fa-magic" />
                                 Tidy
                             </div>

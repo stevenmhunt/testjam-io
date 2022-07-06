@@ -132,11 +132,11 @@ Command-line utilities
                     </div>
                     <div className="view-header-right">
                         <div className="menu">
-                            <div onClick={this.copyOutput} role="button" tabIndex={0} className="btn btn-small">
+                            <div onClick={this.copyOutput} onKeyDown={app.handleEnter(this.copyOutput)} role="button" tabIndex={0} className="btn btn-small">
                                 <i className="fa fa-1x fa-clipboard" />
                                 Copy
                             </div>
-                            <div onClick={this.clearOutput} role="button" tabIndex={0} className="btn btn-small">
+                            <div onClick={this.clearOutput} onKeyDown={app.handleEnter(this.clearOutput)} role="button" tabIndex={0} className="btn btn-small">
                                 <i className="fa fa-1x fa-times" />
                                 Clear Logs
                             </div>
