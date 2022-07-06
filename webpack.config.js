@@ -26,6 +26,9 @@ const jsxConfig = {
             },
         ],
     },
+    resolve: {
+        extensions: ['.js', '.jsx'],
+    },
 };
 
 const sassConfig = {

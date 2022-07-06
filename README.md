@@ -1,6 +1,7 @@
 # testjam.io
 An online coding environment specifically designed for Cucumber and Gherkin.
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Deploy to Firebase Hosting on merge](https://github.com/stevenmhunt/testjam-io/actions/workflows/firebase-hosting-merge.yml/badge.svg)](https://github.com/stevenmhunt/testjam-io/actions/workflows/firebase-hosting-merge.yml)
 [![Stand With Ukraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/badges/StandWithUkraine.svg)](https://stand-with-ukraine.pp.ua)
 

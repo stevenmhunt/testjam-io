@@ -1,4 +1,5 @@
 /* eslint-disable no-console */
+import { dialects } from '@cucumber/gherkin';
 import { loadRuntime, executeRuntime } from './runtime';
 import {
     runtimes, themes, featureSource, stepSource,
@@ -15,8 +16,13 @@ const { npm } = require('./packages');
 
 const setImmediate = (fn) => setTimeout(fn, 0);
 
-const cache = {
+const defaultValues = {
     runtime: 'CucumberJS 8.x',
+    language: 'en',
+};
+
+const cache = {
+    ...defaultValues,
     isTestingEnabled: true,
     isTestRunning: false,
 };
@@ -88,7 +94,8 @@ function loadJam() {
             })),
             Promise.resolve(app.setName(jam.name)),
             Promise.resolve(app.setFork(jam.fork)),
-            app.setRuntime(jam.runtime),
+            app.setRuntime(jam.runtime || defaultValues.runtime),
+            app.setLanguage(jam.language || defaultValues.language),
             ...(jam.features.map((i) => app.setFeature(i))),
             ...(jam.stepDefinitions.map((i) => app.setStepDefinition(i))),
         ]));
@@ -98,6 +105,7 @@ app.save = () => Promise.resolve(hub.emit('saving'))
     .then(() => firebase.saveJam(browser.page(), {
         name: app.getName(),
         runtime: app.getRuntime(),
+        language: app.getLanguage(),
         features: app.getFeatures(),
         stepDefinitions: app.getStepDefinitions(),
     })).then((id) => {
@@ -113,6 +121,7 @@ app.fork = () => Promise.resolve(hub.emit('forking'))
     .then(() => firebase.forkJam(browser.page(), {
         name: app.getName(),
         runtime: app.getRuntime(),
+        language: app.getLanguage(),
         features: app.getFeatures(),
         stepDefinitions: app.getStepDefinitions(),
         createdBy: getOwner(),
@@ -215,6 +224,7 @@ function runTestsInternal() {
             .then(() => executeRuntime(app.getRuntime(), {
                 features: app.getFeatures(),
                 stepDefinitions: app.getStepDefinitions(),
+                language: app.getLanguage(),
                 packages,
                 logger: app.logger,
             }))
@@ -265,6 +275,18 @@ app.unlike = () => Promise.resolve(hub.emit('changingLike'))
     .then(() => firebase.unlikeJam(browser.page()))
     .then(() => Promise.resolve(hub.emit('unliked')));
 
+// Language Management
+
+app.getLanguages = () => _.sortBy(_.keys(dialects).map((key) => ({
+    value: key,
+    label: dialects[key].native,
+})), (i) => i.label);
+app.getLanguage = () => cache.language;
+app.setLanguage = (lang) => {
+    cache.language = lang;
+    hub.emit('languageChanged', lang);
+};
+
 // Runtime Management
 
 app.getRuntimes = () => runtimes;
@@ -277,6 +299,7 @@ app.setRuntime = (r) => {
             .then(() => {
                 enableTests();
                 hub.emit('runtimeChanged', r);
+                console.log(`Runtime changed to ${r}`);
             });
     }
     return Promise.reject(new Error(`Unrecognized runtime '${r}'.`));
@@ -363,6 +386,13 @@ app.execute = (text) => {
 };
 
 app.on = hub.on.bind(hub);
+
+app.handleEnter = (fn) => (e) => {
+    if (e.key === 'Enter') {
+        return fn();
+    }
+    return undefined;
+};
 
 export default app;
 

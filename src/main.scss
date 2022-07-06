@@ -196,6 +196,15 @@ div.editor-container {
     height: calc(100% - 31px);
 }
 
+div.editor-outer-container {
+    width: 100%;
+    height: 100%;
+
+    > div {
+        border-width: 0;
+    }
+}
+
 div.output-container {
     width: 100%;
     height: calc(100% - 66px);
@@ -216,6 +225,10 @@ input.commands {
 
 .ace_gutter, .ace_scrollbar {
     z-index: inherit !important;
+}
+
+div[data-testid=editor-toolbar] {
+    display: none;
 }
 
 .Dropdown-menu {

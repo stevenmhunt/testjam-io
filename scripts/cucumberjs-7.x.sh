@@ -24,5 +24,5 @@ if [ ! -f $cucumberjs_7x ]; then
     npx browserify ./lib/src/index.js --standalone Cucumber -o ../cucumber.js
     popd
     cp $CUKEDIR/cucumber.js $cucumberjs_7x
-    chmod -R 777 $CUKEDIR && rm -r $CUKEDIR
+    # chmod -R 777 $CUKEDIR && rm -r $CUKEDIR
 fi;
