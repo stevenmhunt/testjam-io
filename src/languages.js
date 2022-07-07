@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 const { indent } = require('indent.js');
 
 const javascript = {
@@ -51,6 +50,6 @@ end
 
 module.exports = {
     javascript,
-    // java,
-    // ruby,
+    java,
+    ruby,
 };

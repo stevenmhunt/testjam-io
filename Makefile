@@ -97,7 +97,7 @@ min=min
 
 download-1.x: init
 	if [ ! -f "${cucumberjs_1x}.js" ]; then \
-		cp ./lib/cached/cucumber@1.3.3.js ${cucumberjs_1x}.js; \
+		cp ./lib/cucumber@1.3.3.js ${cucumberjs_1x}.js; \
 	fi;
 
 download-2.x: init

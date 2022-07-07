@@ -19,7 +19,7 @@ function removePackage(name) {
 
 function generateScriptTag(name, version) {
     if (cachedPackages[name]) {
-        return executeScriptUrl(`script_${name}`, `/js/cached/${cachedPackages[name]}.js`);
+        return executeScriptUrl(`script_${name}`, `https://storage.testjam.io/packages/${cachedPackages[name]}.js`);
     }
     return executeScriptUrl(`script_${name}`, `https://cdn.testjam.io/standalone/${name}@${version}`);
 }
