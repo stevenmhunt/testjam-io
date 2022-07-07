@@ -95,6 +95,7 @@ function loadJam() {
     }
     console.log(`Loading existing jam ${id}...`);
     return firebase.getJam(id)
+        .then((jam) => app.setLanguage(jam.language || defaultValues.language).then(() => jam))
         .then((jam) => Promise.all([
             Promise.resolve(setOwner({
                 uid: jam.uid, name: jam.createdBy.name, photo: jam.createdBy.photo,
@@ -103,7 +104,6 @@ function loadJam() {
             Promise.resolve(app.setFork(jam.fork)),
             app.setRuntime(jam.runtime || defaultValues.runtime),
             app.setDialect(jam.dialect || defaultValues.dialect),
-            app.setLanguage(jam.language || defaultValues.language),
             ...(jam.features.map((i) => app.setFeature(i))),
             ...(jam.stepDefinitions.map((i) => app.setStepDefinition(i))),
         ]));
@@ -309,7 +309,7 @@ app.getLanguage = () => cache.language;
 app.setLanguage = (lang) => {
     cache.language = lang;
     hub.emit('languageChanged', lang);
-    app.setRuntime(app.getRuntimes()[0].value);
+    return app.setRuntime(app.getRuntimes()[0].value);
 };
 
 // Runtime Management
@@ -317,14 +317,17 @@ app.setLanguage = (lang) => {
 app.getRuntimes = (lang) => runtimes[lang || app.getLanguage()].getRuntimes();
 app.getRuntime = () => cache.runtime;
 app.setRuntime = (r) => {
-    cache.runtime = r;
-    disableTests();
-    return runtimes[app.getLanguage()].loadRuntime(r)
-        .then(() => {
-            enableTests();
-            hub.emit('runtimeChanged', r);
-            console.log(`Runtime changed to ${r}`);
-        });
+    if (cache.runtime !== r) {
+        cache.runtime = r;
+        disableTests();
+        return runtimes[app.getLanguage()].loadRuntime(r)
+            .then(() => {
+                enableTests();
+                hub.emit('runtimeChanged', r);
+                console.log(`Runtime changed to ${r}`);
+            });
+    }
+    return Promise.resolve();
 };
 
 // Package Management
