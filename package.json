@@ -1,6 +1,6 @@
 {
   "name": "testjam-io",
-  "version": "0.8.3",
+  "version": "0.8.4",
   "description": "React web application for testjam.io",
   "main": "index.js",
   "scripts": {
@@ -58,7 +58,7 @@
     "styled-components": "^5.3.5"
   },
   "build": {
-    "version": "0.8.3",
+    "version": "0.8.4",
     "date": "2022-07-07T00:54:28.980Z"
   },
   "devDependencies": {
