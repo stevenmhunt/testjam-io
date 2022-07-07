@@ -96,7 +96,7 @@ min=min
 
 download-1.x: init
 	if [ ! -f "${cucumberjs_1x}.js" ]; then \
-		cp ./lib/cucumber@1.3.3.js ${cucumberjs_1x}.js; \
+		curl -s https://storage.testjam.io/build/cucumber@1.3.3.js -o ${cucumberjs_1x}.js; \
 	fi;
 
 download-2.x: init
