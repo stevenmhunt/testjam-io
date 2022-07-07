@@ -5,6 +5,7 @@
     "expect": "expect@26.6.2",
     "lodash": "lodash@latest",
     "path": "path@latest",
+    "sinon": "sinon@latest",
     "util": "util@latest",
     "wait-promise": "wait-promise@latest"
 }
