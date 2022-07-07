@@ -158,11 +158,11 @@ function unlikeJam(id) {
     return batch.commit();
 }
 
-function getMyJams(startAfter = null, limit = 10) {
+function getMyJams(after = null, limit = 10) {
     if (!authUser || !authUser.uid) {
         return Promise.reject(new Error('You must be an authenticated user to get your jams.'));
     }
-    return fnGetMyJams({ limit, startAfter })
+    return fnGetMyJams({ limit, after })
         .then((r) => r.data);
 }
 
