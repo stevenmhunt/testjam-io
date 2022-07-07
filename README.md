@@ -23,7 +23,7 @@ When I first started building this project, I realized that most major programmi
 - Git
 - Bash
 - Make
-- A firebase instance (or the local emulator with functions and firestore support configured)
+- [Firebase Tools](https://www.npmjs.com/package/firebase-tools)
 
 ### Installation
 ```bash
@@ -36,7 +36,7 @@ npm start
 Once your environment is configured, you can use `npm run watch` to automatically re-compile Sass and JSX changes.
 
 ## Future Improvements
-- Support for multiple written langauges (Spanish, French, Italian, etc.)
 - Support for multiple programming languages (CucumberJVM and Cucumber.rb hopefully)
 - `require()` support for scoped packages (@scope/package) via upgrades to Browserify CDN.
 - More official support for Cucumber.js browser-compatible builds for 7.x and 8.x versions.
+- Improved User Experience.

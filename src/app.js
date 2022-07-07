@@ -143,7 +143,7 @@ app.fork = () => Promise.resolve(hub.emit('forking'))
 
 app.getMyJams = () => {
     if (!cache.myJams) {
-        return firebase.getMyJams()
+        return firebase.getMyJams(cache.after)
             .then((jams) => {
                 cache.myJams = jams.map((jam) => ({
                     ...jam,
@@ -156,6 +156,12 @@ app.getMyJams = () => {
     }
     hub.emit('myJamsLoaded', cache.myJams);
     return Promise.resolve(cache.myJams);
+};
+
+app.setJamsAfter = (after) => {
+    cache.after = after;
+    cache.myJams = undefined;
+    hub.emit('jamsAfterChanged', after);
 };
 
 // Theme Management
@@ -308,7 +314,7 @@ app.setLanguage = (lang) => {
 
 // Runtime Management
 
-app.getRuntimes = () => runtimes[app.getLanguage()].getRuntimes();
+app.getRuntimes = (lang) => runtimes[lang || app.getLanguage()].getRuntimes();
 app.getRuntime = () => cache.runtime;
 app.setRuntime = (r) => {
     cache.runtime = r;
