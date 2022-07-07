@@ -12,7 +12,8 @@ init: npm-install
 	cp -r ./www/* ./build && \
 	cp ./node_modules/react-dropdown/style.css ./build/css/react-dropdown.css && \
 	cp ./node_modules/react-notifications/lib/notifications.css ./build/css/react-notifications.css && \
-	mkdir -p ./build/js/runtimes;
+	mkdir -p ./build/js/runtimes && \
+	cp -r ./lib/cached ./build/js;
 
 build-web: npm-install
 	npm run prod-build;
@@ -96,7 +97,7 @@ min=min
 
 download-1.x: init
 	if [ ! -f "${cucumberjs_1x}.js" ]; then \
-	    curl -s https://cdn.testjam.io/standalone/cucumber@1.3.3 -o ${cucumberjs_1x}.js; \
+		cp ./lib/cached/cucumber@1.3.3.js ${cucumberjs_1x}.js; \
 	fi;
 
 download-2.x: init

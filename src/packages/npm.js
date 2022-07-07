@@ -1,5 +1,6 @@
 const _ = require('lodash');
 const { waitUntilExists, executeScriptUrl } = require('../utils/scripts');
+const cachedPackages = require('../../config/packages.json');
 
 const cache = {
     packages: [],
@@ -16,9 +17,16 @@ function removePackage(name) {
     return Promise.resolve();
 }
 
+function generateScriptTag(name, version) {
+    if (cachedPackages[name]) {
+        return executeScriptUrl(`script_${name}`, `/js/cached/${cachedPackages[name]}.js`);
+    }
+    return executeScriptUrl(`script_${name}`, `https://cdn.testjam.io/standalone/${name}@${version}`);
+}
+
 function downloadPackage(name, version = 'latest') {
     if (!isDownloaded(name)) {
-        return executeScriptUrl(`script_${name}`, `https://cdn.testjam.io/standalone/${name}@${version}`)
+        return generateScriptTag(name, version)
             .then((r) => waitUntilExists(_.camelCase(name), r))
             .catch((err) => {
                 removePackage(name);
