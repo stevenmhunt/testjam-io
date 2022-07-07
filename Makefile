@@ -12,8 +12,7 @@ init: npm-install
 	cp -r ./www/* ./build && \
 	cp ./node_modules/react-dropdown/style.css ./build/css/react-dropdown.css && \
 	cp ./node_modules/react-notifications/lib/notifications.css ./build/css/react-notifications.css && \
-	mkdir -p ./build/js/runtimes && \
-	cp -r ./lib/cached ./build/js;
+	mkdir -p ./build/js/runtimes;
 
 build-web: npm-install
 	npm run prod-build;
