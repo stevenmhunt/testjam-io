@@ -107,7 +107,8 @@ function cucumberRuntimeBuilder(version) {
                                 cucumber.supportCodeLibraryBuilder.reset('');
                                 stepDefinitions
                                     .map(stepDefinitionFormatter)
-                                    .forEach((i) => new Function('__dependencies', i)(dependencies)); // eslint-disable-line no-new-func
+                                    // eslint-disable-next-line no-new-func
+                                    .forEach((i) => new Function('__dependencies', 'console', i)(dependencies, logger));
                                 _context.next = 10;
                                 return cucumber.supportCodeLibraryBuilder.finalize();
 
@@ -118,7 +119,7 @@ function cucumberRuntimeBuilder(version) {
                                     cwd: '/',
                                     eventBroadcaster,
                                     eventDataCollector,
-                                    log: (i) => logger.log(i),
+                                    log: (i) => logger.info(i),
                                     supportCodeLibrary,
                                 };
                                 cucumber.FormatterBuilder.build('progress', formatterOptions);

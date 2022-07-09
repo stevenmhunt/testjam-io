@@ -6,8 +6,8 @@ export default class Logger {
     }
 
     log(data) {
-        this.events.emit('logInfo', data);
-        this.events.emit('output', data);
+        this.events.emit('logInfo', `${data}\n`);
+        this.events.emit('output', `${data}\n`);
     }
 
     warn(data) {

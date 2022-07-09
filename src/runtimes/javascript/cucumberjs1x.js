@@ -27,10 +27,10 @@ function execute({
     const functions = stepDefinitions
         .map(stepDefinitionFormatter)
         // eslint-disable-next-line no-new-func
-        .map((i) => new Function('__dependencies', i));
+        .map((i) => new Function('__dependencies', 'console', i));
 
     function supportCode() {
-        functions.forEach((f) => f.call(this, dependencies)); // eslint-disable-line no-new-func
+        functions.forEach((f) => f.call(this, dependencies, logger));
     }
 
     const instance = cucumber(loadedFeatures, supportCode);
@@ -38,7 +38,7 @@ function execute({
     const formatterOptions = {
         colorsEnabled: true,
         language: dialect,
-        logToFunction: (i) => logger.log(i),
+        logToFunction: (i) => logger.info(i),
     };
 
     const listener = cucumber.Listener.PrettyFormatter(formatterOptions);

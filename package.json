@@ -1,6 +1,6 @@
 {
   "name": "testjam-io",
-  "version": "0.8.6",
+  "version": "0.8.7",
   "description": "testjam.io: An online coding environment specifically designed for Cucumber and Gherkin.",
   "main": "index.js",
   "scripts": {
@@ -58,8 +58,8 @@
     "styled-components": "^5.3.5"
   },
   "build": {
-    "version": "0.8.6",
-    "date": "2022-07-07T17:11:00Z"
+    "version": "0.8.7",
+    "date": "2022-07-09T16:02:00Z"
   },
   "devDependencies": {
     "browserify": "^17.0.0",

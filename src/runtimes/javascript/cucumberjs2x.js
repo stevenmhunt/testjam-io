@@ -32,7 +32,8 @@ function execute({
     cucumber.clearSupportCodeFns();
     stepDefinitions
         .map(stepDefinitionFormatter)
-        .forEach((i) => new Function('__dependencies', i)(dependencies)); // eslint-disable-line no-new-func
+        // eslint-disable-next-line no-new-func
+        .forEach((i) => new Function('__dependencies', 'console', i)(dependencies, logger));
 
     const supportCodeLibrary = cucumber.SupportCodeLibraryBuilder.build({
         cwd: '/',
@@ -42,7 +43,7 @@ function execute({
     const formatterOptions = {
         colorsEnabled: true,
         cwd: '/',
-        log: (i) => logger.log(i),
+        log: (i) => logger.info(i),
         supportCodeLibrary,
     };
     const prettyFormatter = cucumber.FormatterBuilder.build('pretty', formatterOptions);
