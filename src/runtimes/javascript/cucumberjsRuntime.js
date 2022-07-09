@@ -28,7 +28,7 @@ function cucumberRuntimeBuilder(version) {
             stepDefinitions
                 .map(stepDefinitionFormatter)
                 // eslint-disable-next-line no-new-func
-                .forEach((i) => new Function('__dependencies', i)(dependencies));
+                .forEach((i) => new Function('__dependencies', 'console', i)(dependencies, logger));
         });
 
         let pickleFilter;
@@ -49,7 +49,7 @@ function cucumberRuntimeBuilder(version) {
             sources: features.map((i) => ({ data: i.source || '', uri: i.name || '' })),
             pickleFilter,
             type: 'progress',
-            logFn: (i) => logger.log(i),
+            logFn: (i) => logger.info(i),
         });
     }
 
