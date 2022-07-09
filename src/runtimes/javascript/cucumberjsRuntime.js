@@ -24,6 +24,8 @@ function cucumberRuntimeBuilder(version) {
 
         logger.info(`Starting Cucumber.js ${version}...\n`);
         const supportCodeLibrary = cucumber.buildSupportCodeLibrary((cuke) => {
+            // eslint-disable-next-line no-param-reassign
+            cuke.Status = cucumber.Status;
             const dependencies = { ...packages, cucumber: cuke, '@cucumber/cucumber': cuke };
             stepDefinitions
                 .map(stepDefinitionFormatter)
