@@ -40,22 +40,18 @@ export default function renderAboutSitePopup() {
                 </ul>
                 <h3>About Me</h3>
                 <p>
-                    My name is Steven, and I&apos;m an automation engineer and software developer. I have been using Cucumber (
+                    My name is Steven, and I&apos;m a software developer and automation/DevOps engineer. I have been using Cucumber (
                     <a href="https://specflow.org/" target="_blank" rel="noreferrer">SpecFlow</a>
                     {' '}
                     and
                     {' '}
                     <a href="https://github.com/cucumber/cucumber-js" target="_blank" rel="noreferrer">CucumberJS</a>
-                    ) at various organizations since 2014, both as a developer and an automation engineer. I hope to continue to learn more about automated testing in the future and also help mentor others on software and maintaining quality during a project.
+                    ) at various organizations since 2014, both as a developer and an automation engineer. I hope to continue to learn more about automated testing in the future and also help mentor others on software and maintaining quality during a project. For more information, check out my website: <a href="https://stevenhunt.me" target="_blank">stevenhunt.me</a>
                     <br />
                     <br />
                 </p>
                 <a className="link-item" href="https://www.github.com/stevenmhunt" target="_blank" rel="noreferrer">
                     <i className="fa fa-github" />
-    &nbsp;@stevenmhunt
-                </a>
-                <a className="link-item" href="https://www.twitter.com/stevenmhunt" target="_blank" rel="noreferrer">
-                    <i className="fa fa-twitter" />
     &nbsp;@stevenmhunt
                 </a>
                 <a className="link-item" href="http://www.linkedin.com/in/stevenmhunt" target="_blank" rel="noreferrer">
