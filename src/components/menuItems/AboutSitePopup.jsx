@@ -46,7 +46,9 @@ export default function renderAboutSitePopup() {
                     and
                     {' '}
                     <a href="https://github.com/cucumber/cucumber-js" target="_blank" rel="noreferrer">CucumberJS</a>
-                    ) at various organizations since 2014, both as a developer and an automation engineer. I hope to continue to learn more about automated testing in the future and also help mentor others on software and maintaining quality during a project. For more information, check out my website: <a href="https://stevenhunt.me" target="_blank">stevenhunt.me</a>
+                    ) at various organizations since 2014, both as a developer and an automation engineer. I hope to continue to learn more about automated testing in the future and also help mentor others on software and maintaining quality during a project. For more information, check out my website:
+                    {' '}
+                    <a href="https://stevenhunt.me" target="_blank" rel="noreferrer">stevenhunt.me</a>
                     <br />
                     <br />
                 </p>

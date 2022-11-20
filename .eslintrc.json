@@ -31,6 +31,7 @@
             "error",
             4
         ],
-        "react/prefer-stateless-function": 0
+        "react/prefer-stateless-function": 0,
+        "linebreak-style": 0
     }
 }
