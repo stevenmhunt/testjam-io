@@ -23,8 +23,6 @@ jobs:
         run: make 7.x
       - name: Build Cucumber.js 8.x browser-compatible library
         run: make 8.x
-      - name: Build Cucumber.js 9.x browser-compatible library
-        run: make 9.x
       - name: Build Production Web App
         run: make
       - uses: FirebaseExtended/action-hosting-deploy@v0
