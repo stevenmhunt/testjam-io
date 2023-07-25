@@ -26,7 +26,9 @@ cucumberjs_5x=./build/js/runtimes/cucumberjs-5.x
 cucumberjs_6x=./build/js/runtimes/cucumberjs-6.x
 cucumberjs_7x=./build/js/runtimes/cucumberjs-7.x
 cucumberjs_8x=./build/js/runtimes/cucumberjs-8.x
+cucumberjs_9x=./build/js/runtimes/cucumberjs-9.x
 min=min
+
 1.x: download-1.x
 	if [ ! -f "${cucumberjs_1x}.${min}.js" ]; then \
 		sed -i 's/g.cucumber =/g.__cucumber1 =/g' ${cucumberjs_1x}.js; \
@@ -92,6 +94,23 @@ min=min
 			-e 's/methods\.performance\.now()/Date\.now()/g' \
 			${cucumberjs_8x}.js; \
 	fi
+
+9.x: download-9.x
+	if [ ! -f "${cucumberjs_9x}.${min}.js" ]; then \
+		sed -i \
+			-e 's/g.Cucumber =/g.__cucumber8 =/g' \
+			-e 's/_c\.fs\.O_CREAT/512/g' \
+			-e 's/_c\.fs\.O_EXCL/2048/g' \
+			-e 's/_c\.fs\.O_RDWR/2/g' \
+			-e 's/_c\.os\.errno\.EBADF/9/g' \
+			-e 's/_c\.os\.errno\.ENOENT/2/g' \
+			-e 's/fs\.rmdirSync\.bind(fs)/function() {}/g' \
+			-e 's/catch {/catch (err) {/g' \
+			-e 's/= detectSupport(stream, env, enabled)/= { level: 3 }/g' \
+			-e 's/methods\.performance\.now()/Date\.now()/g' \
+			${cucumberjs_9x}.js; \
+	fi
+
 ################## Download required files from the Internet ######################
 
 download-1.x: init
@@ -129,5 +148,8 @@ download-7.x: init
 
 download-8.x: init
 	chmod +x ./scripts/cucumberjs-8.x.sh && ./scripts/cucumberjs-8.x.sh
+
+download-9.x: init
+	chmod +x ./scripts/cucumberjs-9.x.sh && ./scripts/cucumberjs-9.x.sh
 
 legacy.x: 1.x 2.x 3.x 4.x 5.x 6.x

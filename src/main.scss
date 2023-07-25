@@ -398,6 +398,14 @@ div[data-testid=editor-toolbar] {
     font-size: 14pt;
 }
 
+.link-item.small {
+    padding: 3px;
+    margin: 5px;
+    margin-right: 0;
+    font-size: 10pt;
+    font-weight: bold;
+}
+
 .btn-small {
     font-size: 12px !important;
     i {
