@@ -17,7 +17,7 @@ init: npm-install
 build-web: npm-install
 	npm run prod-build;
 
-github_url=https://raw.githubusercontent.com/cucumber/cucumber-js
+storage_url=https://storage.testjam.io/build
 cucumberjs_1x=./build/js/runtimes/cucumberjs-1.x
 cucumberjs_2x=./build/js/runtimes/cucumberjs-2.x
 cucumberjs_3x=./build/js/runtimes/cucumberjs-3.x
@@ -115,32 +115,32 @@ min=min
 
 download-1.x: init
 	if [ ! -f "${cucumberjs_1x}.js" ]; then \
-		curl -s https://storage.testjam.io/build/cucumber@1.3.3.js -o ${cucumberjs_1x}.js; \
+		curl -s ${storage_url}/cucumber@1.3.3.js -o ${cucumberjs_1x}.js; \
 	fi;
 
 download-2.x: init
 	if [ ! -f "${cucumberjs_2x}.js" ]; then \
-		curl -s ${github_url}/2.x/dist/cucumber.js -o ${cucumberjs_2x}.js; \
+		curl -s ${storage_url}/cucumber@2.3.1.js -o ${cucumberjs_2x}.js; \
 	fi;
 
 download-3.x: init
 	if [ ! -f "${cucumberjs_3x}.js" ]; then \
-		curl -s ${github_url}/3.x/dist/cucumber.js -o ${cucumberjs_3x}.js; \
+		curl -s ${storage_url}/cucumber@3.2.1.js -o ${cucumberjs_3x}.js; \
 	fi;
 
 download-4.x: init
 	if [ ! -f "${cucumberjs_4x}.js" ]; then \
-		curl -s ${github_url}/4.x/dist/cucumber.js -o ${cucumberjs_4x}.js; \
+		curl -s ${storage_url}/cucumber@4.2.1.js -o ${cucumberjs_4x}.js; \
 	fi;
 
 download-5.x: init
 	if [ ! -f "${cucumberjs_5x}.js" ]; then \
-		curl -s ${github_url}/5.x/dist/cucumber.js -o ${cucumberjs_5x}.js; \
+		curl -s ${storage_url}/cucumber@5.1.0.js -o ${cucumberjs_5x}.js; \
 	fi;
 
 download-6.x: init
 	if [ ! -f "${cucumberjs_6x}.js" ]; then \
-		curl -s ${github_url}/6.x/dist/cucumber.js -o ${cucumberjs_6x}.js; \
+		curl -s ${storage_url}/cucumber@6.0.5.js -o ${cucumberjs_6x}.js; \
 	fi;
 
 download-7.x: init
