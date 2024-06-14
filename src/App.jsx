@@ -36,12 +36,6 @@ class App extends React.Component {
                     <TestRunnerView />
                     <div className="footer">
                         <div className="item-left">
-                            <a href="https://stevenhunt.me#consulting" className="link-item small" target="_blank" rel="noreferrer">
-                                <i className="fa fa-briefcase" />
-                                &nbsp;
-                                BDD Consulting
-                            </a>
-                            &nbsp;&nbsp;&nbsp;&nbsp;
                             <a href="https://stevenhunt.me" target="_blank" rel="noreferrer">stevenhunt.me</a>
                             &nbsp;&nbsp;&nbsp;&nbsp;
                             The
